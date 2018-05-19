@@ -47,3 +47,9 @@ function directionTo(coordsFrom, coordsTo) {
     return 'nodir';
   }
 };
+
+function distanceTo(coordsFrom, coordsTo) {
+  const dx = Math.abs(coordsTo[0] - coordsFrom[0]);
+  const dy = Math.abs(coordsTo[1] - coordsFrom[1]);
+  return(Math.sqrt((dx * dx) + (dy * dy)));
+};

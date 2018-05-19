@@ -6,13 +6,26 @@ function initializeInput() {
 function mouseHandler(pointerEvent) {
   console.log(pointerEvent);
   const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
-  //World.player.move(directionTextToCoords(directionTo(World.player.myCoords(), clickedTileCoords)));
-  //alert(World.currentMap.checkBlocked(clickedTileCoords));
-  World.player.createPath(clickedTileCoords);
-  if (World.player.path.length > 0) {
-    World.player.moveAbsolute(World.player.path[0]);
-  }
+
+
+  let cheese = new Path(World.player);
+
+  World.player.path = [];
+
+  const addPath = (x, y) => World.player.path.push([x, y]);
+
+  cheese.calculatePath(clickedTileCoords, addPath);
+  // World.player.path.shift();
+  //
+  // if (World.player.path.length > 0) {
+  //   World.player.moveAbsolute(cheesePath[0]);
+  // }
+  //
+  // World.player.path.forEach((coords) => {
+  //   World.rotDisplay.draw(coords[0], coords[1], '*', 'red');
+  // })
 };
+
 
 function keyboardHandler(keyboardEvent) {
   console.log(keyboardEvent);

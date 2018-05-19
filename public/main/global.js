@@ -1,5 +1,5 @@
 const RENDER_ENGINE = "Rot-JS";
-const CANVAS_SIZE = 0.75;
+const CANVAS_SIZE = 0.95;
 
 // Phaser constants
 const PHASER_TILE_SIZE = 32;
@@ -7,7 +7,7 @@ const PHASER_GAME_SCALE = 1;
 const PHASER_TILE_SIZE_SCALED = PHASER_TILE_SIZE * PHASER_GAME_SCALE;
 
 // Rot-JS constants
-const ROT_FONT_SIZE = 20;
+const ROT_FONT_SIZE = 15;
 
 const SCREEN_WIDTH = RENDER_ENGINE === "Rot-JS"
   ? Math.floor(window.innerWidth * CANVAS_SIZE / ROT_FONT_SIZE) * ROT_FONT_SIZE
@@ -27,8 +27,10 @@ const TILE_SIZE = RENDER_ENGINE === "Rot-JS"
   : PHASER_TILE_SIZE_SCALED;
 
 // Colours
-const HEX_WHITE = '#ABB2BF';
+// const HEX_WHITE = '#ABB2BF';
 const HEX_BLACK = '#262626';
+const HEX_WHITE = 'white';
+//const HEX_BLACK = 'black';
 
 // Time
 WORLD_TIME_MULTIPLIER = 3000;
@@ -37,5 +39,6 @@ const World = {
   Time: {},
   allObjects: new Map(),
   allRotObjects: new Map(),
-  allMovingObjects: new Map()
+  allMovingObjects: new Map(),
+  pathTraverse: []
 };
