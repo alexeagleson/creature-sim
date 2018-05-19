@@ -1,29 +1,28 @@
-function rotInitialize() {
-  Game.currentMap = new WorldMap();
-  Game.currentMap.generateCellularMap();
-
-  Game.rotDisplay = new ROT.Display({
+function initializeRotDisplay() {
+  World.rotDisplay = new ROT.Display({
     width: ROT_TILE_WIDTH,
     height: ROT_TILE_HEIGHT,
     fg: HEX_WHITE,
     bg: HEX_BLACK,
     fontSize: ROT_FONT_SIZE,
-    forceSquareRatio: false,
+    forceSquareRatio: true,
     fontFamily: 'dejavu sans mono, consolas, monospace'
   });
 
-  Game.displayCanvas = Game.rotDisplay.getContainer();
-  document.body.append(Game.displayCanvas);
+  World.displayCanvas = World.rotDisplay.getContainer();
+  document.body.append(World.displayCanvas);
 };
 
 function rotUpdate() {
-  for (let i = 0; i < Game.currentMap.mapWidth; i++) {
-    for (let j = 0; j < Game.currentMap.mapHeight; j++) {
-      Game.rotDisplay.draw(i,  j, Game.currentMap.tileMap[i + "," + j].char);
+  for (let i = 0; i < World.currentMap.mapWidth; i++) {
+    for (let j = 0; j < World.currentMap.mapHeight; j++) {
+      World.rotDisplay.draw(i,  j, World.currentMap.tileMap[i + ',' + j].char);
     }
   }
 
-  Game.allRotObjects.forEach((rotObject) => {
-    Game.rotDisplay.draw(rotObject.tileX,  rotObject.tileY, rotObject.char, rotObject.fgColour, rotObject.bgColour);
+  World.allRotObjects.forEach((rotObject) => {
+    World.rotDisplay.draw(rotObject.tile.x,  rotObject.tile.y, rotObject.char, rotObject.fgColour, rotObject.bgColour);
   });
+
+  World.rotDisplay.drawText(2, 2, millisecondsToHHMMSS(millisecondsSinceDayStart()), ROT_TILE_WIDTH);
 };

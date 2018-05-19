@@ -1,7 +1,7 @@
 let game = null;
 let lastSprite = null
 
-const phaserInitialize = function() {
+const initializePhaserDisplay = function() {
     var gameConfig = {
         type: Phaser.WEBGL,
         width: 640,

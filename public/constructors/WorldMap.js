@@ -1,9 +1,13 @@
 const WorldMap = function() {
   this.name = null;
   this.uniqueID = uniqueNumber();
-  this.mapWidth = ROT_TILE_WIDTH;
-  this.mapHeight = ROT_TILE_HEIGHT;
+  this.mapWidth = 50;
+  this.mapHeight = 50;
   this.tileMap = {};
+
+  this.getTile = function(coords) {
+    return this.tileMap[coords[0] + ',' + coords[1]];
+  };
 
   this.generateCellularMap = function() {
     const map = new ROT.Map.Cellular(this.mapWidth, this.mapHeight, {connected: true});
@@ -18,7 +22,7 @@ const WorldMap = function() {
 
     for (let i = 0; i < this.mapWidth; i++) {
       for (let j = 0; j < this.mapHeight; j ++) {
-        const key = i + "," + j;
+        const key = i + ',' + j;
         if (map._map[i][j]) {
           this.tileMap[key] = new WorldTile(i, j, this, false);
           this.tileMap[key].char = ".";
@@ -42,7 +46,7 @@ const WorldMap = function() {
     }
 
     const createMapCallback = function(x, y, isWall) {
-      const key = x + "," + y;
+      const key = x + ',' + y;
       if (isWall) {
         this.tileMap[key] = new WorldTile(x, y, this, isWall);
         this.tileMap[key].char = "#";
