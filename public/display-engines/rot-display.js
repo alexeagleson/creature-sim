@@ -6,49 +6,47 @@ function initializeRotDisplay() {
     bg: HEX_BLACK,
     fontSize: ROT_FONT_SIZE,
     forceSquareRatio: true,
-    fontFamily: 'dejavu sans mono, consolas, monospace'
+    fontFamily: FONT_FAMILY
   });
 
   World.displayCanvas = World.rotDisplay.getContainer();
   document.body.append(World.displayCanvas);
+  initializeCamera();
 };
 
 function rotUpdate() {
-
-
-
-  if (!(World.pathTraverse.length || World.player.path.length)) {
-    for (let i = 0; i < World.currentMap.mapWidth; i++) {
-      for (let j = 0; j < World.currentMap.mapHeight; j++) {
-        World.rotDisplay.draw(i,  j, World.currentMap.tileMap[i + ',' + j].char);
-      }
+  for (let i = 0; i < ROT_TILE_WIDTH; i++) {
+    for (let j = 0; j < ROT_TILE_HEIGHT; j++) {
+      World.rotDisplay.draw(i,  j, World.player.WorldMap.tileMap[(i + World.Camera.x) + ',' + (j + World.Camera.y)].char);
     }
-
-    World.allRotObjects.forEach((rotObject) => {
-      World.rotDisplay.draw(rotObject.tile.x,  rotObject.tile.y, rotObject.char, rotObject.fgColour, rotObject.bgColour);
-    });
-
-    //World.rotDisplay.drawText(2, 2, millisecondsToHHMMSS(millisecondsSinceDayStart()), ROT_TILE_WIDTH);
   }
 
-  doThis();
+  World.allRotObjects.forEach((rotObject) => {
+    World.rotDisplay.draw(rotObject.WorldTile.x - World.Camera.x, rotObject.WorldTile.y - World.Camera.y, rotObject.char, rotObject.fgColour, rotObject.bgColour);
+  });
 
-
+  World.rotDisplay.drawText(2, 2, millisecondsToHHMMSS(millisecondsSinceDayStart()), ROT_TILE_WIDTH);
 };
 
-function doThis() {
-  if (World.pathTraverse.length) {
-    setTimeout(() => {
-      World.rotDisplay.draw(World.pathTraverse[0][0], World.pathTraverse[0][1], '*', 'yellow');
-      //World.rotDisplay.draw(World.pathTraverse[0][0], World.pathTraverse[0][1], '*', '#FFE272');
-      World.pathTraverse.shift();
-      doThis();
-    }, 500);
-  } else if (World.player.path.length) {
-    setTimeout(() => {
-      World.rotDisplay.draw(World.player.path[0][0], World.player.path[0][1], '*', 'red');
-      World.player.path.shift();
-      doThis();
-    }, 1000);
-  }
-}
+function initializeCamera() {
+  World.Camera = new Camera();
+  World.Camera.updatePosition();
+};
+
+const Camera = function() {
+  this.updatePosition = function() {
+    this.x = this.computeCoord(World.player.WorldTile.x, ROT_TILE_WIDTH, World.player.WorldMap.mapWidth);
+    this.y = this.computeCoord(World.player.WorldTile.y, ROT_TILE_HEIGHT, World.player.WorldMap.mapHeight);
+  };
+
+  this.computeCoord = function(playerPosition, screenSize, mapSize) {
+    const halfScreenSize = Math.floor(screenSize / 2);
+    if (playerPosition < halfScreenSize) {
+      return 0;
+    } else if (playerPosition >= mapSize - halfScreenSize) {
+      return mapSize - screenSize;
+    } else {
+      return playerPosition - halfScreenSize;
+    }
+  };
+};

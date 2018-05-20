@@ -1,12 +1,18 @@
 const WorldMap = function() {
   this.name = null;
   this.uniqueID = uniqueNumber();
-  this.mapWidth = 80;
-  this.mapHeight = 40;
+  this.mapWidth = 120;
+  this.mapHeight = 100;
   this.tileMap = {};
 
   this.getTile = function(coords) {
     return this.tileMap[coords[0] + ',' + coords[1]];
+  };
+
+  this.addObjectToTile = function(object, coords) {
+    object.WorldMap = this;
+    object.WorldTile = this.getTile(coords);
+    if (object === World.player) { World.Camera.updatePosition(); }
   };
 
   this.generateCellularMap = function() {

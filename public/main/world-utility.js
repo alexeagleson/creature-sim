@@ -3,30 +3,31 @@ function addObjectToUniverse(object) {
 };
 
 function pixelToTile(pixelCoordsArray) {
-  const tileX = Math.floor(pixelCoordsArray[0] / TILE_SIZE);
-  const tileY = Math.floor(pixelCoordsArray[1] / TILE_SIZE);
+  const tileX = Math.floor(pixelCoordsArray[0] / TILE_SIZE) + World.Camera.x;
+  const tileY = Math.floor(pixelCoordsArray[1] / TILE_SIZE) + World.Camera.y;
+  console.log([tileX, tileY]);
   return([tileX, tileY]);
 };
 
-function getRandomFreeTile(worldMap) {
+function getRandomFreeTile(WorldMap) {
   let randomTile = null;
   for (let i = 0; i < 9999; i++) {
-    const randomX = randBetween(0, worldMap.mapWidth - 1);
-    const randomY = randBetween(0, worldMap.mapHeight - 1);
-    if (!worldMap.getTile([randomX, randomY]).wall) {
-      randomTile = worldMap.getTile([randomX, randomY]);
+    const randomX = randBetween(0, WorldMap.mapWidth - 1);
+    const randomY = randBetween(0, WorldMap.mapHeight - 1);
+    if (!WorldMap.getTile([randomX, randomY]).wall) {
+      randomTile = WorldMap.getTile([randomX, randomY]);
       break;
     }
   }
   if (!randomTile) {
-    displayError(`No available empty tile found in ${worldMap.name}.`);
+    displayError(`No available empty tile found in ${WorldMap.name}.`);
   }
   return randomTile;
 };
 
-function withinMapBounds(worldMap, coords) {
-  if (coords[0] < 0 || coords[0] >= worldMap.mapWidth) { return false; }
-  if (coords[1] < 0 || coords[1] >= worldMap.mapHeight) { return false; }
+function withinMapBounds(WorldMap, coords) {
+  if (coords[0] < 0 || coords[0] >= WorldMap.mapWidth) { return false; }
+  if (coords[1] < 0 || coords[1] >= WorldMap.mapHeight) { return false; }
   return true;
 };
 

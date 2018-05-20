@@ -1,10 +1,10 @@
-const WorldTile = function (x, y, worldMap, wall) {
+const WorldTile = function (x, y, WorldMap, wall) {
   this.x = x;
   this.y = y;
-  this.worldMap = worldMap;
+  this.WorldMap = WorldMap;
   this.wall = wall;
 
   this.checkBlocked = function(checkAgainstObject = null) {
     return (!this.wall);
-  };
+  };  
 };

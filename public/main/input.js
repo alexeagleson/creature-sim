@@ -6,24 +6,13 @@ function initializeInput() {
 function mouseHandler(pointerEvent) {
   console.log(pointerEvent);
   const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
+  World.player.path = new Path(World.player);
+  World.player.path.calculatePath(clickedTileCoords);
+  World.player.path.currentPath.shift();
 
-
-  let cheese = new Path(World.player);
-
-  World.player.path = [];
-
-  const addPath = (x, y) => World.player.path.push([x, y]);
-
-  cheese.calculatePath(clickedTileCoords, addPath);
-  // World.player.path.shift();
-  //
-  // if (World.player.path.length > 0) {
-  //   World.player.moveAbsolute(cheesePath[0]);
-  // }
-  //
-  // World.player.path.forEach((coords) => {
-  //   World.rotDisplay.draw(coords[0], coords[1], '*', 'red');
-  // })
+  if (World.player.path.currentPath.length > 0) {
+    World.player.move(World.player.path.currentPath[0]);
+  }
 };
 
 

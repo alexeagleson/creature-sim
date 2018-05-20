@@ -4,23 +4,18 @@ window.onload = () => {
   initializeWorld();
   initializeRotDisplay();
   initializeInput();
-  initializePlayer();
   startTimer();
   window.requestAnimationFrame(mainLoop);
 };
 
 function initializeWorld() {
-  World.currentMap = new WorldMap();
-  World.currentMap.generateCellularMap();
-  World.worldActive = true;
-};
-
-function initializePlayer() {
   World.player = createWorldObject('Generic');
-  becomeRotObject(World.player, {fgColour: 'red'});
+  becomeRotObject(World.player, {fgColour: HEX_RED});
   becomeMovingObject(World.player);
-  World.player.worldMap = World.currentMap;
-  World.player.tile = getRandomFreeTile(World.player.worldMap);
+  World.player.WorldMap = new WorldMap();
+  World.player.WorldMap.generateCellularMap();
+  World.player.WorldTile = getRandomFreeTile(World.player.WorldMap);
+  World.worldActive = true;
 };
 
 function mainLoop(timestamp) {
