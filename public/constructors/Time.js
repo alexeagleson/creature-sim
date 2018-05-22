@@ -1,19 +1,21 @@
-function startTimer() {
-  World.Time.millisecondsElapsed = 0;
-  World.Time.dayStartedMilliseconds = 0;
+const Time = function() {
+  this.millisecondsElapsed = 0;
+  this.dayStartedMilliseconds = 0;
 
-  const countDownDate = new Date().getTime();
+  this.startTimer = function() {
+    const countDownDate = new Date().getTime();
 
-  World.Time.mainTimer = setInterval(function() {
-    const now = new Date().getTime();
-    const distance = countDownDate - now;
-    World.Time.millisecondsElapsed = (0 - Math.floor(distance));
-  }, 100);
-}
+    World.Time.mainTimer = setInterval(function() {
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+      World.Time.millisecondsElapsed = (0 - Math.floor(distance));
+    }, 100);
+  }
 
-function millisecondsSinceDayStart() {
-  return (World.Time.millisecondsElapsed - World.Time.dayStartedMilliseconds) * WORLD_TIME_MULTIPLIER;
-}
+  this.millisecondsSinceDayStart = function() {
+    return (this.millisecondsElapsed - this.dayStartedMilliseconds) * WORLD_TIME_MULTIPLIER;
+  }
+};
 
 function millisecondsToHHMMSS(timeInMilliseconds) {
     let sec_num = Math.floor(timeInMilliseconds / 1000);

@@ -6,13 +6,8 @@ function initializeInput() {
 function mouseHandler(pointerEvent) {
   console.log(pointerEvent);
   const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
-  World.player.path = new Path(World.player);
-  World.player.path.calculatePath(clickedTileCoords);
-  World.player.path.currentPath.shift();
-
-  if (World.player.path.currentPath.length > 0) {
-    World.player.move(World.player.path.currentPath[0]);
-  }
+  World.player.Pathing.calculatePath(clickedTileCoords);
+  World.player.Pathing.movePath();
 };
 
 
@@ -21,12 +16,12 @@ function keyboardHandler(keyboardEvent) {
   if (keyboardEvent.key === 'q') {
     endSim();
   } else if (keyboardEvent.key === 'ArrowUp') {
-    World.player.moveRelative(directionTextToCoords('up'));
+    World.player.Moving.moveRelative(directionTextToCoords('up'));
   } else if (keyboardEvent.key === 'ArrowDown') {
-    World.player.moveRelative(directionTextToCoords('down'));
+    World.player.Moving.moveRelative(directionTextToCoords('down'));
   } else if (keyboardEvent.key === 'ArrowLeft') {
-    World.player.moveRelative(directionTextToCoords('left'));
+    World.player.Moving.moveRelative(directionTextToCoords('left'));
   } else if (keyboardEvent.key === 'ArrowRight') {
-    World.player.moveRelative(directionTextToCoords('right'));
+    World.player.Moving.moveRelative(directionTextToCoords('right'));
   }
 };

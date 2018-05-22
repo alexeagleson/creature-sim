@@ -5,7 +5,6 @@ function addObjectToUniverse(object) {
 function pixelToTile(pixelCoordsArray) {
   const tileX = Math.floor(pixelCoordsArray[0] / TILE_SIZE) + World.Camera.x;
   const tileY = Math.floor(pixelCoordsArray[1] / TILE_SIZE) + World.Camera.y;
-  console.log([tileX, tileY]);
   return([tileX, tileY]);
 };
 

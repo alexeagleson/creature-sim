@@ -1,3 +1,16 @@
+// Relative coordinates
+const NODIR_COORDS = [0, 0];
+
+const UP_COORDS = [0, -1];
+const DOWN_COORDS = [0, 1];
+const LEFT_COORDS = [-1, 0];
+const RIGHT_COORDS = [1, 0];
+
+const UPLEFT_COORDS = [-1, -1];
+const UPRIGHT_COORDS = [1, -1];
+const DOWNLEFT_COORDS = [-1, 1];
+const DOWNRIGHT_COORDS = [1, 1];
+
 let errorAlertHasBeenTriggered = false;
 
 function rollDie(dieSize) {
@@ -47,15 +60,15 @@ function displayError(errorText) {
 
 function directionTextToCoords(directionText) {
   if (directionText.toLowerCase() === 'up') {
-    return [0, -1];
+    return UP_COORDS;
   } else if (directionText.toLowerCase() === 'down') {
-    return [0, 1];
+    return DOWN_COORDS;
   } else if (directionText.toLowerCase() === 'left') {
-    return [-1, 0];
+    return LEFT_COORDS;
   } else if (directionText.toLowerCase() === 'right') {
-    return [1, 0];
+    return RIGHT_COORDS;
   } else if (directionText.toLowerCase() === 'nodir') {
-    return [0, 0];
+    return NODIR_COORDS;
   } else {
     displayError(`Invalid argument ${directionText} in function ${directionTextToCoords}.`);
     return null;

@@ -38,18 +38,17 @@ const FONT_FAMILY = 'dejavu sans mono, consolas, monospace';
 // const HEX_BLACK = '#282c34';
 // const HEX_RED = '#e05848';
 // const HEX_YELLOW = '#d19a66';
-// const HEX_BLUE = '#56b6c2';
+const HEX_BLUE = '#56b6c2';
 // const HEX_GREEN = '#98c379';
 // const FONT_FAMILY = 'Inconsolata, Monaco, Consolas, Courier New, Courier';
 
-
 // Time
-WORLD_TIME_MULTIPLIER = 3000;
+const WORLD_TIME_MULTIPLIER = 3000;
 
 const World = {
   Time: {},
   Camera: {},
   allObjects: new Map(),
   allRotObjects: new Map(),
-  allMovingObjects: new Map()
+  allTurnTakingObjects: new Map()
 };

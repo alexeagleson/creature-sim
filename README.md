@@ -1,2 +1,2 @@
 # creature-sim
-Living creature simulation using Javascript with Node
+TurnTaking creature simulation using Javascript with Node

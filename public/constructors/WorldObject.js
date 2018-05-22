@@ -1,9 +1,10 @@
-const WorldObject = function(objectName) {
+const WorldObject = function(objectName, arg = {}) {
   this.name = objectName;
   this.uniqueID = uniqueNumber();
-  this.char = null;
-  this.WorldMap = null;
-  this.WorldTile = null;
+
+  this.char = arg.char || null;
+  this.WorldMap = arg.WorldMap || null;
+  this.WorldTile = arg.WorldMap || null;
 
   this.myCoords = function() {
     if (!this.WorldTile) {
@@ -11,5 +12,5 @@ const WorldObject = function(objectName) {
       return null;
     }
     return [this.WorldTile.x, this.WorldTile.y];
-  }
+  };
 };

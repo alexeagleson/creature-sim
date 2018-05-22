@@ -1,39 +1,16 @@
-const becomeMovingObject = function(object, arg = {}) {
-  object.MovingObject = true;
-  World.allMovingObjects.set(object.uniqueID, object);
+const Pathing = function(worldObject, arg = {}) {
+  this.owner = worldObject;
 
-  object.path = [];
-
-  object.move = function(movementCoords) {
-    if (!object.WorldMap.getTile(movementCoords).wall) {
-      object.WorldMap.addObjectToTile(object, movementCoords);
-    }
-  };
-
-  object.moveRelative = function(relativeMovementCoords) {
-    object.move([object.WorldTile.x + relativeMovementCoords[0], object.WorldTile.y + relativeMovementCoords[1]]);
-  };
-
-  object.checkBlockedAgainstObject = function(x, y) {
-    if (!object.WorldMap) {
-      displayError(`${object.name} must be on a map to call checkBlockedAgainstObject.`);
-      return null;
-    }
-    if (!withinMapBounds(object.WorldMap, [x, y])) {
-      return false;
-    }
-    return object.WorldMap.getTile([x, y]).checkBlocked(checkAgainstObject = object);
-  };
-};
-
-const Path = function(fromObject) {
-  this.currentPath = [];
-  this.todo = [];
-  this.done = {};
-  this.fromObject = fromObject;
-  this.checkBlockedAgainstObject = fromObject.checkBlockedAgainstObject;
+  if (!this.owner.Moving) {
+    displayError(`${this.name} must be a Moving object in order to be a Pathing object.`);
+    return null;
+  }
 
   this.calculatePath = function(toCoords) {
+    this.currentPath = [];
+    this.todo = [];
+    this.done = {};
+
     const toX = toCoords[0];
     const toY = toCoords[1];
     let thisNode = null;
@@ -45,9 +22,9 @@ const Path = function(fromObject) {
       let id = thisNode.x + "," + thisNode.y;
       if (id in this.done) { continue; }
       this.done[id] = thisNode;
-      if (thisNode.x == fromObject.WorldTile.x && thisNode.y == fromObject.WorldTile.y) { break; }
+      if (thisNode.x == this.owner.WorldTile.x && thisNode.y == this.owner.WorldTile.y) { break; }
 
-      var neighbors = this.getNeighbors(thisNode.x, thisNode.y);
+      let neighbors = this.getNeighbors(thisNode.x, thisNode.y);
 
       for (let i = 0; i < neighbors.length; i++) {
         const neighbor = neighbors[i];
@@ -59,8 +36,8 @@ const Path = function(fromObject) {
       }
     }
 
-    thisNode = this.done[fromObject.WorldTile.x + "," + fromObject.WorldTile.y];
-    if (!thisNode) { return; }
+    thisNode = this.done[this.owner.WorldTile.x + "," + this.owner.WorldTile.y];
+    if (!thisNode) { return null; }
 
     while (thisNode) {
       this.currentPath.push([thisNode.x, thisNode.y]);
@@ -78,7 +55,7 @@ const Path = function(fromObject) {
   		const x = cx + dir[0];
   		const y = cy + dir[1];
 
-  		if (!this.checkBlockedAgainstObject(x, y)) { continue; }
+  		if (!this.owner.Moving.checkBlockedAgainstObject(x, y)) { continue; }
   		result.push([x, y]);
   	}
 
@@ -86,7 +63,7 @@ const Path = function(fromObject) {
   };
 
   this.add = function(x, y, prev) {
-    let h = distanceTo(fromObject.myCoords(), [x, y]);
+    let h = distanceTo(this.owner.myCoords(), [x, y]);
     const obj = {
       x: x,
       y: y,
@@ -107,5 +84,13 @@ const Path = function(fromObject) {
     }
 
     this.todo.push(obj);
+  };
+
+  this.movePath = function() {
+    this.currentPath.shift();
+    if (this.currentPath.length > 0) {
+      return this.owner.Moving.move(this.currentPath[0]);
+    }
+    return false;
   };
 };
