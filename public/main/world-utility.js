@@ -53,3 +53,14 @@ function distanceTo(coordsFrom, coordsTo) {
   const dy = Math.abs(coordsTo[1] - coordsFrom[1]);
   return(Math.sqrt((dx * dx) + (dy * dy)));
 };
+
+function getObjectsAtCoordinates(clickedTileCoords) {
+  const clickedObjects = new Map();
+  World.allObjects.forEach((object) => {
+    if (object === World.player) { return null; }
+    if (object.WorldTile.x === clickedTileCoords[0] && object.WorldTile.y === clickedTileCoords[1]) {
+      clickedObjects.set(object.uniqueID, object);
+    }
+  });
+  return clickedObjects;
+}

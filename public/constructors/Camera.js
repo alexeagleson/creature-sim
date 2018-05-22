@@ -14,4 +14,8 @@ const Camera = function() {
       return playerPosition - halfScreenSize;
     }
   };
+
+  this.getObjectPixelCoords = function(worldObject) {
+    return [(worldObject.WorldTile.x - World.Camera.x) * TILE_SIZE, (worldObject.WorldTile.y - World.Camera.y) * TILE_SIZE];
+  };
 };

@@ -1,15 +1,20 @@
 function initializeInput() {
   window.addEventListener('keydown', keyboardHandler);
-  World.displayCanvas.addEventListener('pointerdown', mouseHandler);
+  World.allUI.displayCanvas.addEventListener('pointerdown', mouseHandler);
 };
 
 function mouseHandler(pointerEvent) {
   console.log(pointerEvent);
   const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
-  World.player.Pathing.calculatePath(clickedTileCoords);
-  World.player.Pathing.movePath();
-};
+  const objectsAtCoords = getObjectsAtCoordinates(clickedTileCoords);
 
+  if (objectsAtCoords.size > 0) {
+    World.allUI.selectUI.Select.promptObject(objectsAtCoords);
+  } else {
+    World.player.Pathing.calculatePath(clickedTileCoords);
+    World.player.Pathing.movePath();
+  }
+};
 
 function keyboardHandler(keyboardEvent) {
   console.log(keyboardEvent);

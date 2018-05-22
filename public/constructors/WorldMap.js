@@ -3,6 +3,7 @@ const WorldMap = function() {
   this.uniqueID = uniqueNumber();
   this.mapWidth = 70;
   this.mapHeight = 50;
+  this.temp = 20;
   this.tileMap = {};
 
   this.getTile = function(coords) {

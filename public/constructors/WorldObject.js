@@ -13,4 +13,10 @@ const WorldObject = function(objectName, arg = {}) {
     }
     return [this.WorldTile.x, this.WorldTile.y];
   };
+
+  this.destroy = function() {
+    World.allObjects.delete(this.uniqueID);
+    World.allRotJSs.delete(this.uniqueID);
+    World.allTurnTakingObjects.delete(this.uniqueID);
+  };
 };

@@ -1,4 +1,4 @@
-let lastRender = 0
+let lastRender = 0;
 
 window.onload = () => {
   initializeWorld();
@@ -11,9 +11,11 @@ window.onload = () => {
 
 function initializeWorld() {
   World.player = createWorldObject('Generic');
-  World.player.RotObject = new RotObject(World.player, arg = {fgColour: HEX_RED});
-  World.player.Moving = new Moving(World.player);
-  World.player.Pathing = new Pathing(World.player);
+
+  applyBasePrototypes(World.player);
+  World.player.RotJS.fgColour = HEX_RED;
+
+
   World.player.WorldMap = new WorldMap();
   World.player.WorldMap.generateCellularMap();
   World.player.WorldTile = getRandomFreeTile(World.player.WorldMap);
@@ -33,6 +35,8 @@ function mainLoop(timestamp) {
   });
 
   rotUpdate();
+
+  World.allUI.hudUI.Hud.update();
 
   lastRender = timestamp;
   if (World.worldActive) {

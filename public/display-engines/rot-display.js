@@ -9,10 +9,31 @@ function initializeRotDisplay() {
     fontFamily: FONT_FAMILY
   });
 
-  World.displayCanvas = World.rotDisplay.getContainer();
-  document.body.append(World.displayCanvas);
+  World.allUI.displayCanvas = World.rotDisplay.getContainer();
+  World.allUI.displayCanvas.className = 'displayCanvas';
+  World.allUI.mainWrapper = new UI(arg = {id: 'mainWrapper', class: 'mainWrapper', width: World.allUI.displayCanvas.width, height: World.allUI.displayCanvas.height});
+
+
+  World.allUI.hudUI = new UI(arg = {id: 'mainMenu', class: 'basicMenu'});
+  World.allUI.hudUI.Hud = new Hud(World.allUI.hudUI);
+
+  World.allUI.selectUI = new UI(arg = {id: 'selectObject', class: 'basicMenu'});
+  World.allUI.selectUI.Select = new Select(World.allUI.selectUI);
+
+  document.body.append(World.allUI.mainWrapper.htmlElement);
+  World.allUI.mainWrapper.htmlElement.append(World.allUI.displayCanvas);
+  World.allUI.mainWrapper.htmlElement.append(World.allUI.hudUI.htmlElement);
+  World.allUI.mainWrapper.htmlElement.append(World.allUI.selectUI.htmlElement);
+
   World.Camera = new Camera();
   World.Camera.updatePosition();
+
+  World.allUI.selectUI.hide();
+
+  //initializeHUD(World.allUI.hud);
+  //selectObject(World.allUI.hud);
+  //moveUiToObject(World.allUI.hud, World.player);
+
 };
 
 function rotUpdate() {
@@ -22,8 +43,8 @@ function rotUpdate() {
     }
   }
 
-  World.allRotObjects.forEach((object) => {
-    World.rotDisplay.draw(object.WorldTile.x - World.Camera.x, object.WorldTile.y - World.Camera.y, object.char, object.RotObject.fgColour, object.RotObject.bgColour);
+  World.allRotJSs.forEach((object) => {
+    World.rotDisplay.draw(object.WorldTile.x - World.Camera.x, object.WorldTile.y - World.Camera.y, object.char, object.RotJS.fgColour, object.RotJS.bgColour);
   });
 
   World.rotDisplay.drawText(2, 2, millisecondsToHHMMSS(World.Time.millisecondsSinceDayStart()), ROT_TILE_WIDTH);

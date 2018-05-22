@@ -6,6 +6,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/views'));
 app.use(express.static(__dirname + '/node_modules/phaser/dist'));
 
 // http://expressjs.com/en/starter/basic-routing.html

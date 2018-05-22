@@ -1,0 +1,28 @@
+body {
+  background: #000000;
+  padding: 0px;
+  margin: 0px;
+}
+
+.mainWrapper{
+  position: absolute;
+  z-index: 0;
+  display: block;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.displayCanvas {
+  position: absolute;
+  z-index: 1;
+}
+
+.basicMenu {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  background-color: white;
+  font-family: dejavu sans mono, consolas, monospace;
+}

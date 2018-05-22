@@ -15,7 +15,6 @@ const Moving = function(worldObject, arg = {}) {
 
   this.moveRandom = function() {
     const relativeMovementCoords = pickRandom([UP_COORDS, DOWN_COORDS, LEFT_COORDS, RIGHT_COORDS, NODIR_COORDS]);
-    console.log(this);
     return this.moveRelative(relativeMovementCoords);
   };
 
