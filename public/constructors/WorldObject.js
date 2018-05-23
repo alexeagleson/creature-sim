@@ -14,9 +14,26 @@ const WorldObject = function(objectName, arg = {}) {
     return [this.WorldTile.x, this.WorldTile.y];
   };
 
-  this.destroy = function() {
+  this.removeLocationData = function() {
+    this.WorldMap = null;
+    this.WorldTile = null;
+  };
+
+  this.removeFromUniverse = function() {
     World.allObjects.delete(this.uniqueID);
-    World.allRotJSs.delete(this.uniqueID);
+    World.allRotJSObjects.delete(this.uniqueID);
     World.allTurnTakingObjects.delete(this.uniqueID);
+  };
+
+  this.onPlayerMap = function() {
+    if (!this.onAnyMap) { return false; }
+    if (this.WorldMap != World.player.WorldMap) { return false; }
+    return true;
+  };
+
+  this.onAnyMap = function() {
+    if (!this.WorldMap) { return false; }
+    if (!this.WorldTile) { return false; }
+    return true;
   };
 };

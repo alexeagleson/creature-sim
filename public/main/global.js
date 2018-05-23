@@ -59,6 +59,6 @@ const World = {
   rotDisplay: null,
 
   allObjects: new Map(),
-  allRotJSs: new Map(),
+  allRotJSObjects: new Map(),
   allTurnTakingObjects: new Map()
 };

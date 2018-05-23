@@ -2,7 +2,7 @@ const Pathing = function(worldObject, arg = {}) {
   this.owner = worldObject;
 
   if (!this.owner.Moving) {
-    displayError(`${this.name} must be a Moving object in order to be a Pathing object.`);
+    displayError(`${this.owner.name} must be a Moving object in order to be a Pathing object.`);
     return null;
   }
 

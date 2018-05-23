@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "express": "^4.16.3",
+    "lodash": "^4.17.10",
     "node": "^10.0.0",
     "npm": "^6.0.1",
     "phaser": "^3.8.0"

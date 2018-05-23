@@ -24,13 +24,18 @@ function applyBasePrototypes(thisObject) {
   thisObject.RotJS = new RotJS(thisObject, arg = {fgColour: HEX_BLUE});
   thisObject.Moving = new Moving(thisObject);
   thisObject.Pathing = new Pathing(thisObject);
-  thisObject.Consumer = new Consumer(thisObject);
   thisObject.Consumable = new Consumable(thisObject);
   thisObject.Destructible = new Destructible(thisObject);
+  thisObject.Inventory = new Inventory(thisObject);
+  thisObject.Living = new Living(thisObject);
+  thisObject.Consumer = new Consumer(thisObject);
   thisObject.Temperature = new Temperature(thisObject);
+  thisObject.Combat = new Combat(thisObject);
+  thisObject.Item = new Item(thisObject);
 };
 
 function applyNPCPrototypes(thisObject) {
   thisObject.TurnTaking = new TurnTaking(thisObject);
   thisObject.AI = new AI(thisObject);
+
 };

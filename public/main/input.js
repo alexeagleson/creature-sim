@@ -8,8 +8,16 @@ function mouseHandler(pointerEvent) {
   const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
   const objectsAtCoords = getObjectsAtCoordinates(clickedTileCoords);
 
-  if (objectsAtCoords.size > 0) {
-    World.allUI.selectUI.Select.promptObject(objectsAtCoords);
+
+
+  if (objectsAtCoords.length > 0) {
+    World.allUI.selectUI.Select.prompt({
+      writtenText: 'helo',
+      buttonText: objectsAtCoords.map(worldObject => worldObject.name),
+      buttonFunctions: objectsAtCoords.map(worldObject => () => {
+        World.allUI.selectUI.Select.prompt(prepareContextMenu({ writtenText: 'do what', objectActivating: World.player, objectBeingActivated: worldObject }));
+      })
+    });
   } else {
     World.player.Pathing.calculatePath(clickedTileCoords);
     World.player.Pathing.movePath();

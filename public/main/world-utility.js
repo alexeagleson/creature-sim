@@ -55,11 +55,13 @@ function distanceTo(coordsFrom, coordsTo) {
 };
 
 function getObjectsAtCoordinates(clickedTileCoords) {
-  const clickedObjects = new Map();
+  const clickedObjects = [];
   World.allObjects.forEach((object) => {
     if (object === World.player) { return null; }
+    if (!object.onAnyMap()) { return null; }
+
     if (object.WorldTile.x === clickedTileCoords[0] && object.WorldTile.y === clickedTileCoords[1]) {
-      clickedObjects.set(object.uniqueID, object);
+      clickedObjects.push(object);
     }
   });
   return clickedObjects;

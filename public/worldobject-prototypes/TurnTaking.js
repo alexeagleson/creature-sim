@@ -18,6 +18,8 @@ const TurnTaking = function(worldObject, arg = {}) {
   };
 
   this.takeTurn = function() {
+    if (!this.owner.onAnyMap()) { return null; }
+
     if (this.owner.AI) {
       this.owner.AI.determineAction();
       if (this.owner.AI.currentAction) {
