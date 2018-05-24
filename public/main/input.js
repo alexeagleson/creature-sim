@@ -4,20 +4,11 @@ function initializeInput() {
 };
 
 function mouseHandler(pointerEvent) {
-  console.log(pointerEvent);
   const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
   const objectsAtCoords = getObjectsAtCoordinates(clickedTileCoords);
 
-
-
   if (objectsAtCoords.length > 0) {
-    World.allUI.selectUI.Select.prompt({
-      writtenText: 'helo',
-      buttonText: objectsAtCoords.map(worldObject => worldObject.name),
-      buttonFunctions: objectsAtCoords.map(worldObject => () => {
-        World.allUI.selectUI.Select.prompt(prepareContextMenu({ writtenText: 'do what', objectActivating: World.player, objectBeingActivated: worldObject }));
-      })
-    });
+    promptSelectObject(objectsAtCoords);
   } else {
     World.player.Pathing.calculatePath(clickedTileCoords);
     World.player.Pathing.movePath();
@@ -25,9 +16,15 @@ function mouseHandler(pointerEvent) {
 };
 
 function keyboardHandler(keyboardEvent) {
-  console.log(keyboardEvent);
   if (keyboardEvent.key === 'q') {
     endSim();
+  } else if (keyboardEvent.key === 'e') {
+    World.allUI.hudUI.toggle();
+  } else if (keyboardEvent.key === 't') {
+    World.allUI.timelineUI.Timeline.update();
+    World.allUI.timelineUI.toggle();
+  } else if (keyboardEvent.key === 'r') {
+    promptSelectObject(World.player.Inventory.currentInventory);
   } else if (keyboardEvent.key === 'ArrowUp') {
     World.player.Moving.moveRelative(directionTextToCoords('up'));
   } else if (keyboardEvent.key === 'ArrowDown') {

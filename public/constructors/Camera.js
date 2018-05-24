@@ -1,7 +1,10 @@
 const Camera = function() {
   this.updatePosition = function() {
-    this.x = this.computeCoord(World.player.WorldTile.x, ROT_TILE_WIDTH, World.player.WorldMap.mapWidth);
-    this.y = this.computeCoord(World.player.WorldTile.y, ROT_TILE_HEIGHT, World.player.WorldMap.mapHeight);
+    const displayScreenWidth = Math.min(ROT_TILE_WIDTH, World.player.WorldMap.mapWidth);
+    const displayScreenHeight = Math.min(ROT_TILE_HEIGHT, World.player.WorldMap.mapHeight);
+
+    this.x = this.computeCoord(World.player.WorldTile.x, displayScreenWidth, World.player.WorldMap.mapWidth);
+    this.y = this.computeCoord(World.player.WorldTile.y, displayScreenHeight, World.player.WorldMap.mapHeight);
   };
 
   this.computeCoord = function(playerPosition, screenSize, mapSize) {

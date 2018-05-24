@@ -8,7 +8,7 @@ const port = process.env.PORT;
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/views'));
 app.use(express.static(__dirname + '/node_modules/phaser/dist'));
-app.use(express.static(__dirname + '/node_modules/lodash'));
+app.use(express.static(__dirname + '/node_modules/howler/dist'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (request, response) {

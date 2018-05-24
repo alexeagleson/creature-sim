@@ -13,32 +13,32 @@ function initializeRotDisplay() {
   World.allUI.displayCanvas.className = 'displayCanvas';
   World.allUI.mainWrapper = new UI(arg = {id: 'mainWrapper', class: 'mainWrapper', width: World.allUI.displayCanvas.width, height: World.allUI.displayCanvas.height});
 
-
-  World.allUI.hudUI = new UI(arg = {id: 'mainMenu', class: 'basicMenu'});
+  World.allUI.hudUI = new UI(arg = {id: 'mainMenu', class: 'basicMenu top-left'});
   World.allUI.hudUI.Hud = new Hud(World.allUI.hudUI);
 
-  World.allUI.selectUI = new UI(arg = {id: 'selectObject', class: 'basicMenu'});
+  World.allUI.timelineUI = new UI(arg = {id: 'worldTimeline', class: 'basicMenu bottom-left'});
+  World.allUI.timelineUI.Timeline = new Timeline(World.allUI.timelineUI);
+
+  World.allUI.selectUI = new UI(arg = {id: 'selectObject', class: 'basicMenu top-right'});
   World.allUI.selectUI.Select = new Select(World.allUI.selectUI);
+
+
 
   document.body.append(World.allUI.mainWrapper.htmlElement);
   World.allUI.mainWrapper.htmlElement.append(World.allUI.displayCanvas);
-  World.allUI.mainWrapper.htmlElement.append(World.allUI.hudUI.htmlElement);
-  World.allUI.mainWrapper.htmlElement.append(World.allUI.selectUI.htmlElement);
 
   World.Camera = new Camera();
   World.Camera.updatePosition();
 
   World.allUI.selectUI.hide();
-
-  //initializeHUD(World.allUI.hud);
-  //selectObject(World.allUI.hud);
-  //moveUiToObject(World.allUI.hud, World.player);
-
 };
 
 function rotUpdate() {
-  for (let i = 0; i < ROT_TILE_WIDTH; i++) {
-    for (let j = 0; j < ROT_TILE_HEIGHT; j++) {
+  const displayScreenWidth = Math.min(ROT_TILE_WIDTH, World.player.WorldMap.mapWidth);
+  const displayScreenHeight = Math.min(ROT_TILE_HEIGHT, World.player.WorldMap.mapHeight);
+
+  for (let i = 0; i < displayScreenWidth; i++) {
+    for (let j = 0; j < displayScreenHeight; j++) {
       World.rotDisplay.draw(i,  j, World.player.WorldMap.tileMap[(i + World.Camera.x) + ',' + (j + World.Camera.y)].char);
     }
   }

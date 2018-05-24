@@ -12,7 +12,7 @@ const Select = function(uiObject) {
       return null;
     }
 
-    this.writtenTextElement.value = arg.writtenText
+    this.writtenTextElement.innerHTML = arg.writtenText
     for (let i = 0; i < arg.buttonText.length; i++) {
       const thisButton = document.createElement('button');
       thisButton.innerText = arg.buttonText[i];
@@ -32,7 +32,20 @@ const Select = function(uiObject) {
     });
     this.buttonElements = [];
   };
+
+  World.allUI.mainWrapper.addChildMenu(this.owner.htmlElement);
 };
+
+function promptSelectObject(listOfObjects) {
+  if (listOfObjects.length === 0) { return null; }
+  World.allUI.selectUI.Select.prompt({
+    writtenText: 'Select Object',
+    buttonText: listOfObjects.map(worldObject => worldObject.name),
+    buttonFunctions: listOfObjects.map(worldObject => () => {
+      World.allUI.selectUI.Select.prompt(prepareContextMenu({ writtenText: 'Take what action:', objectActivating: World.player, objectBeingActivated: worldObject }));
+    })
+  });
+}
 
 function prepareContextMenu(arg = { writtenText: null, objectActivating: null, objectBeingActivated: null }) {
   const buttonText = [];
@@ -50,6 +63,30 @@ function prepareContextMenu(arg = { writtenText: null, objectActivating: null, o
     buttonText.push('Pick Up');
     buttonFunctions.push(() => {
       arg.objectActivating.Inventory.addToInventory(arg.objectBeingActivated);
+      World.allUI.selectUI.hide();
+    });
+  }
+
+  if (arg.objectBeingActivated.Equipment) {
+    buttonText.push('Equip');
+    buttonFunctions.push(() => {
+      arg.objectActivating.Living.equip(arg.objectBeingActivated);
+      World.allUI.selectUI.hide();
+    });
+  }
+
+  if (arg.objectBeingActivated.Social) {
+    buttonText.push('Speak');
+    buttonFunctions.push(() => {
+      arg.objectActivating.Social.speak(arg.objectBeingActivated);
+      World.allUI.selectUI.hide();
+    });
+  }
+
+  if (arg.objectBeingActivated.Destructible) {
+    buttonText.push('Attack');
+    buttonFunctions.push(() => {
+      arg.objectActivating.Combat.attackObject(arg.objectBeingActivated);
       World.allUI.selectUI.hide();
     });
   }

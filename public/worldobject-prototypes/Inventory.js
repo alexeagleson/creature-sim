@@ -1,6 +1,6 @@
 const Inventory = function(worldObject, arg = {}) {
   this.owner = worldObject;
-  this.currentInventory = new Map();
+  this.currentInventory = [];
 
   this.addToInventory = function(worldObject) {
     if (!worldObject.Item) {
@@ -9,6 +9,6 @@ const Inventory = function(worldObject, arg = {}) {
     }
 
     worldObject.removeLocationData();
-    this.currentInventory.set(worldObject.uniqueID, worldObject);
+    this.currentInventory.push(worldObject);
   };
 };

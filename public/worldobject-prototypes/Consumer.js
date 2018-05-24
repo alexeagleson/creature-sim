@@ -1,5 +1,5 @@
-const HUNGER_LOSS_PER_MILLISECOND = 0.001;
-const THIRST_LOSS_PER_MILLISECOND = 0.001;
+const HUNGER_LOSS_PER_MILLISECOND = 0.0001;
+const THIRST_LOSS_PER_MILLISECOND = 0.0001;
 
 const Consumer = function(worldObject, arg = {}) {
   this.owner = worldObject;

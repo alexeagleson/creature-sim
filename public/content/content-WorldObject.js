@@ -11,6 +11,11 @@ function createWorldObject(objectName) {
     applyBasePrototypes(createdObject);
     applyNPCPrototypes(createdObject);
     createdObject.RotJS.fgColour = HEX_BLUE;
+  } else if (objectName === 'Onion') {
+    createdObject.char = 'N';
+    applyBasePrototypes(createdObject);
+    applyNPCPrototypes(createdObject);
+    createdObject.RotJS.fgColour = HEX_GREEN;
   }
   createdObject.WorldMap = World.player.WorldMap;
   createdObject.WorldTile = getRandomFreeTile(World.player.WorldMap);
@@ -28,10 +33,12 @@ function applyBasePrototypes(thisObject) {
   thisObject.Destructible = new Destructible(thisObject);
   thisObject.Inventory = new Inventory(thisObject);
   thisObject.Living = new Living(thisObject);
+  thisObject.Social = new Social(thisObject);
   thisObject.Consumer = new Consumer(thisObject);
   thisObject.Temperature = new Temperature(thisObject);
   thisObject.Combat = new Combat(thisObject);
   thisObject.Item = new Item(thisObject);
+  thisObject.Equipment = new Equipment(thisObject);
 };
 
 function applyNPCPrototypes(thisObject) {

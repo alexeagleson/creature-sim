@@ -7,12 +7,12 @@ body {
 .mainWrapper{
   position: absolute;
   z-index: 0;
-  display: block;
+  display: flex;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  user-select: none;
 }
-
 
 .displayCanvas {
   position: absolute;
@@ -20,9 +20,34 @@ body {
 }
 
 .basicMenu {
-  position: absolute;
+  height: 50%;
   z-index: 2;
   margin: 0;
   background-color: white;
   font-family: dejavu sans mono, consolas, monospace;
+}
+
+.top-left {
+}
+
+.top-right {
+  margin-left: auto;
+}
+
+.bottom-right {
+  margin-left: auto;
+  margin-top: auto;
+}
+
+.bottom-left {
+  margin-top: auto;
+}
+
+.no-click {
+  pointer-events: none;
+}
+
+#worldTimeline {
+  width: auto;
+  height: auto;
 }

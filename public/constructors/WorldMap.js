@@ -1,9 +1,9 @@
 const WorldMap = function() {
   this.name = null;
   this.uniqueID = uniqueNumber();
-  this.mapWidth = 70;
-  this.mapHeight = 50;
-  this.temp = 2000;
+  this.mapWidth = 40;
+  this.mapHeight = 30;
+  this.temp = 50;
   this.tileMap = {};
 
   this.getTile = function(coords) {
