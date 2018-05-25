@@ -35,10 +35,12 @@ const UI = function(arg = {}) {
 
   this.hide = function() {
     this.htmlElement.style['display'] = 'none';
+    if (this.Select) { resumeSim(); }
   };
 
   this.show = function() {
     this.htmlElement.style['display'] = 'block';
+    if (this.Select) { pauseSim(); }
   };
 };
 
@@ -72,4 +74,24 @@ function displayNamesOfObjects(objectsAtCoords) {
     objectNamesElement.style['z-index'] = "2";
     objectNamesElement.style['pointer-events'] = "none";
   }
+};
+
+function initializeUI() {
+  World.MainDisplay.canvas.className = 'displayCanvas';
+  World.allUI.mainWrapper = new UI(arg = {id: 'mainWrapper', class: 'mainWrapper', width: World.MainDisplay.canvas.width, height: World.MainDisplay.canvas.height});
+  document.body.append(World.allUI.mainWrapper.htmlElement);
+  World.allUI.mainWrapper.htmlElement.append(World.MainDisplay.canvas);
+
+  World.allUI.hudUI = new UI(arg = {id: 'mainMenu', class: 'basicMenu top-left'});
+  World.allUI.hudUI.Hud = new Hud(World.allUI.hudUI);
+
+  World.allUI.timelineUI = new UI(arg = {id: 'worldTimeline', class: 'basicMenu bottom-left'});
+  World.allUI.timelineUI.Timeline = new Timeline(World.allUI.timelineUI);
+
+  World.allUI.selectUI = new UI(arg = {id: 'selectObject', class: 'basicMenu top-right'});
+  World.allUI.selectUI.Select = new Select(World.allUI.selectUI);
+}
+
+function removeAllChildren(htmlElement) {
+  while(htmlElement.firstChild) { htmlElement.removeChild(htmlElement.firstChild); }
 };

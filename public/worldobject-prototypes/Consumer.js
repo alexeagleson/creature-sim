@@ -18,16 +18,13 @@ const Consumer = function(worldObject, arg = {}) {
   };
 
   this.consume = function(worldObject) {
-    if (!worldObject.Consumable) {
-      displayError(`${worldObject.name} is not a consumable object.`);
-      return null;
-    }
-
     this.hunger += worldObject.Consumable.hungerValue;
     this.hunger = normalizeToValue(this.hunger, 0, 100);
 
     this.thirst += worldObject.Consumable.thirstValue;
     this.thirst = normalizeToValue(this.thirst, 0, 100);
+
+    worldObject.removeFromUniverse();
   };
 
   this.adjustHunger = function(timePassedMilliseconds) {

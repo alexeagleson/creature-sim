@@ -66,3 +66,11 @@ function getObjectsAtCoordinates(clickedTileCoords) {
   });
   return clickedObjects;
 }
+
+function pauseSim() {
+  World.worldPaused = true;
+};
+
+function resumeSim() {
+  World.worldPaused = false;
+};

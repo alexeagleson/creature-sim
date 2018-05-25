@@ -63,6 +63,5 @@ const WorldMap = function() {
       this.tileMap[key].char = ".";
     }
     map.create(createMapCallback.bind(this));
-
   };
 }

@@ -50,8 +50,8 @@ function prepareContextMenu(arg = { writtenText: null, objectActivating: null, o
   const buttonText = [];
   const buttonFunctions = [];
 
-  if (World.player.Consumer) {
-    if (World.player.Consumer.canIConsumeObject(arg.objectBeingActivated)) {
+  if (arg.objectActivating.Consumer) {
+    if (arg.objectActivating.Consumer.canIConsumeObject(arg.objectBeingActivated)) {
       buttonText.push('Eat');
       buttonFunctions.push(() => {
         arg.objectActivating.Consumer.consume(arg.objectBeingActivated);
@@ -60,36 +60,45 @@ function prepareContextMenu(arg = { writtenText: null, objectActivating: null, o
     }
   }
 
-  if (arg.objectBeingActivated.Item) {
-    buttonText.push('Pick Up');
-    buttonFunctions.push(() => {
-      arg.objectActivating.Inventory.addToInventory(arg.objectBeingActivated);
-      World.allUI.selectUI.hide();
-    });
+  if (arg.objectActivating.Inventory) {
+    if (arg.objectActivating.Inventory.canIAddToInventory(arg.objectBeingActivated)) {
+      buttonText.push('Pick Up');
+      buttonFunctions.push(() => {
+        arg.objectActivating.Inventory.addToInventory(arg.objectBeingActivated);
+        World.allUI.selectUI.hide();
+      });
+    }
   }
 
-  if (arg.objectBeingActivated.Equipment) {
-    buttonText.push('Equip');
-    buttonFunctions.push(() => {
-      arg.objectActivating.Living.equip(arg.objectBeingActivated);
-      World.allUI.selectUI.hide();
-    });
+
+  if (arg.objectActivating.Equipper) {
+    if (arg.objectActivating.Equipper.canIEquipObject(arg.objectBeingActivated)) {
+      buttonText.push('Equip');
+      buttonFunctions.push(() => {
+        arg.objectActivating.Equipper.equip(arg.objectBeingActivated);
+        World.allUI.selectUI.hide();
+      });
+    }
   }
 
-  if (arg.objectBeingActivated.Social) {
-    buttonText.push('Speak');
-    buttonFunctions.push(() => {
-      arg.objectActivating.Social.speak(arg.objectBeingActivated);
-      World.allUI.selectUI.hide();
-    });
+  if (arg.objectActivating.Social) {
+    if (arg.objectActivating.Social.canISpeakTo(arg.objectBeingActivated)) {
+      buttonText.push('Speak');
+      buttonFunctions.push(() => {
+        arg.objectActivating.Social.speak(arg.objectBeingActivated);
+        World.allUI.selectUI.hide();
+      });
+    }
   }
 
-  if (arg.objectBeingActivated.Destructible) {
-    buttonText.push('Attack');
-    buttonFunctions.push(() => {
-      arg.objectActivating.Combat.attackObject(arg.objectBeingActivated);
-      World.allUI.selectUI.hide();
-    });
+  if (arg.objectActivating.Combat) {
+    if (arg.objectActivating.Combat.canIAttackObject(arg.objectBeingActivated)) {
+      buttonText.push('Attack');
+      buttonFunctions.push(() => {
+        arg.objectActivating.Combat.attackObject(arg.objectBeingActivated);
+        World.allUI.selectUI.hide();
+      });
+    }
   }
 
   return { writtenText: arg.writtenText, buttonText: buttonText, buttonFunctions: buttonFunctions };

@@ -16,16 +16,16 @@ const Destructible = function(worldObject, arg = {}) {
     let bonusDamage = 0;
     let bonusArmour = 0;
 
-    if (attackerObject.Living.currentEquipment) {
-      bonusDamage += attackerObject.Living.currentEquipment.Equipment.bonusAttack;
-      for (let i = 0; i < attackerObject.Living.currentEquipment.Equipment.dieQuantity; i++) {
-        bonusDamage += rollDie(attackerObject.Living.currentEquipment.Equipment.dieValue);
+    if (attackerObject.Equipper.currentEquipment) {
+      bonusDamage += attackerObject.Equipper.currentEquipment.Equipment.bonusAttack;
+      for (let i = 0; i < attackerObject.Equipper.currentEquipment.Equipment.dieQuantity; i++) {
+        bonusDamage += rollDie(attackerObject.Equipper.currentEquipment.Equipment.dieValue);
       }
     }
 
     if (this.Living) {
-      if (this.Living.currentEquipment) {
-        bonusArmour = this.Living.currentEquipment.Equipment.bonusArmour;
+      if (this.Equipper.currentEquipment) {
+        bonusArmour = this.Equipper.currentEquipment.Equipment.bonusArmour;
       }
     }
 

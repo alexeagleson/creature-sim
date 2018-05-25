@@ -1,4 +1,4 @@
-const RENDER_ENGINE = "Rot-JS";
+const RENDER_ENGINE = 'Phaser';
 const CANVAS_SIZE = 0.75;
 
 // Phaser constants
@@ -17,9 +17,13 @@ const SCREEN_HEIGHT = RENDER_ENGINE === "Rot-JS"
   ? Math.floor(window.innerHeight * CANVAS_SIZE / ROT_FONT_SIZE) * ROT_FONT_SIZE
   : Math.floor(window.innerHeight * CANVAS_SIZE / PHASER_TILE_SIZE_SCALED) * PHASER_TILE_SIZE_SCALED;
 
-// More Rot-JS constants
-const ROT_TILE_WIDTH = Math.floor(SCREEN_WIDTH / ROT_FONT_SIZE);
-const ROT_TILE_HEIGHT = Math.floor(SCREEN_HEIGHT / ROT_FONT_SIZE);
+const MAIN_DISPLAY_TILE_WIDTH = RENDER_ENGINE === "Rot-JS"
+  ? Math.floor(SCREEN_WIDTH / ROT_FONT_SIZE)
+  : Math.floor(SCREEN_WIDTH / PHASER_TILE_SIZE_SCALED);
+
+const MAIN_DISPLAY_TILE_HEIGHT = RENDER_ENGINE === "Rot-JS"
+  ? Math.floor(SCREEN_HEIGHT / ROT_FONT_SIZE)
+  : Math.floor(SCREEN_HEIGHT / PHASER_TILE_SIZE_SCALED);
 
 // Global values independent of graphics engines
 const TILE_SIZE = RENDER_ENGINE === "Rot-JS"
@@ -56,12 +60,12 @@ const World = {
   Camera: {},
   allUI: {},
 
-  rotDisplay: null,
+  MainDisplay: null,
 
   allEvents: [],
-
   allObjects: new Map(),
-  allInventoryObjects: new Map(),
-  allRotJSObjects: new Map(),
-  allTurnTakingObjects: new Map()
+  allTurnTakingObjects: new Map(),
+
+  worldPaused: false,
+  worldEnd: false
 };

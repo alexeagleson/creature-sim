@@ -41,11 +41,13 @@ const Hud = function(uiObject) {
     this.objectThirst.innerHTML = this.owner.hudTargetObject.Consumer ? `Thirst: ${Math.round(this.owner.hudTargetObject.Consumer.thirst)}/100` : `Thirst: N/A`;
     this.objectTemp.innerHTML = this.owner.hudTargetObject.Temperature ? `Temperature: ${Math.round(this.owner.hudTargetObject.Temperature.temp)}` : `Temperature: N/A`;
     this.objectEquipment.innerHTML = this.owner.hudTargetObject.Living
-      ? this.owner.hudTargetObject.Living.currentEquipment
-        ? `Equipment: ${this.owner.hudTargetObject.Living.currentEquipment.name}`
+      ? this.owner.hudTargetObject.Equipper.currentEquipment
+        ? `Equipment: ${this.owner.hudTargetObject.Equipper.currentEquipment.name}`
         : `Equipment: None`
       : `Equipment: N/A`;
   };
 
+  // badcode add time later
+  //        World.rotDisplay.drawText(2, 2, millisecondsToHHMMSS(World.Time.millisecondsSinceDayStart()), MAIN_DISPLAY_TILE_WIDTH);
   World.allUI.mainWrapper.addChildMenu(this.owner.htmlElement);
 };

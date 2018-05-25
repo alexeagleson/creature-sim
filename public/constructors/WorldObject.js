@@ -20,8 +20,8 @@ const WorldObject = function(objectName, arg = {}) {
   };
 
   this.removeFromUniverse = function() {
+    this.removeLocationData();
     World.allObjects.delete(this.uniqueID);
-    World.allRotJSObjects.delete(this.uniqueID);
     World.allTurnTakingObjects.delete(this.uniqueID);
   };
 
@@ -50,11 +50,4 @@ const WorldObject = function(objectName, arg = {}) {
     if (!inMyInventory && !adjacentTo) { return false; }
     return true;
   };
-
-
-
-
-
-
-
 };

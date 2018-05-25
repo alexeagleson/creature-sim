@@ -9,6 +9,14 @@ const Temperature = function(worldObject, arg = {}) {
 
   this.adjustTemperature = function(timePassedMilliseconds) {
     let differenceBetweenWeatherAndCurrent = this.owner.WorldMap.temp - this.temp;
+
+    if (this.owner.Equipper) {
+      if (differenceBetweenWeatherAndCurrent < 0 && this.owner.Equipper.currentEquipment) {
+        const protection = this.owner.Equipper.currentEquipment.temperatureProtection;
+        differenceBetweenWeatherAndCurrent = differenceBetweenWeatherAndCurrent * ((100 - protection) / 100);
+      }
+    }
+
     this.temp += differenceBetweenWeatherAndCurrent / timePassedMilliseconds * 10;
     this.adjustConditionBasedOnTemperature();
   };

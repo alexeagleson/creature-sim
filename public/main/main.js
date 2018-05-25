@@ -4,8 +4,14 @@ let oneTenthSecondInterval = 0;
 
 window.onload = () => {
   initializeWorld();
-  initializeRotDisplay();
+  World.MainDisplay = new MainDisplay();
+};
+
+function beginSim() {
+  initializeUI();
   initializeInput();
+  World.Camera = new Camera();
+  World.Camera.updatePosition();
   World.Time = new Time();
   World.Time.startTimer();
   window.requestAnimationFrame(mainLoop);
@@ -14,14 +20,9 @@ window.onload = () => {
 function initializeWorld() {
   World.player = createWorldObject('Player');
 
-  applyBasePrototypes(World.player);
-  applyLivingPrototypes(World.player);
-  World.player.RotJS.fgColour = HEX_RED;
-
   World.player.WorldMap = new WorldMap();
   World.player.WorldMap.generateCellularMap();
   World.player.WorldTile = getRandomFreeTile(World.player.WorldMap);
-  World.worldActive = true;
 
   createWorldObject('Squirrel');
   createWorldObject('Acorn');
@@ -29,34 +30,39 @@ function initializeWorld() {
 
 function mainLoop(timestamp) {
   const progress = timestamp - lastRender;
-  World.allTurnTakingObjects.forEach((object) => {
-    if (object.TurnTaking.checkForTurnReady()) {
-      object.TurnTaking.takeTurn();
+
+  if (!World.worldPaused) {
+    World.allTurnTakingObjects.forEach((object) => {
+      if (object.TurnTaking.checkForTurnReady()) {
+        object.TurnTaking.takeTurn();
+      }
+    });
+
+    if (World.Time.millisecondsElapsed > oneTenthSecondInterval + 100) {
+      World.allUI.hudUI.Hud.update();
+      oneTenthSecondInterval = World.Time.millisecondsElapsed;
     }
-  });
 
-  rotUpdate();
+    if (World.Time.millisecondsElapsed > oneSecondInterval + 1000) {
+      World.player.Living.adjustStamina(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
+      World.player.Consumer.adjustHunger(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
+      World.player.Consumer.adjustThirst(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
+      World.player.Temperature.adjustTemperature(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
+      oneSecondInterval = World.Time.millisecondsElapsed;
+    }
 
-  if (World.Time.millisecondsElapsed > oneTenthSecondInterval + 100) {
-    World.allUI.hudUI.Hud.update();
-    oneTenthSecondInterval = World.Time.millisecondsElapsed;
-  }
-
-  if (World.Time.millisecondsElapsed > oneSecondInterval + 1000) {
-    World.player.Living.adjustStamina(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
-    World.player.Consumer.adjustHunger(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
-    World.player.Consumer.adjustThirst(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
-    World.player.Temperature.adjustTemperature(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
-    oneSecondInterval = World.Time.millisecondsElapsed;
+    World.MainDisplay.renderAll();
   }
 
   lastRender = timestamp;
-  if (World.worldActive) {
+  if (!World.worldEnd) {
     window.requestAnimationFrame(mainLoop);
   }
 };
 
 function endSim() {
-  World.worldActive = false;
+  World.worldEnd = true;
+  World.MainDisplay.displayEngineHandler.stopDisplayEngine();
+  removeAllChildren(World.allUI.mainWrapper.htmlElement);
   alert('The simulation has ended.');
 }

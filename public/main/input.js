@@ -1,7 +1,7 @@
 function initializeInput() {
   window.addEventListener('keydown', keydownHandler);
-  World.allUI.displayCanvas.addEventListener('pointerdown', pointerdownHandler);
-  World.allUI.displayCanvas.addEventListener('mousemove', mousemoveHandler);
+  World.MainDisplay.canvas.addEventListener('pointerdown', pointerdownHandler);
+  World.MainDisplay.canvas.addEventListener('mousemove', mousemoveHandler);
 };
 
 function mousemoveHandler(mousemoveEvent) {

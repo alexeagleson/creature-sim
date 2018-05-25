@@ -1,15 +1,15 @@
 const Inventory = function(worldObject, arg = {}) {
   this.owner = worldObject;
-  World.allInventoryObjects.set(this.owner.uniqueID, this.owner);
 
   this.currentInventory = [];
 
-  this.addToInventory = function(worldObject) {
-    if (!worldObject.Item) {
-      displayError(`${worldObject.name} is not an inventory compatible object.`);
-      return null;
-    }
+  this.canIAddToInventory = function(worldObject) {
+    if (!worldObject.Item) { return false; }
+    if (!this.owner.isAdjacentTo(worldObject)) { return false; }
+    return true;
+  };
 
+  this.addToInventory = function(worldObject) {
     worldObject.removeLocationData();
     this.currentInventory.push(worldObject);
   };

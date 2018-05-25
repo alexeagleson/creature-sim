@@ -3,7 +3,6 @@ const STAMINA_LOSS_PER_MILLISECOND = 0.0001;
 const Living = function(worldObject, arg = {}) {
   this.owner = worldObject;
   this.stamina = 100;
-  this.currentEquipment = null;
 
   if (!this.owner.Destructible) {
     displayError(`${this.owner.name} must be a Destructible object in order to be a Living object.`);
@@ -30,17 +29,5 @@ const Living = function(worldObject, arg = {}) {
 
   this.death = function() {
     // game handles destruction, only need living-specific death code here
-  };
-
-  this.equip = function(worldObject) {
-    if (!worldObject.Equipment) {
-      displayError(`${worldObject.name} must be an Equipment object to be equipped.`);
-      return null;
-    }
-    this.currentEquipment = worldObject;
-  };
-
-  this.unequip = function() {
-    this.currentEquipment = null;
   };
 };

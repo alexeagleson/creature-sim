@@ -7,6 +7,12 @@ const Combat = function(worldObject, arg = {}) {
     return null;
   }
 
+  this.canIAttackObject = function(worldObject) {
+    if (!worldObject.Destructible) { return false; }
+    if (!this.owner.isAdjacentTo(worldObject)) { return false; }
+    return true;
+  };
+
   this.attackObject = function(attackTarget) {
     if (!this.owner.Living.checkAdequateStaminaForAction('Attack')) { return false; }
     this.owner.Living.reduceStaminaBasedOnAction('Attack');

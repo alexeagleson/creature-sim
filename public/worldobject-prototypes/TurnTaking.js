@@ -25,10 +25,6 @@ const TurnTaking = function(worldObject, arg = {}) {
       if (this.owner.DecisionAI.currentAction) {
         this.owner.DecisionAI.currentAction();
       }
-    } else if (this.owner.Moving) {
-      this.owner.Moving.moveRandom();
-    } else {
-      // Do nothing
     }
     return this.turnOver();
   };
