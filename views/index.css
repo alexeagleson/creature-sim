@@ -4,7 +4,7 @@ body {
   margin: 0px;
 }
 
-.mainWrapper{
+.mainWrapper {
   position: absolute;
   z-index: 0;
   display: flex;
@@ -25,6 +25,15 @@ body {
   margin: 0;
   background-color: white;
   font-family: dejavu sans mono, consolas, monospace;
+}
+
+.strokeme {
+  color: white;
+  text-shadow:
+  -1px -1px 0 #000,
+  1px -1px 0 #000,
+  -1px 1px 0 #000,
+  1px 1px 0 #000;
 }
 
 .top-left {
@@ -50,4 +59,9 @@ body {
 #worldTimeline {
   width: auto;
   height: auto;
+  display: none;
+}
+
+#selectObject {
+  display: none;
 }

@@ -11,6 +11,12 @@ const Consumer = function(worldObject, arg = {}) {
     return null;
   }
 
+  this.canIConsumeObject = function(worldObject) {
+    if (!worldObject.Consumable) { return false; }
+    if (!this.owner.inMyInventoryOrAdjacent(worldObject)) { return false; }
+    return true;
+  };
+
   this.consume = function(worldObject) {
     if (!worldObject.Consumable) {
       displayError(`${worldObject.name} is not a consumable object.`);

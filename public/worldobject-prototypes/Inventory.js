@@ -1,5 +1,7 @@
 const Inventory = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allInventoryObjects.set(this.owner.uniqueID, this.owner);
+
   this.currentInventory = [];
 
   this.addToInventory = function(worldObject) {
@@ -10,5 +12,10 @@ const Inventory = function(worldObject, arg = {}) {
 
     worldObject.removeLocationData();
     this.currentInventory.push(worldObject);
+  };
+
+  this.inventoryContains = function(worldObject) {
+    if (this.currentInventory.includes(worldObject)) { return true; }
+    return false;
   };
 };

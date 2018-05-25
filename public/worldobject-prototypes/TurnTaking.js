@@ -20,10 +20,10 @@ const TurnTaking = function(worldObject, arg = {}) {
   this.takeTurn = function() {
     if (!this.owner.onAnyMap()) { return null; }
 
-    if (this.owner.AI) {
-      this.owner.AI.determineAction();
-      if (this.owner.AI.currentAction) {
-        this.owner.AI.currentAction();
+    if (this.owner.DecisionAI) {
+      this.owner.DecisionAI.determineAction();
+      if (this.owner.DecisionAI.currentAction) {
+        this.owner.DecisionAI.currentAction();
       }
     } else if (this.owner.Moving) {
       this.owner.Moving.moveRandom();

@@ -12,9 +12,10 @@ window.onload = () => {
 };
 
 function initializeWorld() {
-  World.player = createWorldObject('Generic');
+  World.player = createWorldObject('Player');
 
   applyBasePrototypes(World.player);
+  applyLivingPrototypes(World.player);
   World.player.RotJS.fgColour = HEX_RED;
 
   World.player.WorldMap = new WorldMap();
@@ -22,7 +23,8 @@ function initializeWorld() {
   World.player.WorldTile = getRandomFreeTile(World.player.WorldMap);
   World.worldActive = true;
 
-  createWorldObject('NPC');
+  createWorldObject('Squirrel');
+  createWorldObject('Acorn');
 };
 
 function mainLoop(timestamp) {

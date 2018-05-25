@@ -61,6 +61,7 @@ const World = {
   allEvents: [],
 
   allObjects: new Map(),
+  allInventoryObjects: new Map(),
   allRotJSObjects: new Map(),
   allTurnTakingObjects: new Map()
 };

@@ -21,7 +21,6 @@ const Select = function(uiObject) {
       this.buttonElements.push(thisButton);
     }
 
-    this.owner.moveToObject(World.player);
     this.owner.show();
   };
 
@@ -51,12 +50,14 @@ function prepareContextMenu(arg = { writtenText: null, objectActivating: null, o
   const buttonText = [];
   const buttonFunctions = [];
 
-  if (arg.objectBeingActivated.Consumable) {
-    buttonText.push('Eat');
-    buttonFunctions.push(() => {
-      arg.objectActivating.Consumer.consume(arg.objectBeingActivated);
-      World.allUI.selectUI.hide();
-    });
+  if (World.player.Consumer) {
+    if (World.player.Consumer.canIConsumeObject(arg.objectBeingActivated)) {
+      buttonText.push('Eat');
+      buttonFunctions.push(() => {
+        arg.objectActivating.Consumer.consume(arg.objectBeingActivated);
+        World.allUI.selectUI.hide();
+      });
+    }
   }
 
   if (arg.objectBeingActivated.Item) {

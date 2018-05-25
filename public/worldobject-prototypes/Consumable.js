@@ -1,5 +1,5 @@
 const Consumable = function(worldObject, arg = {}) {
   this.owner = worldObject;
-  this.hungerValue = 100;
-  this.thirstValue = 100;
+  this.hungerValue = 0;
+  this.thirstValue = 0;
 };

@@ -1,9 +1,16 @@
 function initializeInput() {
-  window.addEventListener('keydown', keyboardHandler);
-  World.allUI.displayCanvas.addEventListener('pointerdown', mouseHandler);
+  window.addEventListener('keydown', keydownHandler);
+  World.allUI.displayCanvas.addEventListener('pointerdown', pointerdownHandler);
+  World.allUI.displayCanvas.addEventListener('mousemove', mousemoveHandler);
 };
 
-function mouseHandler(pointerEvent) {
+function mousemoveHandler(mousemoveEvent) {
+  const hoverTileCoords = pixelToTile([mousemoveEvent.offsetX, mousemoveEvent.offsetY]);
+  const objectsAtCoords = getObjectsAtCoordinates(hoverTileCoords);
+  displayNamesOfObjects(objectsAtCoords);
+};
+
+function pointerdownHandler(pointerEvent) {
   const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
   const objectsAtCoords = getObjectsAtCoordinates(clickedTileCoords);
 
@@ -15,7 +22,7 @@ function mouseHandler(pointerEvent) {
   }
 };
 
-function keyboardHandler(keyboardEvent) {
+function keydownHandler(keyboardEvent) {
   if (keyboardEvent.key === 'q') {
     endSim();
   } else if (keyboardEvent.key === 'e') {
@@ -24,7 +31,11 @@ function keyboardHandler(keyboardEvent) {
     World.allUI.timelineUI.Timeline.update();
     World.allUI.timelineUI.toggle();
   } else if (keyboardEvent.key === 'r') {
-    promptSelectObject(World.player.Inventory.currentInventory);
+    if (!World.allUI.selectUI.isHidden()) {
+      World.allUI.selectUI.hide()
+    } else {
+      promptSelectObject(World.player.Inventory.currentInventory);
+    }
   } else if (keyboardEvent.key === 'ArrowUp') {
     World.player.Moving.moveRelative(directionTextToCoords('up'));
   } else if (keyboardEvent.key === 'ArrowDown') {

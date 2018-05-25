@@ -30,17 +30,21 @@ const Hud = function(uiObject) {
   this.owner.htmlElement.append(this.mapTemp);
 
   this.objectEquipment = document.createElement('p');
-  this.objectEquipment.innerHTML = `Equipment: None`;
+  this.objectEquipment.innerHTML = `Equipment: N/A`;
   this.owner.htmlElement.append(this.objectEquipment);
 
   this.update = function() {
     this.objectName.innerHTML = this.owner.hudTargetObject.name;
-    this.objectCondition.innerHTML = `Condition: ${Math.round(this.owner.hudTargetObject.Destructible.condition)}/100`;
-    this.objectStamina.innerHTML = `Stamina: ${Math.round(this.owner.hudTargetObject.Living.stamina)}/100`;
-    this.objectHunger.innerHTML = `Hunger: ${Math.round(this.owner.hudTargetObject.Consumer.hunger)}/100`;
-    this.objectThirst.innerHTML = `Thirst: ${Math.round(this.owner.hudTargetObject.Consumer.thirst)}/100`;
-    this.objectTemp.innerHTML = `Temperature: ${Math.round(this.owner.hudTargetObject.Temperature.temp)}`;
-    this.objectEquipment.innerHTML = this.owner.hudTargetObject.Living.currentEquipment ? `Equipment: ${this.owner.hudTargetObject.Living.currentEquipment.name}` : `Equipment: None`;
+    this.objectCondition.innerHTML = this.owner.hudTargetObject.Destructible ? `Condition: ${Math.round(this.owner.hudTargetObject.Destructible.condition)}/100` : `Condition: N/A`;
+    this.objectStamina.innerHTML = this.owner.hudTargetObject.Living ? `Stamina: ${Math.round(this.owner.hudTargetObject.Living.stamina)}/100` : `Stamina: N/A`;
+    this.objectHunger.innerHTML = this.owner.hudTargetObject.Consumer ? `Hunger: ${Math.round(this.owner.hudTargetObject.Consumer.hunger)}/100` : `Hunger: N/A`;
+    this.objectThirst.innerHTML = this.owner.hudTargetObject.Consumer ? `Thirst: ${Math.round(this.owner.hudTargetObject.Consumer.thirst)}/100` : `Thirst: N/A`;
+    this.objectTemp.innerHTML = this.owner.hudTargetObject.Temperature ? `Temperature: ${Math.round(this.owner.hudTargetObject.Temperature.temp)}` : `Temperature: N/A`;
+    this.objectEquipment.innerHTML = this.owner.hudTargetObject.Living
+      ? this.owner.hudTargetObject.Living.currentEquipment
+        ? `Equipment: ${this.owner.hudTargetObject.Living.currentEquipment.name}`
+        : `Equipment: None`
+      : `Equipment: N/A`;
   };
 
   World.allUI.mainWrapper.addChildMenu(this.owner.htmlElement);

@@ -44,7 +44,7 @@ function rotUpdate() {
   }
 
   World.allRotJSObjects.forEach((object) => {
-    if (!object.onPlayerMap()) { return null; }
+    if (!object.onMapOf(World.player)) { return null; }
     World.rotDisplay.draw(object.WorldTile.x - World.Camera.x, object.WorldTile.y - World.Camera.y, object.char, object.RotJS.fgColour, object.RotJS.bgColour);
   });
 

@@ -7,6 +7,6 @@ const Social = function(worldObject, arg = {}) {
   }
 
   this.speak = function(objectSpeakTo) {
-    publishEvent(`${this.owner.name} hello ${objectSpeakTo.name}!`)
+    publishEvent(`${this.owner.name} says: hello ${objectSpeakTo.name}!`)
   };
 };

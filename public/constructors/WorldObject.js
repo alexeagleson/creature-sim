@@ -25,9 +25,10 @@ const WorldObject = function(objectName, arg = {}) {
     World.allTurnTakingObjects.delete(this.uniqueID);
   };
 
-  this.onPlayerMap = function() {
+  this.onMapOf = function(worldObject) {
     if (!this.onAnyMap) { return false; }
-    if (this.WorldMap != World.player.WorldMap) { return false; }
+    if (!worldObject.onAnyMap) { return false; }
+    if (this.WorldMap != worldObject.WorldMap) { return false; }
     return true;
   };
 
@@ -36,4 +37,24 @@ const WorldObject = function(objectName, arg = {}) {
     if (!this.WorldTile) { return false; }
     return true;
   };
+
+  this.isAdjacentTo = function(worldObject) {
+    if (!this.WorldTile || !worldObject.WorldTile) { return false; }
+    if (distanceTo(this.myCoords(), worldObject.myCoords()) <= 1.5) { return true; }
+    return false;
+  };
+
+  this.inMyInventoryOrAdjacent = function(worldObject) {
+    const inMyInventory = this.Inventory ? this.Inventory.inventoryContains(worldObject) : false;
+    const adjacentTo = this.isAdjacentTo(worldObject);
+    if (!inMyInventory && !adjacentTo) { return false; }
+    return true;
+  };
+
+
+
+
+
+
+
 };
