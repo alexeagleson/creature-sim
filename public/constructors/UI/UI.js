@@ -65,11 +65,10 @@ function displayNamesOfObjects(objectsAtCoords) {
 
   objectNamesElement.innerHTML = objectNames;
   if (objectsAtCoords.length > 0) {
-    const pixelX = World.Camera.getObjectPixelCoords(objectsAtCoords[0])[0];
-    const pixelY = World.Camera.getObjectPixelCoords(objectsAtCoords[0])[1];
+    const pixelCoords = tileToPixel(objectsAtCoords[0].WorldTile);
     objectNamesElement.innerHTML = objectNames;
-    objectNamesElement.style['left'] = `${pixelX}px`;
-    objectNamesElement.style['top'] = `${pixelY}px`;
+    objectNamesElement.style['left'] = `${pixelCoords[0]}px`;
+    objectNamesElement.style['top'] = `${pixelCoords[1]}px`;
     objectNamesElement.style['position'] = "absolute";
     objectNamesElement.style['z-index'] = "2";
     objectNamesElement.style['pointer-events'] = "none";

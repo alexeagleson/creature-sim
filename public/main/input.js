@@ -14,6 +14,10 @@ function pointerdownHandler(pointerEvent) {
   const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
   const objectsAtCoords = getObjectsAtCoordinates(clickedTileCoords);
 
+  console.log(World.player.myCoords());
+  console.log(clickedTileCoords);
+  console.log(World.Camera.tileX, World.Camera.tileY);
+
   if (objectsAtCoords.length > 0) {
     promptSelectObject(objectsAtCoords);
   } else {

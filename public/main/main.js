@@ -5,16 +5,10 @@ let oneTenthSecondInterval = 0;
 window.onload = () => {
   initializeWorld();
   World.MainDisplay = new MainDisplay();
-};
-
-function beginSim() {
-  initializeUI();
-  initializeInput();
-  World.Camera = new Camera();
-  World.Camera.updatePosition();
-  World.Time = new Time();
-  World.Time.startTimer();
-  window.requestAnimationFrame(mainLoop);
+  if (RENDER_ENGINE === 'Rot-JS') {
+    initializeUiTimeAndCamera();
+    window.requestAnimationFrame(rotJsLoop);
+  }
 };
 
 function initializeWorld() {
@@ -28,9 +22,24 @@ function initializeWorld() {
   createWorldObject('Acorn');
 };
 
-function mainLoop(timestamp) {
-  const progress = timestamp - lastRender;
+function initializeUiTimeAndCamera() {
+  initializeUI();
+  initializeInput();
+  World.Camera = new MainCamera();
+  World.Time = new Time();
 
+};
+
+function rotJsLoop(timestamp) {
+  const progress = timestamp - lastRender;
+  lastRender = timestamp;
+  mainLoop();
+  if (!World.worldEnd) {
+    window.requestAnimationFrame(rotJsLoop);
+  }
+};
+
+function mainLoop() {
   if (!World.worldPaused) {
     World.allTurnTakingObjects.forEach((object) => {
       if (object.TurnTaking.checkForTurnReady()) {
@@ -51,12 +60,8 @@ function mainLoop(timestamp) {
       oneSecondInterval = World.Time.millisecondsElapsed;
     }
 
+    World.Camera.updatePosition();
     World.MainDisplay.renderAll();
-  }
-
-  lastRender = timestamp;
-  if (!World.worldEnd) {
-    window.requestAnimationFrame(mainLoop);
   }
 };
 

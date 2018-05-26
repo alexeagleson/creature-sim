@@ -3,10 +3,16 @@ function addObjectToUniverse(object) {
 };
 
 function pixelToTile(pixelCoordsArray) {
-  const tileX = Math.floor(pixelCoordsArray[0] / TILE_SIZE) + World.Camera.x;
-  const tileY = Math.floor(pixelCoordsArray[1] / TILE_SIZE) + World.Camera.y;
+  const tileX = Math.floor(pixelCoordsArray[0] / TILE_SIZE) + World.Camera.tileX;
+  const tileY = Math.floor(pixelCoordsArray[1] / TILE_SIZE) + World.Camera.tileY;
   return([tileX, tileY]);
 };
+
+function tileToPixel(worldTile) {
+  const pixelOffset = RENDER_ENGINE === 'Phaser' ? Math.floor(TILE_SIZE / 2) : 0;
+  return [worldTile.x * TILE_SIZE + pixelOffset, worldTile.y * TILE_SIZE + pixelOffset];
+};
+
 
 function getRandomFreeTile(WorldMap) {
   let randomTile = null;

@@ -14,10 +14,6 @@ const RotJsDisplay = function(mainDisplay) {
     this.owner.canvas = this.engine.getContainer();
   };
 
-  this.go = function() {
-    beginSim();
-  };
-
   this.setRenderScreenDimensions = function() {
     this.owner.displayScreenTileWidth = Math.min(MAIN_DISPLAY_TILE_WIDTH, World.player.WorldMap.mapWidth);
     this.owner.displayScreenTileHeight = Math.min(MAIN_DISPLAY_TILE_HEIGHT, World.player.WorldMap.mapHeight);

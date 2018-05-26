@@ -10,11 +10,13 @@ const Time = function() {
       const distance = countDownDate - now;
       World.Time.millisecondsElapsed = (0 - Math.floor(distance));
     }, 100);
-  }
+  };
 
   this.millisecondsSinceDayStart = function() {
     return (this.millisecondsElapsed - this.dayStartedMilliseconds) * WORLD_TIME_MULTIPLIER;
-  }
+  };
+
+  this.startTimer();
 };
 
 function millisecondsToHHMMSS(timeInMilliseconds) {
