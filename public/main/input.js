@@ -5,18 +5,14 @@ function initializeInput() {
 };
 
 function mousemoveHandler(mousemoveEvent) {
-  const hoverTileCoords = pixelToTile([mousemoveEvent.offsetX, mousemoveEvent.offsetY]);
+  const hoverTileCoords = screenToActual(pixelToTile([mousemoveEvent.offsetX, mousemoveEvent.offsetY]));
   const objectsAtCoords = getObjectsAtCoordinates(hoverTileCoords);
   displayNamesOfObjects(objectsAtCoords);
 };
 
 function pointerdownHandler(pointerEvent) {
-  const clickedTileCoords = pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]);
+  const clickedTileCoords = screenToActual(pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]));
   const objectsAtCoords = getObjectsAtCoordinates(clickedTileCoords);
-
-  console.log(World.player.myCoords());
-  console.log(clickedTileCoords);
-  console.log(World.Camera.tileX, World.Camera.tileY);
 
   if (objectsAtCoords.length > 0) {
     promptSelectObject(objectsAtCoords);

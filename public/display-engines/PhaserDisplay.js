@@ -18,7 +18,7 @@ const playGame = new Phaser.Class({
 
     for (let i = 0; i < World.player.WorldMap.mapWidth; i++) {
       for (let j = 0; j < World.player.WorldMap.mapHeight; j++) {
-        World.MainDisplay.displayEngineHandler.drawTileAt(World.player.WorldMap.tileMap[i + ',' + j], [i, j]);
+        World.MainDisplay.displayEngineHandler.drawTile([i, j]);
       }
     }
 
@@ -26,7 +26,7 @@ const playGame = new Phaser.Class({
   },
 
   update: function() {
-    mainLoop();
+      if (!World.worldPaused) { mainLoop(); }
   }
 });
 
@@ -45,11 +45,10 @@ const PhaserDisplay = function(mainDisplay) {
     this.owner.canvas = this.engine.canvas;
   };
 
-  this.setRenderScreenDimensions = function() {
-  };
+  this.drawTile = function(screenTileCoords) {
+    const worldTile = World.player.WorldMap.getTile(screenToActual(screenTileCoords));
+    const pixelCoords = tileToPixel(worldTile.myCoords());
 
-  this.drawTileAt = function(worldTile, coords) {
-    const pixelCoords = tileToPixel(worldTile);
     if (worldTile.char === '#') {
       if (!worldTile.sprite) { worldTile.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Ice', 0); }
     } else {
@@ -58,8 +57,8 @@ const PhaserDisplay = function(mainDisplay) {
     worldTile.depth = 0;
   };
 
-  this.drawObjectAt = function(worldObject, coords) {
-    const pixelCoords = tileToPixel(worldObject.WorldTile);
+  this.drawObject = function(worldObject) {
+    const pixelCoords = tileToPixel(worldObject.myCoords());
     if (!worldObject.PhaserObject.sprite) { worldObject.PhaserObject.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], worldObject.PhaserObject.spriteFilename, 0); }
     worldObject.PhaserObject.sprite.x = pixelCoords[0];
     worldObject.PhaserObject.sprite.y = pixelCoords[1];
@@ -69,6 +68,4 @@ const PhaserDisplay = function(mainDisplay) {
   this.stopDisplayEngine = function() {
     this.engine.scene.stop();
   };
-
-  this.setRenderScreenDimensions();
 };

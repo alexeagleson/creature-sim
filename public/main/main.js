@@ -5,7 +5,7 @@ let oneTenthSecondInterval = 0;
 window.onload = () => {
   initializeWorld();
   World.MainDisplay = new MainDisplay();
-  if (RENDER_ENGINE === 'Rot-JS') {
+  if (RENDER_ENGINE === 'RotJs') {
     initializeUiTimeAndCamera();
     window.requestAnimationFrame(rotJsLoop);
   }
@@ -33,36 +33,34 @@ function initializeUiTimeAndCamera() {
 function rotJsLoop(timestamp) {
   const progress = timestamp - lastRender;
   lastRender = timestamp;
-  mainLoop();
+    if (!World.worldPaused) { mainLoop(); }
   if (!World.worldEnd) {
     window.requestAnimationFrame(rotJsLoop);
   }
 };
 
 function mainLoop() {
-  if (!World.worldPaused) {
-    World.allTurnTakingObjects.forEach((object) => {
-      if (object.TurnTaking.checkForTurnReady()) {
-        object.TurnTaking.takeTurn();
-      }
-    });
-
-    if (World.Time.millisecondsElapsed > oneTenthSecondInterval + 100) {
-      World.allUI.hudUI.Hud.update();
-      oneTenthSecondInterval = World.Time.millisecondsElapsed;
+  World.allTurnTakingObjects.forEach((object) => {
+    if (object.TurnTaking.checkForTurnReady()) {
+      object.TurnTaking.takeTurn();
     }
+  });
 
-    if (World.Time.millisecondsElapsed > oneSecondInterval + 1000) {
-      World.player.Living.adjustStamina(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
-      World.player.Consumer.adjustHunger(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
-      World.player.Consumer.adjustThirst(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
-      World.player.Temperature.adjustTemperature(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
-      oneSecondInterval = World.Time.millisecondsElapsed;
-    }
-
-    World.Camera.updatePosition();
-    World.MainDisplay.renderAll();
+  if (World.Time.millisecondsElapsed > oneTenthSecondInterval + 100) {
+    World.allUI.hudUI.Hud.update();
+    oneTenthSecondInterval = World.Time.millisecondsElapsed;
   }
+
+  if (World.Time.millisecondsElapsed > oneSecondInterval + 1000) {
+    World.player.Living.adjustStamina(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
+    World.player.Consumer.adjustHunger(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
+    World.player.Consumer.adjustThirst(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
+    World.player.Temperature.adjustTemperature(timePassedMilliseconds = (World.Time.millisecondsElapsed - oneSecondInterval));
+    oneSecondInterval = World.Time.millisecondsElapsed;
+  }
+
+  World.Camera.updatePosition();
+  World.MainDisplay.renderAll();
 };
 
 function endSim() {

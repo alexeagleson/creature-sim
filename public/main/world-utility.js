@@ -3,16 +3,27 @@ function addObjectToUniverse(object) {
 };
 
 function pixelToTile(pixelCoordsArray) {
-  const tileX = Math.floor(pixelCoordsArray[0] / TILE_SIZE) + World.Camera.tileX;
-  const tileY = Math.floor(pixelCoordsArray[1] / TILE_SIZE) + World.Camera.tileY;
+  const tileX = Math.floor(pixelCoordsArray[0] / TILE_SIZE);
+  const tileY = Math.floor(pixelCoordsArray[1] / TILE_SIZE);
   return([tileX, tileY]);
 };
 
-function tileToPixel(worldTile) {
-  const pixelOffset = RENDER_ENGINE === 'Phaser' ? Math.floor(TILE_SIZE / 2) : 0;
-  return [worldTile.x * TILE_SIZE + pixelOffset, worldTile.y * TILE_SIZE + pixelOffset];
+function tileToPixel(tileCoordsArray) {
+  const pixelOffset = Math.floor(TILE_SIZE / 2);
+  return [tileCoordsArray[0] * TILE_SIZE + pixelOffset, tileCoordsArray[1] * TILE_SIZE + pixelOffset];
 };
 
+function screenToActual(coords) {
+  const cameraX = World.Camera.tileX ? World.Camera.tileX : 0;
+  const cameraY = World.Camera.tileY ? World.Camera.tileY : 0;
+  return [coords[0] + cameraX, coords[1] + cameraY];
+};
+
+function actualToScreen(coords) {
+  const cameraX = World.Camera.tileX ? World.Camera.tileX : 0;
+  const cameraY = World.Camera.tileY ? World.Camera.tileY : 0;
+  return [coords[0] - cameraX, coords[1] - cameraY];
+};
 
 function getRandomFreeTile(WorldMap) {
   let randomTile = null;

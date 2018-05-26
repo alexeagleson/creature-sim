@@ -65,7 +65,7 @@ function displayNamesOfObjects(objectsAtCoords) {
 
   objectNamesElement.innerHTML = objectNames;
   if (objectsAtCoords.length > 0) {
-    const pixelCoords = tileToPixel(objectsAtCoords[0].WorldTile);
+    const pixelCoords = tileToPixel(actualToScreen(objectsAtCoords[0].myCoords()));
     objectNamesElement.innerHTML = objectNames;
     objectNamesElement.style['left'] = `${pixelCoords[0]}px`;
     objectNamesElement.style['top'] = `${pixelCoords[1]}px`;

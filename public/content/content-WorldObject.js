@@ -5,7 +5,7 @@ function createWorldObject(objectName) {
     applyBasePrototypes(createdObject);
     applyLivingPrototypes(createdObject);
     createdObject.char = '@';
-    createdObject.RotJS.fgColour = HEX_RED;
+    createdObject.RotJsObject.fgColour = HEX_RED;
     addObjectToUniverse(createdObject);
 
   } else if (objectName === 'Squirrel') {
@@ -13,12 +13,12 @@ function createWorldObject(objectName) {
     applyLivingPrototypes(createdObject);
     applyNPCPrototypes(createdObject);
     createdObject.char = 'S';
-    createdObject.RotJS.fgColour = HEX_BLUE;
+    createdObject.RotJsObject.fgColour = HEX_BLUE;
 
   } else if (objectName === 'Acorn') {
     applyBasePrototypes(createdObject);
     createdObject.char = 'o';
-    createdObject.RotJS.fgColour = HEX_GREEN;
+    createdObject.RotJsObject.fgColour = HEX_GREEN;
     createdObject.Consumable.hungerValue = 100;
   }
 
@@ -31,7 +31,7 @@ function createWorldObject(objectName) {
 };
 
 function applyBasePrototypes(thisObject) {
-  thisObject.RotJS = new RotJS(thisObject, arg = {fgColour: HEX_BLUE});
+  thisObject.RotJsObject = new RotJsObject(thisObject, arg = {fgColour: HEX_BLUE});
   thisObject.PhaserObject = new PhaserObject(thisObject, arg = {spriteFilename: 'Squirrel'});
   thisObject.Consumable = new Consumable(thisObject);
   thisObject.Destructible = new Destructible(thisObject);

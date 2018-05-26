@@ -14,21 +14,16 @@ const RotJsDisplay = function(mainDisplay) {
     this.owner.canvas = this.engine.getContainer();
   };
 
-  this.setRenderScreenDimensions = function() {
-    this.owner.displayScreenTileWidth = Math.min(MAIN_DISPLAY_TILE_WIDTH, World.player.WorldMap.mapWidth);
-    this.owner.displayScreenTileHeight = Math.min(MAIN_DISPLAY_TILE_HEIGHT, World.player.WorldMap.mapHeight);
+  this.drawTile = function(screenTileCoords) {
+    const worldTile = World.player.WorldMap.getTile(screenToActual(screenTileCoords));
+    this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldTile.char);
   };
 
-  this.drawTileAt = function(worldTile, coords) {
-    this.engine.draw(coords[0], coords[1], worldTile.char);
-  };
-
-  this.drawObjectAt = function(worldObject, coords) {
-    this.engine.draw(coords[0], coords[1], worldObject.char, worldObject.RotJS.fgColour, worldObject.RotJS.bgColour);
+  this.drawObject = function(worldObject) {
+    const screenTileCoords = actualToScreen(worldObject.myCoords());
+    this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldObject.char, worldObject.RotJsObject.fgColour, worldObject.RotJsObject.bgColour);
   };
 
   this.stopDisplayEngine = function() {
   };
-
-  this.setRenderScreenDimensions();
 };

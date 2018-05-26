@@ -1,4 +1,4 @@
-const RENDER_ENGINE = 'Phaser';
+const RENDER_ENGINE = 'RotJs';
 const CANVAS_SIZE = 0.75;
 
 // Phaser constants
@@ -6,27 +6,27 @@ const PHASER_TILE_SIZE = 32;
 const PHASER_GAME_SCALE = 1;
 const PHASER_TILE_SIZE_SCALED = PHASER_TILE_SIZE * PHASER_GAME_SCALE;
 
-// Rot-JS constants
+// RotJs constants
 const ROT_FONT_SIZE = 20;
 
-const SCREEN_WIDTH = RENDER_ENGINE === "Rot-JS"
+const SCREEN_WIDTH = RENDER_ENGINE === 'RotJs'
   ? Math.floor(window.innerWidth * CANVAS_SIZE / ROT_FONT_SIZE) * ROT_FONT_SIZE
   : Math.floor(window.innerWidth * CANVAS_SIZE / PHASER_TILE_SIZE_SCALED) * PHASER_TILE_SIZE_SCALED;
 
-const SCREEN_HEIGHT = RENDER_ENGINE === "Rot-JS"
+const SCREEN_HEIGHT = RENDER_ENGINE === 'RotJs'
   ? Math.floor(window.innerHeight * CANVAS_SIZE / ROT_FONT_SIZE) * ROT_FONT_SIZE
   : Math.floor(window.innerHeight * CANVAS_SIZE / PHASER_TILE_SIZE_SCALED) * PHASER_TILE_SIZE_SCALED;
 
-const MAIN_DISPLAY_TILE_WIDTH = RENDER_ENGINE === "Rot-JS"
+const MAIN_DISPLAY_TILE_WIDTH = RENDER_ENGINE === 'RotJs'
   ? Math.floor(SCREEN_WIDTH / ROT_FONT_SIZE)
   : Math.floor(SCREEN_WIDTH / PHASER_TILE_SIZE_SCALED);
 
-const MAIN_DISPLAY_TILE_HEIGHT = RENDER_ENGINE === "Rot-JS"
+const MAIN_DISPLAY_TILE_HEIGHT = RENDER_ENGINE === 'RotJs'
   ? Math.floor(SCREEN_HEIGHT / ROT_FONT_SIZE)
   : Math.floor(SCREEN_HEIGHT / PHASER_TILE_SIZE_SCALED);
 
 // Global values independent of graphics engines
-const TILE_SIZE = RENDER_ENGINE === "Rot-JS"
+const TILE_SIZE = RENDER_ENGINE === 'RotJs'
   ? ROT_FONT_SIZE
   : PHASER_TILE_SIZE_SCALED;
 
