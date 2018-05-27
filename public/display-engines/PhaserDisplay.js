@@ -9,8 +9,10 @@ const playGame = new Phaser.Class({
     this.load.image("Squirrel", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Squirrel.png");
     this.load.image("Acorn", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Acorn.png");
     this.load.image("Rabbit", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Rabbit.png");
+    this.load.image("Carrot", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Carrot.png");
     this.load.image("Floor_Grass", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Grass.png");
     this.load.image("Floor_Ice", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Ice.png");
+    this.load.image("Tree", "https://kalospace.com/gameassets/active_game_assets/sprites/32x64/Tree.png");
   },
 
   create: function() {
@@ -50,11 +52,11 @@ const PhaserDisplay = function(mainDisplay) {
     const pixelCoords = tileToPixel(worldTile.myCoords());
 
     if (worldTile.char === '#') {
-      if (!worldTile.sprite) { worldTile.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Ice', 0); }
+      this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0);
+      this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Tree', 0).depth = 0.5;
     } else {
-      if (!worldTile.sprite) { worldTile.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0); }
+      this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0);
     }
-    worldTile.depth = 0;
   };
 
   this.drawObject = function(worldObject) {

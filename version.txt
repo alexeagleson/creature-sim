@@ -1,2 +1,10 @@
 get phaser running
 clean up UI
+
+
+
+
+
+<strong>Version 0.1.00</strong>
+--------------
+(*) Completed implemented of both RotJs and Phaser display engines.

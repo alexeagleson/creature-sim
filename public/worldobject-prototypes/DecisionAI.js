@@ -1,43 +1,50 @@
 const DecisionAI = function(worldObject, arg = {}) {
   this.owner = worldObject;
-  this.currentAction = null;
 
   if (!this.owner.TurnTaking) {
     displayError(`${this.name} must be a TurnTaking object in order to be an AI object.`);
     return null;
   }
 
+  this.resetObjective = function() {
+    this.hasObjective = false;
+    this.currentAction = () => null;
+    this.successCondition = () => null;
+    this.onSuccess = () => null;
+    this.onFail = () => null;
+  };
+
   this.determineAction = function() {
-
-    let decisionMade = false;
-
-    if (this.owner.Consumer && !decisionMade) {
+    if (this.owner.Consumer) {
       World.allObjects.forEach((object) => {
-
-        if (decisionMade) { return null; }
         if (!this.owner.onMapOf(object)) { return null; }
 
         if (object.Consumable) {
           if (object.Consumable.hungerValue > 0) {
-            this.owner.Pathing.calculatePath(object.myCoords());
-            this.owner.Pathing.movePath();
-            decisionMade = true;
+
+            this.currentAction = () => {
+              this.owner.Pathing.calculatePath(object.myCoords());
+              return this.owner.Pathing.movePath();
+            };
+
+            this.successCondition = () => {
+              return this.owner.isAdjacentTo(object);
+            };
+
+            this.onSuccess = () => {
+              return this.owner.Consumer.consume(object);
+            };
+
+            this.onFail = () => {
+              return null;
+            };
+
+            this.hasObjective = true;
           }
         }
       });
     }
-
-    if (this.owner.Moving && !decisionMade) {
-      this.currentAction = this.owner.Moving.moveRandom.bind(this.owner.Moving);
-      decisionMade = true;
-    }
-
-    if (!decisionMade) {
-      this.currentAction = null;
-    }
   };
 
-  this.processCurrentAction = function() {
-    null;
-  };
+  this.resetObjective();
 };

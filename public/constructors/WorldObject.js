@@ -20,6 +20,7 @@ const WorldObject = function(objectName, arg = {}) {
   };
 
   this.removeFromUniverse = function() {
+    if (RENDER_ENGINE === 'Phaser' && this.PhaserObject) { this.PhaserObject.destroySprite(); }
     this.removeLocationData();
     World.allObjects.delete(this.uniqueID);
     World.allTurnTakingObjects.delete(this.uniqueID);
@@ -40,7 +41,7 @@ const WorldObject = function(objectName, arg = {}) {
 
   this.isAdjacentTo = function(worldObject) {
     if (!this.WorldTile || !worldObject.WorldTile) { return false; }
-    if (distanceTo(this.myCoords(), worldObject.myCoords()) <= 1.5) { return true; }
+    if (distanceTo(this.myCoords(), worldObject.myCoords()) <= OBJECT_INTERACT_MIN_DISTANCE) { return true; }
     return false;
   };
 

@@ -20,6 +20,8 @@ function initializeWorld() {
 
   createWorldObject('Squirrel');
   createWorldObject('Acorn');
+  createWorldObject('Rabbit');
+  createWorldObject('Carrot');
 };
 
 function initializeUiTimeAndCamera() {

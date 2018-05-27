@@ -6,7 +6,7 @@ function createWorldObject(objectName) {
     applyLivingPrototypes(createdObject);
     createdObject.char = '@';
     createdObject.RotJsObject.fgColour = HEX_RED;
-    addObjectToUniverse(createdObject);
+    createdObject.PhaserObject.spriteFilename = 'Rabbit';
 
   } else if (objectName === 'Squirrel') {
     applyBasePrototypes(createdObject);
@@ -14,15 +14,36 @@ function createWorldObject(objectName) {
     applyNPCPrototypes(createdObject);
     createdObject.char = 'S';
     createdObject.RotJsObject.fgColour = HEX_BLUE;
+    createdObject.PhaserObject.spriteFilename = 'Squirrel';
 
   } else if (objectName === 'Acorn') {
     applyBasePrototypes(createdObject);
     createdObject.char = 'o';
     createdObject.RotJsObject.fgColour = HEX_GREEN;
     createdObject.Consumable.hungerValue = 100;
+    createdObject.PhaserObject.spriteFilename = 'Acorn';
+
+  } else if (objectName === 'Rabbit') {
+    applyBasePrototypes(createdObject);
+    applyLivingPrototypes(createdObject);
+    applyNPCPrototypes(createdObject);
+    createdObject.char = 'R';
+    createdObject.RotJsObject.fgColour = HEX_BLUE;
+    createdObject.PhaserObject.spriteFilename = 'Rabbit';
+
+  } else if (objectName === 'Carrot') {
+    applyBasePrototypes(createdObject);
+    createdObject.char = 'c';
+    createdObject.RotJsObject.fgColour = HEX_GREEN;
+    createdObject.Consumable.hungerValue = 100;
+    createdObject.PhaserObject.spriteFilename = 'Carrot';
+
   }
 
-  if (objectName === 'Player') { return createdObject; }
+  if (objectName === 'Player') {
+    addObjectToUniverse(createdObject);
+    return createdObject;
+  }
 
   createdObject.WorldMap = World.player.WorldMap;
   createdObject.WorldTile = getRandomFreeTile(World.player.WorldMap);
@@ -31,8 +52,8 @@ function createWorldObject(objectName) {
 };
 
 function applyBasePrototypes(thisObject) {
-  thisObject.RotJsObject = new RotJsObject(thisObject, arg = {fgColour: HEX_BLUE});
-  thisObject.PhaserObject = new PhaserObject(thisObject, arg = {spriteFilename: 'Squirrel'});
+  thisObject.RotJsObject = new RotJsObject(thisObject);
+  thisObject.PhaserObject = new PhaserObject(thisObject);
   thisObject.Consumable = new Consumable(thisObject);
   thisObject.Destructible = new Destructible(thisObject);
   thisObject.Item = new Item(thisObject);
