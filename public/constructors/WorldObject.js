@@ -6,6 +6,10 @@ const WorldObject = function(objectName, arg = {}) {
   this.WorldMap = arg.WorldMap || null;
   this.WorldTile = arg.WorldMap || null;
 
+  this.myTile = function() {
+    return this.WorldMap.getTile(this.myCoords());
+  };
+
   this.myCoords = function() {
     if (!this.WorldTile) {
       displayError(`${this.name} is not on a tile and cannot call myCoords.`);
@@ -15,15 +19,26 @@ const WorldObject = function(objectName, arg = {}) {
   };
 
   this.removeLocationData = function() {
+    this.destroySprite();
     this.WorldMap = null;
     this.WorldTile = null;
   };
 
   this.removeFromUniverse = function() {
-    if (RENDER_ENGINE === 'Phaser' && this.PhaserObject) { this.PhaserObject.destroySprite(); }
     this.removeLocationData();
     World.allObjects.delete(this.uniqueID);
     World.allTurnTakingObjects.delete(this.uniqueID);
+  };
+
+  this.destroySprite = function() {
+    if (isEngine('Phaser') && this.PhaserObject) { this.PhaserObject.destroySprite(); }
+  };
+
+  this.placeSprite = function(tileCoords) {
+    if (isEngine('Phaser') && this.PhaserObject) {
+      this.PhaserObject.generateSprite();
+      this.PhaserObject.placeSprite(tileCoords);
+    }
   };
 
   this.onMapOf = function(worldObject) {

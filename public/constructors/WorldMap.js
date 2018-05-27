@@ -13,6 +13,7 @@ const WorldMap = function() {
   this.addObjectToTile = function(object, coords) {
     object.WorldMap = this;
     object.WorldTile = this.getTile(coords);
+    object.placeSprite(coords);
     if (object === World.player) { World.Camera.updatePosition(); }
   };
 

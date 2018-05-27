@@ -7,7 +7,7 @@ const MainCamera = function() {
     const displayScreenHeight = Math.min(MAIN_DISPLAY_TILE_HEIGHT, World.player.WorldMap.mapHeight);
     this.tileX = this.computeTileCoord(World.player.WorldTile.x, displayScreenWidth, World.player.WorldMap.mapWidth);
     this.tileY = this.computeTileCoord(World.player.WorldTile.y, displayScreenHeight, World.player.WorldMap.mapHeight);
-    if (RENDER_ENGINE === 'Phaser') { this.updatePhaserCameraPosition(); }
+    if (isEngine('Phaser')) { this.updatePhaserCameraPosition(); }
   };
 
   this.updatePhaserCameraPosition = function() {

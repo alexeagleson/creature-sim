@@ -5,7 +5,7 @@ let oneTenthSecondInterval = 0;
 window.onload = () => {
   initializeWorld();
   World.MainDisplay = new MainDisplay();
-  if (RENDER_ENGINE === 'RotJs') {
+  if (isEngine('RotJs')) {
     initializeUiTimeAndCamera();
     window.requestAnimationFrame(rotJsLoop);
   }
@@ -62,7 +62,7 @@ function mainLoop() {
   }
 
   World.Camera.updatePosition();
-  World.MainDisplay.renderAll();
+  if (isEngine('RotJs')) { World.MainDisplay.renderAll(); }
 };
 
 function endSim() {

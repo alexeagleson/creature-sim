@@ -22,8 +22,9 @@ const DecisionAI = function(worldObject, arg = {}) {
         if (object.Consumable) {
           if (object.Consumable.hungerValue > 0) {
 
+            this.owner.Pathing.calculatePath(object.myCoords());
+
             this.currentAction = () => {
-              this.owner.Pathing.calculatePath(object.myCoords());
               return this.owner.Pathing.movePath();
             };
 
@@ -36,7 +37,7 @@ const DecisionAI = function(worldObject, arg = {}) {
             };
 
             this.onFail = () => {
-              return null;
+              return alert(`${this.owner.name}: im so hungry`);
             };
 
             this.hasObjective = true;

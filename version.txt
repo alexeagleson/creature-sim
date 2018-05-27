@@ -1,9 +1,12 @@
 get phaser running
 clean up UI
+dialogue text as css under character
 
 
 
-
+<strong>Version 0.1.01</strong>
+--------------
+(*) Added success and fail conditions to decision AI.
 
 <strong>Version 0.1.00</strong>
 --------------

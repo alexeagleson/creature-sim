@@ -3,7 +3,7 @@ const TurnTaking = function(worldObject, arg = {}) {
   World.allTurnTakingObjects.set(this.owner.uniqueID, this.owner);
 
   this.lastTurnMilliseconds = arg.lastTurnMilliseconds || 0;
-  this.millisecondsBetweenTurns = arg.millisecondsBetweenTurns || 500;
+  this.millisecondsBetweenTurns = arg.millisecondsBetweenTurns || 300;
 
   this.checkForTurnReady = function() {
     if (World.Time.millisecondsElapsed - this.lastTurnMilliseconds > this.millisecondsBetweenTurns) {
@@ -26,7 +26,10 @@ const TurnTaking = function(worldObject, arg = {}) {
           this.owner.DecisionAI.onSuccess();
           this.owner.DecisionAI.resetObjective();
         } else {
-          this.owner.DecisionAI.currentAction();
+          if (!this.owner.DecisionAI.currentAction()) {
+            this.owner.DecisionAI.onFail();
+            this.owner.DecisionAI.resetObjective();
+          }
         }
       } else {
         this.owner.DecisionAI.determineAction();

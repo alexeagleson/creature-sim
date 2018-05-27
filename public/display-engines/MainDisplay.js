@@ -4,12 +4,13 @@ const MainDisplay = function() {
   this.displayScreenTileHeight = null;
 
   this.setRenderScreenDimensions = function() {
-    this.displayScreenTileWidth = Math.min(MAIN_DISPLAY_TILE_WIDTH, World.player.WorldMap.mapWidth);
-    this.displayScreenTileHeight = Math.min(MAIN_DISPLAY_TILE_HEIGHT, World.player.WorldMap.mapHeight);
+    this.displayScreenTileWidth = isEngine('RotJs') ? Math.min(MAIN_DISPLAY_TILE_WIDTH, World.player.WorldMap.mapWidth) : World.player.WorldMap.mapWidth;
+    this.displayScreenTileHeight = isEngine('RotJs') ? Math.min(MAIN_DISPLAY_TILE_HEIGHT, World.player.WorldMap.mapHeight) : World.player.WorldMap.mapHeight;
   };
 
   this.renderAll = function() {
-    if (RENDER_ENGINE === 'RotJs') { this.renderTiles(); }
+    // Run only once for Phaser on scene create, run on every update loop for RotJs
+    this.renderTiles();
     this.renderObjects();
   };
 
@@ -29,6 +30,6 @@ const MainDisplay = function() {
   };
 
   this.setRenderScreenDimensions();
-  this.displayEngineHandler = RENDER_ENGINE === 'Phaser' ? new PhaserDisplay(this) : new RotJsDisplay(this);
+  this.displayEngineHandler = isEngine('Phaser') ? new PhaserDisplay(this) : new RotJsDisplay(this);
   this.displayEngineHandler.initialize();
 };

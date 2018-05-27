@@ -36,6 +36,9 @@ function keydownHandler(keyboardEvent) {
     } else {
       promptSelectObject(World.player.Inventory.currentInventory);
     }
+  } else if (keyboardEvent.key === 'f') {
+    World.player.myTile().wall = true;
+    World.player.myTile().char = '#';
   } else if (keyboardEvent.key === 'ArrowUp') {
     World.player.Moving.moveRelative(directionTextToCoords('up'));
   } else if (keyboardEvent.key === 'ArrowDown') {

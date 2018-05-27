@@ -17,13 +17,7 @@ const playGame = new Phaser.Class({
 
   create: function() {
     World.MainDisplay.displayEngineHandler.mainScene = this;
-
-    for (let i = 0; i < World.player.WorldMap.mapWidth; i++) {
-      for (let j = 0; j < World.player.WorldMap.mapHeight; j++) {
-        World.MainDisplay.displayEngineHandler.drawTile([i, j]);
-      }
-    }
-
+    World.MainDisplay.renderAll();
     initializeUiTimeAndCamera();
   },
 
@@ -61,10 +55,7 @@ const PhaserDisplay = function(mainDisplay) {
 
   this.drawObject = function(worldObject) {
     const pixelCoords = tileToPixel(worldObject.myCoords());
-    if (!worldObject.PhaserObject.sprite) { worldObject.PhaserObject.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], worldObject.PhaserObject.spriteFilename, 0); }
-    worldObject.PhaserObject.sprite.x = pixelCoords[0];
-    worldObject.PhaserObject.sprite.y = pixelCoords[1];
-    worldObject.PhaserObject.sprite.depth = 1;
+    worldObject.PhaserObject.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], worldObject.PhaserObject.spriteFilename, 0);
   };
 
   this.stopDisplayEngine = function() {

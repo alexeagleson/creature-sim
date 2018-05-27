@@ -9,7 +9,7 @@ const WorldTile = function (x, y, WorldMap, wall) {
     return [this.x, this.y];
   };
 
-  this.checkBlocked = function(checkAgainstObject = null) {
+  this.checkBlocked = function() {
     return (!this.wall);
   };
 };
