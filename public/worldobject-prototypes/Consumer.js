@@ -3,13 +3,10 @@ const THIRST_LOSS_PER_MILLISECOND = 0.0001;
 
 const Consumer = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  if (!this.owner.Living) { applyLiving(this.owner); }
+
   this.hunger = 50;
   this.thirst = 100;
-
-  if (!this.owner.Living) {
-    displayError(`${this.owner.name} must be a Living object in order to be a Consumer object.`);
-    return null;
-  }
 
   this.canIConsumeObject = function(worldObject) {
     if (!worldObject.Consumable) { return false; }
@@ -25,6 +22,7 @@ const Consumer = function(worldObject, arg = {}) {
     this.thirst = normalizeToValue(this.thirst, 0, 100);
 
     worldObject.removeFromUniverse();
+    publishEvent(`${this.owner.name} consumes ${worldObject.name}.`);
   };
 
   this.adjustHunger = function(timePassedMilliseconds) {
@@ -37,4 +35,8 @@ const Consumer = function(worldObject, arg = {}) {
     this.thirst = normalizeToValue(this.thirst, 0, 100);
   };
 
+};
+
+function applyConsumer(worldObject, arg = {}) {
+  worldObject.Consumer = worldObject.Consumer || new Consumer(worldObject, arg);
 };

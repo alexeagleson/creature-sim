@@ -2,12 +2,9 @@ const STAMINA_LOSS_PER_MILLISECOND = 0.0001;
 
 const Living = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  if (!this.owner.Destructible) { applyDestructible(this.owner); }
+  
   this.stamina = 100;
-
-  if (!this.owner.Destructible) {
-    displayError(`${this.owner.name} must be a Destructible object in order to be a Living object.`);
-    return null;
-  }
 
   this.adjustStamina = function(timePassedMilliseconds) {
     this.stamina -= STAMINA_LOSS_PER_MILLISECOND * timePassedMilliseconds;
@@ -30,4 +27,8 @@ const Living = function(worldObject, arg = {}) {
   this.death = function() {
     // game handles destruction, only need living-specific death code here
   };
+};
+
+function applyLiving(worldObject, arg = {}) {
+  worldObject.Living = worldObject.Living || new Living(worldObject, arg);
 };

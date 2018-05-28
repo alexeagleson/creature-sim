@@ -1,7 +1,3 @@
-function addObjectToUniverse(object) {
-  World.allObjects.set(object.uniqueID, object);
-};
-
 function pixelToTile(pixelCoordsArray) {
   const tileX = Math.floor(pixelCoordsArray[0] / TILE_SIZE);
   const tileY = Math.floor(pixelCoordsArray[1] / TILE_SIZE);
@@ -70,19 +66,6 @@ function distanceTo(coordsFrom, coordsTo) {
   const dy = Math.abs(coordsTo[1] - coordsFrom[1]);
   return(Math.sqrt((dx * dx) + (dy * dy)));
 };
-
-function getObjectsAtCoordinates(clickedTileCoords) {
-  const clickedObjects = [];
-  World.allObjects.forEach((object) => {
-    if (object === World.player) { return null; }
-    if (!object.onAnyMap()) { return null; }
-
-    if (object.WorldTile.x === clickedTileCoords[0] && object.WorldTile.y === clickedTileCoords[1]) {
-      clickedObjects.push(object);
-    }
-  });
-  return clickedObjects;
-}
 
 function pauseSim() {
   World.worldPaused = true;

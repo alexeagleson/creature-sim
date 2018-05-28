@@ -46,3 +46,7 @@ const Destructible = function(worldObject, arg = {}) {
     this.owner.removeFromUniverse();
   };
 }
+
+function applyDestructible(worldObject, arg = {}) {
+  worldObject.Destructible = worldObject.Destructible || new Destructible(worldObject, arg);
+};

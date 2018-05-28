@@ -1,10 +1,6 @@
 const Social = function(worldObject, arg = {}) {
   this.owner = worldObject;
-
-  if (!this.owner.Living) {
-    displayError(`${this.owner.name} must be a Living object in order to be a Social object.`);
-    return null;
-  }
+  if (!this.owner.Living) { applyLiving(this.owner); }
 
   this.canISpeakTo = function(worldObject) {
     if (!worldObject.Social) { return false; }
@@ -13,6 +9,10 @@ const Social = function(worldObject, arg = {}) {
   };
 
   this.speak = function(objectSpeakTo) {
-    publishEvent(`${this.owner.name} says: hello ${objectSpeakTo.name}!`)
+    publishEvent(`${this.owner.name} says: Hello ${objectSpeakTo.name}!`);
   };
+};
+
+function applySocial(worldObject, arg = {}) {
+  worldObject.Social = worldObject.Social || new Social(worldObject, arg);
 };

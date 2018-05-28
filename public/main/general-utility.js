@@ -56,6 +56,7 @@ function displayError(errorText) {
     errorAlertHasBeenTriggered = true;
   }
   console.log(`Error: ${errorText}`);
+  return null;
 };
 
 function directionTextToCoords(directionText) {

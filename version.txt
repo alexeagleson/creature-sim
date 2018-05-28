@@ -1,8 +1,20 @@
 get phaser running
 clean up UI
 dialogue text as css under character
+improve inventory system
+filters for message system
+separate arrays for separate types of objects
+sort array by closeness
 
 
+
+<strong>Version 0.1.03</strong>
+--------------
+(*) Added sort functions to create arrays of objects sorted by proximity to objects searching for them.
+
+<strong>Version 0.1.02</strong>
+--------------
+(*) Added filter functions to track objects within the world.
 
 <strong>Version 0.1.01</strong>
 --------------

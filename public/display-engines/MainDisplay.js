@@ -23,8 +23,7 @@ const MainDisplay = function() {
   };
 
   this.renderObjects = function() {
-    World.allObjects.forEach((object) => {
-      if (!object.onMapOf(World.player)) { return null; }
+    World.allObjects.filter(isOnMapOfObject.bind(World.player)).forEach((object) => {
       this.displayEngineHandler.drawObject(object);
     });
   };

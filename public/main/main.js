@@ -42,7 +42,7 @@ function rotJsLoop(timestamp) {
 };
 
 function mainLoop() {
-  World.allTurnTakingObjects.forEach((object) => {
+  World.allObjects.filter(isTurnTaking).filter(isOnAMap).forEach((object) => {
     if (object.TurnTaking.checkForTurnReady()) {
       object.TurnTaking.takeTurn();
     }

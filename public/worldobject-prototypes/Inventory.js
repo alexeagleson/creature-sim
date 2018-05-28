@@ -1,8 +1,6 @@
 const Inventory = function(worldObject, arg = {}) {
   this.owner = worldObject;
 
-  this.currentInventory = [];
-
   this.canIAddToInventory = function(worldObject) {
     if (!worldObject.Item) { return false; }
     if (!this.owner.isAdjacentTo(worldObject)) { return false; }
@@ -11,11 +9,11 @@ const Inventory = function(worldObject, arg = {}) {
 
   this.addToInventory = function(worldObject) {
     worldObject.removeLocationData();
-    this.currentInventory.push(worldObject);
+    worldObject.Item.inInventoryOf = this.owner;
+    publishEvent(`${this.owner.name} picks up ${worldObject.name}.`);
   };
+};
 
-  this.inventoryContains = function(worldObject) {
-    if (this.currentInventory.includes(worldObject)) { return true; }
-    return false;
-  };
+function applyInventory(worldObject, arg = {}) {
+  worldObject.Inventory = worldObject.Inventory || new Inventory(worldObject, arg);
 };

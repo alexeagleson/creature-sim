@@ -20,3 +20,7 @@ const PhaserObject = function(worldObject, arg = {}) {
     this.sprite.depth = 1;
   };
 };
+
+function applyPhaserObject(worldObject, arg = {}) {
+  worldObject.PhaserObject = worldObject.PhaserObject || new PhaserObject(worldObject, arg);
+};

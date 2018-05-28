@@ -10,13 +10,6 @@ const WorldMap = function() {
     return this.tileMap[coords[0] + ',' + coords[1]];
   };
 
-  this.addObjectToTile = function(object, coords) {
-    object.WorldMap = this;
-    object.WorldTile = this.getTile(coords);
-    object.placeSprite(coords);
-    if (object === World.player) { World.Camera.updatePosition(); }
-  };
-
   this.generateCellularMap = function() {
     const map = new ROT.Map.Cellular(this.mapWidth, this.mapHeight, {connected: true});
 

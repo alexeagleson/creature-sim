@@ -1,10 +1,6 @@
 const DecisionAI = function(worldObject, arg = {}) {
   this.owner = worldObject;
-
-  if (!this.owner.TurnTaking) {
-    displayError(`${this.name} must be a TurnTaking object in order to be an AI object.`);
-    return null;
-  }
+  if (!this.owner.TurnTaking) { applyTurnTaking(this.owner); }
 
   this.resetObjective = function() {
     this.hasObjective = false;
@@ -15,37 +11,44 @@ const DecisionAI = function(worldObject, arg = {}) {
   };
 
   this.determineAction = function() {
+    const objectsOnMyMap = World.allObjects.filter(isOnMapOfObject.bind(this.owner)).filter(isNotObject.bind(this.owner));
+
     if (this.owner.Consumer) {
-      World.allObjects.forEach((object) => {
-        if (!this.owner.onMapOf(object)) { return null; }
+      let consumableObjectsOnMyMap = objectsOnMyMap.filter(isConsumable);
+      consumableObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
 
-        if (object.Consumable) {
-          if (object.Consumable.hungerValue > 0) {
+      consumableObjectsOnMyMap.some((consumableObject) => {
+        if (consumableObject.Consumable.hungerValue > 0) {
+          this.owner.Pathing.createPath(consumableObject.myCoords());
+          publishEvent(`${this.owner.name} wants to consume ${consumableObject.name}.`);
 
-            this.owner.Pathing.calculatePath(object.myCoords());
+          this.currentAction = () => {
+            return this.owner.Pathing.movePath();
+          };
 
-            this.currentAction = () => {
-              return this.owner.Pathing.movePath();
-            };
+          this.successCondition = () => {
+            return this.owner.isAdjacentTo(consumableObject);
+          };
 
-            this.successCondition = () => {
-              return this.owner.isAdjacentTo(object);
-            };
+          this.onSuccess = () => {
+            return this.owner.Consumer.consume(consumableObject);
+          };
 
-            this.onSuccess = () => {
-              return this.owner.Consumer.consume(object);
-            };
+          this.onFail = () => {
+            publishEvent(`${this.owner.name} fails to consume ${consumableObject.name}.`);
+          };
 
-            this.onFail = () => {
-              return alert(`${this.owner.name}: im so hungry`);
-            };
-
-            this.hasObjective = true;
-          }
+          this.hasObjective = true;
+          return true;
         }
+        return false;
       });
     }
   };
 
   this.resetObjective();
+};
+
+function applyDecisionAI(worldObject, arg = {}) {
+  worldObject.DecisionAI = worldObject.DecisionAI || new DecisionAI(worldObject, arg);
 };

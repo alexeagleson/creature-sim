@@ -26,8 +26,7 @@ const WorldObject = function(objectName, arg = {}) {
 
   this.removeFromUniverse = function() {
     this.removeLocationData();
-    World.allObjects.delete(this.uniqueID);
-    World.allTurnTakingObjects.delete(this.uniqueID);
+    World.allObjects = World.allObjects.filter(isNotObject.bind(this));
   };
 
   this.destroySprite = function() {
@@ -41,17 +40,11 @@ const WorldObject = function(objectName, arg = {}) {
     }
   };
 
-  this.onMapOf = function(worldObject) {
-    if (!this.onAnyMap) { return false; }
-    if (!worldObject.onAnyMap) { return false; }
-    if (this.WorldMap != worldObject.WorldMap) { return false; }
-    return true;
-  };
-
-  this.onAnyMap = function() {
-    if (!this.WorldMap) { return false; }
-    if (!this.WorldTile) { return false; }
-    return true;
+  this.placeOnMap = function(worldMap, coords) {
+    this.WorldMap = worldMap;
+    this.WorldTile = this.WorldMap.getTile(coords);
+    this.placeSprite(coords);
+    if (this === World.player) { World.Camera.updatePosition(); }
   };
 
   this.isAdjacentTo = function(worldObject) {
@@ -61,9 +54,9 @@ const WorldObject = function(objectName, arg = {}) {
   };
 
   this.inMyInventoryOrAdjacent = function(worldObject) {
-    const inMyInventory = this.Inventory ? this.Inventory.inventoryContains(worldObject) : false;
+    const myInventory = this.Inventory ? World.allObjects.filter(isInInventoryOf.bind(worldObject)) : false;
     const adjacentTo = this.isAdjacentTo(worldObject);
-    if (!inMyInventory && !adjacentTo) { return false; }
+    if (!(myInventory.length > 0) && !adjacentTo) { return false; }
     return true;
   };
 };

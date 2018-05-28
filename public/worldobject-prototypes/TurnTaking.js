@@ -1,9 +1,8 @@
 const TurnTaking = function(worldObject, arg = {}) {
   this.owner = worldObject;
-  World.allTurnTakingObjects.set(this.owner.uniqueID, this.owner);
 
   this.lastTurnMilliseconds = arg.lastTurnMilliseconds || 0;
-  this.millisecondsBetweenTurns = arg.millisecondsBetweenTurns || 300;
+  this.millisecondsBetweenTurns = arg.millisecondsBetweenTurns || 500;
 
   this.checkForTurnReady = function() {
     if (World.Time.millisecondsElapsed - this.lastTurnMilliseconds > this.millisecondsBetweenTurns) {
@@ -18,8 +17,6 @@ const TurnTaking = function(worldObject, arg = {}) {
   };
 
   this.takeTurn = function() {
-    if (!this.owner.onAnyMap()) { return null; }
-
     if (this.owner.DecisionAI) {
       if (this.owner.DecisionAI.hasObjective) {
         if (this.owner.DecisionAI.successCondition()) {
@@ -37,4 +34,8 @@ const TurnTaking = function(worldObject, arg = {}) {
     }
     return this.turnOver();
   };
+};
+
+function applyTurnTaking(worldObject, arg = {}) {
+  worldObject.TurnTaking = worldObject.TurnTaking || new TurnTaking(worldObject, arg);
 };

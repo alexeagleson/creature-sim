@@ -71,8 +71,7 @@ const World = {
   MainDisplay: null,
 
   allEvents: [],
-  allObjects: new Map(),
-  allTurnTakingObjects: new Map(),
+  allObjects: [],
 
   worldPaused: false,
   worldEnd: false

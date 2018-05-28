@@ -6,18 +6,18 @@ function initializeInput() {
 
 function mousemoveHandler(mousemoveEvent) {
   const hoverTileCoords = screenToActual(pixelToTile([mousemoveEvent.offsetX, mousemoveEvent.offsetY]));
-  const objectsAtCoords = getObjectsAtCoordinates(hoverTileCoords);
+  const objectsAtCoords = World.player.WorldMap.getTile(hoverTileCoords).objectsOnTile();
   displayNamesOfObjects(objectsAtCoords);
 };
 
 function pointerdownHandler(pointerEvent) {
   const clickedTileCoords = screenToActual(pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]));
-  const objectsAtCoords = getObjectsAtCoordinates(clickedTileCoords);
+  const objectsAtCoords = World.player.WorldMap.getTile(clickedTileCoords).objectsOnTile().filter(isNotObject.bind(World.player));
 
   if (objectsAtCoords.length > 0) {
     promptSelectObject(objectsAtCoords);
   } else {
-    World.player.Pathing.calculatePath(clickedTileCoords);
+    World.player.Pathing.createPath(clickedTileCoords);
     World.player.Pathing.movePath();
   }
 };
@@ -34,7 +34,7 @@ function keydownHandler(keyboardEvent) {
     if (!World.allUI.selectUI.isHidden()) {
       World.allUI.selectUI.hide()
     } else {
-      promptSelectObject(World.player.Inventory.currentInventory);
+      promptSelectObject(World.allObjects.filter(isInInventoryOf.bind(World.player)));
     }
   } else if (keyboardEvent.key === 'f') {
     World.player.myTile().wall = true;

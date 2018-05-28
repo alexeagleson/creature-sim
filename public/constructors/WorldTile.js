@@ -9,7 +9,12 @@ const WorldTile = function (x, y, WorldMap, wall) {
     return [this.x, this.y];
   };
 
-  this.checkBlocked = function() {
+  this.checkBlocked = function(checkAgainstObject = null) {
     return (!this.wall);
+  };
+
+  this.objectsOnTile = function() {
+    const listOfObjects = World.allObjects.filter(isOnTile.bind(this));
+    return listOfObjects;
   };
 };

@@ -1,11 +1,8 @@
 const Equipper = function(worldObject, arg = {}) {
   this.owner = worldObject;
-  this.currentEquipment = null;
+  if (!this.owner.Living) { applyLiving(this.owner); }
 
-  if (!this.owner.Living) {
-    displayError(`${this.owner.name} must be a Living object in order to be an Equipper object.`);
-    return null;
-  }
+  this.currentEquipment = null;
 
   this.canIEquipObject = function(worldObject) {
     if (!worldObject.Equipment) { return false; }
@@ -16,9 +13,14 @@ const Equipper = function(worldObject, arg = {}) {
   this.equip = function(worldObject) {
     if (this.owner.isAdjacentTo(worldObject)) { this.owner.Inventory.addToInventory(worldObject); }
     this.currentEquipment = worldObject;
+    publishEvent(`${this.owner.name} equips ${worldObject.name}.`);
   };
 
   this.unequip = function() {
     this.currentEquipment = null;
   };
+};
+
+function applyEquipper(worldObject, arg = {}) {
+  worldObject.Equipper = worldObject.Equipper || new Equipper(worldObject, arg);
 };

@@ -3,7 +3,7 @@ const Moving = function(worldObject, arg = {}) {
 
   this.move = function(movementCoords) {
     if (!this.owner.WorldMap.getTile(movementCoords).wall) {
-      this.owner.WorldMap.addObjectToTile(this.owner, movementCoords);
+      this.owner.placeOnMap(this.owner.WorldMap, movementCoords);
       return true;
     }
     return false;
@@ -28,4 +28,8 @@ const Moving = function(worldObject, arg = {}) {
     }
     return this.owner.WorldMap.getTile([x, y]).checkBlocked(this.owner);
   };
+};
+
+function applyMoving(worldObject, arg = {}) {
+  worldObject.Moving = worldObject.Moving || new Moving(worldObject, arg);
 };

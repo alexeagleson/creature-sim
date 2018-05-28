@@ -1,18 +1,19 @@
 const Pathing = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  if (!this.owner.Moving) { applyMoving(this.owner); }
 
-  if (!this.owner.Moving) {
-    displayError(`${this.owner.name} must be a Moving object in order to be a Pathing object.`);
-    return null;
-  }
+  this.createPath = function(toCoords) {
+    this.currentPath = this.calculatePath(toCoords);
+  };
 
   this.calculatePath = function(toCoords) {
-    this.currentPath = [];
     this.todo = [];
     this.done = {};
 
     const toX = toCoords[0];
     const toY = toCoords[1];
+    const finalPath = [];
+
     let thisNode = null;
 
     this.add(toX, toY, null);
@@ -37,13 +38,13 @@ const Pathing = function(worldObject, arg = {}) {
     }
 
     thisNode = this.done[this.owner.WorldTile.x + "," + this.owner.WorldTile.y];
-    if (!thisNode) { return null; }
+    if (!thisNode) { return finalPath; }
 
     while (thisNode) {
-      this.currentPath.push([thisNode.x, thisNode.y]);
+      finalPath.push([thisNode.x, thisNode.y]);
       thisNode = thisNode.prev;
     }
-
+    return finalPath;
   };
 
   this.getNeighbors = function(cx, cy) {
@@ -93,4 +94,8 @@ const Pathing = function(worldObject, arg = {}) {
     }
     return false;
   };
+};
+
+function applyPathing(worldObject, arg = {}) {
+  worldObject.Pathing = worldObject.Pathing || new Pathing(worldObject, arg);
 };
