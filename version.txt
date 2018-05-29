@@ -6,7 +6,11 @@ filters for message system
 separate arrays for separate types of objects
 sort array by closeness
 different maps (internal maps)
+temperature
 
+<strong>Version 0.1.05</strong>
+--------------
+(*) Added support for multiple maps
 
 <strong>Version 0.1.04</strong>
 --------------

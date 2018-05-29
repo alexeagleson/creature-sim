@@ -11,6 +11,7 @@ const Inventory = function(worldObject, arg = {}) {
     worldObject.removeLocationData();
     worldObject.Item.inInventoryOf = this.owner;
     publishEvent(`${this.owner.name} picks up ${worldObject.name}.`);
+    displayDialogue(this.owner, pickRandom(['who is leaving all this shit everywhere?', 'all i do is clean']));
   };
 };
 

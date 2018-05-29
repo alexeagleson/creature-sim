@@ -1,15 +1,13 @@
 // Filters
 function isOnTile(worldObject) {
   // Bind 'this' to desired lookup tile
-  if (!worldObject.WorldTile) { return false; }
+  if (!worldObject.WorldMap || !worldObject.WorldTile) { return false; }
   return worldObject.WorldTile === this;
 };
 
 function isOnMapOfObject(worldObject) {
   // Bind 'this' to desired lookup object
-  if (!worldObject.WorldMap) { return false; }
-  if (!this.WorldMap) { return false; }
-  return worldObject.WorldMap === this.WorldMap;
+  return onSameMap(worldObject, this);
 };
 
 function isNotObject(worldObject) {
@@ -22,6 +20,8 @@ function isInInventoryOf(worldObject) {
   if (!worldObject.Item) { return false; }
   return worldObject.Item.inInventoryOf === this;
 };
+
+
 
 // Filters no bind
 function isTurnTaking(worldObject) {
@@ -44,6 +44,7 @@ function isOnAMap(worldObject) {
   if (!worldObject.WorldMap) { return false; }
   return worldObject.WorldTile != null;
 };
+
 
 
 // Sorts

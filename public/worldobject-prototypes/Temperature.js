@@ -5,7 +5,7 @@ const Temperature = function(worldObject, arg = {}) {
   this.temp = 20;
 
   this.adjustTemperature = function(timePassedMilliseconds) {
-    let differenceBetweenWeatherAndCurrent = this.owner.WorldMap.temp - this.temp;
+    let differenceBetweenWeatherAndCurrent = this.owner.WorldMap.mapTemp - this.temp;
 
     if (this.owner.Equipper) {
       if (differenceBetweenWeatherAndCurrent < 0 && this.owner.Equipper.currentEquipment) {

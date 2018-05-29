@@ -30,7 +30,7 @@ const Hud = function(uiObject) {
   this.owner.htmlElement.append(this.objectTemp);
 
   this.mapTemp = document.createElement('p');
-  this.mapTemp.innerHTML = `Map Temperature: ${World.player.WorldMap.temp}`;
+  this.mapTemp.innerHTML = `Map Temperature: ${World.player.WorldMap.mapTemp}`;
   this.owner.htmlElement.append(this.mapTemp);
 
   this.objectEquipment = document.createElement('p');

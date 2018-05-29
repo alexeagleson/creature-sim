@@ -36,6 +36,7 @@ const DecisionAI = function(worldObject, arg = {}) {
 
           this.onFail = () => {
             publishEvent(`${this.owner.name} fails to consume ${consumableObject.name}.`);
+            displayDialogue(this.owner, `what the fuck where did the ${consumableObject.name} go`);
           };
 
           this.hasObjective = true;
@@ -60,7 +61,7 @@ const DecisionAI = function(worldObject, arg = {}) {
         };
 
         this.successCondition = () => {
-          return this.owner.isAdjacentTo(socialObject);
+          return this.owner.isAdjacentTo(socialObject, SPEAK_MAX_DISTANCE);
         };
 
         this.onSuccess = () => {
@@ -69,6 +70,7 @@ const DecisionAI = function(worldObject, arg = {}) {
 
         this.onFail = () => {
           publishEvent(`${this.owner.name} fails to speak to ${socialObject.name}.`);
+          displayDialogue(this.owner, `dammit ${socialObject.name} stop moving im trying to talk to you`);
         };
 
         this.hasObjective = true;

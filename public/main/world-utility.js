@@ -43,6 +43,17 @@ function withinMapBounds(WorldMap, coords) {
   return true;
 };
 
+function onSameMap(worldObject1, worldObject2) {
+  if (!worldObject1.WorldMap || !worldObject2.WorldMap) { return false; }
+  return worldObject1.WorldMap === worldObject2.WorldMap;
+};
+
+function onSameTile(worldObject1, worldObject2) {
+  if (!onSameMap(worldObject1, worldObject2)) { return false; }
+  if (!worldObject1.WorldTile || !worldObject2.WorldTile) { return false; }
+  return worldObject1.WorldTile === worldObject2.WorldTile;
+};
+
 function directionTo(coordsFrom, coordsTo) {
   const dx = coordsTo[0] - coordsFrom[0];
   const dy = coordsTo[1] - coordsFrom[1];

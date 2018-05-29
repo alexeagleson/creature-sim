@@ -24,6 +24,9 @@ const RotJsDisplay = function(mainDisplay) {
     this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldObject.char, worldObject.RotJsObject.fgColour, worldObject.RotJsObject.bgColour);
   };
 
+  this.destroyAllSprites = function() {
+  };
+
   this.stopDisplayEngine = function() {
   };
 };

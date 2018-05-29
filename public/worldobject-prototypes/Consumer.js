@@ -27,6 +27,7 @@ const Consumer = function(worldObject, arg = {}) {
 
     worldObject.removeFromUniverse();
     publishEvent(`${this.owner.name} consumes ${worldObject.name}.`);
+    displayDialogue(this.owner, pickRandom(['yum!', '*crunch*']));
   };
 
   this.adjustHunger = function(timePassedMilliseconds) {

@@ -1,4 +1,4 @@
-const RENDER_ENGINE = 'Phaser';
+const RENDER_ENGINE = 'ROtJs';
 const CANVAS_SIZE = 0.75;
 
 const isEngine = (engineName) => {
@@ -68,8 +68,10 @@ const World = {
   MainDisplay: null,
 
   allEvents: [],
+  allMaps: [],
   allObjects: [],
 
   worldPaused: false,
-  worldEnd: false
+  worldEnd: false,
+  playerMapTransition: false
 };

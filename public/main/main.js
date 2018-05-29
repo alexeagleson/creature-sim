@@ -13,15 +13,14 @@ window.onload = () => {
 
 function initializeWorld() {
   World.player = createWorldObject('Player');
-
-  World.player.WorldMap = new WorldMap();
-  World.player.WorldMap.generateCellularMap();
+  World.player.WorldMap = getMapByName('Home');
   World.player.WorldTile = getRandomFreeTile(World.player.WorldMap);
 
   createWorldObject('Squirrel');
   createWorldObject('Acorn');
   createWorldObject('Rabbit');
   createWorldObject('Carrot');
+  createWorldObject('Portal');
   runXTimes(createWorldObject, 10, 'Trash');
 };
 
@@ -30,7 +29,6 @@ function initializeUiTimeAndCamera() {
   initializeInput();
   World.Camera = new MainCamera();
   World.Time = new Time();
-
 };
 
 function rotJsLoop(timestamp) {
@@ -63,11 +61,19 @@ function mainLoop() {
   }
 
   World.Camera.updatePosition();
-  if (isEngine('RotJs')) { World.MainDisplay.renderAll(); }
+  if (isEngine('RotJs') || World.playerMapTransition) {
+    if (World.playerMapTransition) {
+      World.MainDisplay.displayEngineHandler.destroyAllSprites();
+      World.MainDisplay.setRenderScreenDimensions();
+    }
+    World.playerMapTransition = false;
+    World.MainDisplay.renderAll();
+  }
 };
 
 function endSim() {
   World.worldEnd = true;
+  World.worldPaused = true;
   World.MainDisplay.displayEngineHandler.stopDisplayEngine();
   removeAllChildren(World.allUI.mainWrapper.htmlElement);
   alert('The simulation has ended.');

@@ -76,11 +76,11 @@ function displayNamesOfObjects(objectsAtCoords) {
 };
 
 function displayDialogue(speakerObject, dialogue) {
-  let dialogueElement = document.getElementById('dialogueElement');
+  let dialogueElement = document.getElementById(`dialogue${speakerObject.uniqueID}`);
 
   if (!dialogueElement) {
     dialogueElement = document.createElement('p');
-    dialogueElement.id = 'dialogueElement';
+    dialogueElement.id = `dialogue${speakerObject.uniqueID}`;
     dialogueElement.className = 'strokeme';
     World.allUI.mainWrapper.htmlElement.append(dialogueElement);
   }
@@ -93,7 +93,7 @@ function displayDialogue(speakerObject, dialogue) {
   dialogueElement.style['z-index'] = "2";
   dialogueElement.style['pointer-events'] = "none";
 
-  setTimeout(() => { removeAllChildren(dialogueElement); }, 2000);
+  setTimeout(() => { removeAllChildren(dialogueElement); }, 3000);
 };
 
 function initializeUI() {

@@ -40,15 +40,23 @@ const WorldObject = function(objectName, arg = {}) {
     }
   };
 
-  this.placeOnMap = function(worldMap, coords) {
+  this.placeOnMap = function(worldMap, coords, ignoreTriggers = false) {
+    const mapTransition = (this.WorldMap != null && this.WorldMap != worldMap) ? true : false;
+    if (mapTransition) { this.removeLocationData(); }
+    if (this === World.player && mapTransition) { World.playerMapTransition = true; }
     this.WorldMap = worldMap;
     this.WorldTile = this.WorldMap.getTile(coords);
-    this.placeSprite(coords);
-    if (this === World.player) { World.Camera.updatePosition(); }
+    if (onSameMap(this, World.player)) {
+      this.placeSprite(coords);
+    }
+
+    const walkTriggers = World.allObjects.filter(worldObject => worldObject.onStep).filter(isOnMapOfObject.bind(this)).filter(isOnTile.bind(this.WorldTile)).filter(isNotObject.bind(this));
+    walkTriggers.forEach((triggerObject) => { triggerObject.onStep(this); })
   };
 
   this.isAdjacentTo = function(worldObject, maxDistance = INTERACT_MAX_DISTANCE) {
     if (!this.WorldTile || !worldObject.WorldTile) { return false; }
+    if (!this.WorldMap || !worldObject.WorldMap) { return false; }
     if (distanceTo(this.myCoords(), worldObject.myCoords()) <= maxDistance) { return true; }
     return false;
   };
@@ -59,4 +67,5 @@ const WorldObject = function(objectName, arg = {}) {
     if (!(myInventory.length > 0) && !adjacentTo) { return false; }
     return true;
   };
+
 };

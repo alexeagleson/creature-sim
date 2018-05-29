@@ -1,9 +1,10 @@
-const WorldMap = function() {
-  this.name = null;
+const WorldMap = function(mapName, arg = {mapWidth: null, mapHeight: null, mapTemp: null, mapType: null}) {
+  this.name = mapName;
   this.uniqueID = uniqueNumber();
-  this.mapWidth = 70;
-  this.mapHeight = 40;
-  this.temp = 40;
+  this.mapWidth = arg.mapWidth || 70;
+  this.mapHeight = arg.mapHeight || 40;
+  this.mapTemp =  arg.mapTemp || 20;
+  this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};
 
   this.getTile = function(coords) {
@@ -58,4 +59,10 @@ const WorldMap = function() {
     }
     map.create(createMapCallback.bind(this));
   };
-}
+
+  if (this.mapType === 'Cellular') {
+    this.generateCellularMap();
+  } else {
+    this.generateMapByType({mapType: this.mapType});
+  }
+};

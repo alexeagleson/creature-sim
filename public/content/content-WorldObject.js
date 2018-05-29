@@ -1,5 +1,5 @@
 function createWorldObject(objectName) {
-  let createdObject = new WorldObject(objectName);;
+  let createdObject = new WorldObject(objectName);
 
   if (objectName === 'Player') {
     applyBasePrototypes(createdObject);
@@ -55,8 +55,15 @@ function createWorldObject(objectName) {
       createdObject.PhaserObject.spriteFilename = 'Trash';
       createdObject.PhaserObject.defaultFrameNumber = randBetween(0, 3);
     }
-
     applyItem(createdObject);
+
+  } else if (objectName === 'Portal') {
+    applyBasePrototypes(createdObject);
+    createdObject.char = 'P';
+    isEngine('RotJs')
+      ? createdObject.RotJsObject.fgColour = HEX_YELLOW
+      : createdObject.PhaserObject.spriteFilename = 'Hotdog1';
+      applyPortal(createdObject, arg = {warpToMap: 'Map 2'});
 
   }
 
