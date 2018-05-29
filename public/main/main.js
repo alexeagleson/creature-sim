@@ -13,15 +13,7 @@ window.onload = () => {
 
 function initializeWorld() {
   World.player = createWorldObject('Player');
-  World.player.WorldMap = getMapByName('Home');
-  World.player.WorldTile = getRandomFreeTile(World.player.WorldMap);
-
-  createWorldObject('Squirrel');
-  createWorldObject('Acorn');
-  createWorldObject('Rabbit');
-  createWorldObject('Carrot');
-  createWorldObject('Portal');
-  runXTimes(createWorldObject, 10, 'Trash');
+  World.player.placeOnMap({worldMap: getMapByName('Home')});
 };
 
 function initializeUiTimeAndCamera() {

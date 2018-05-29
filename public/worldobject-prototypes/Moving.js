@@ -3,7 +3,7 @@ const Moving = function(worldObject, arg = {}) {
 
   this.move = function(movementCoords) {
     if (!this.owner.WorldMap.getTile(movementCoords).wall) {
-      this.owner.placeOnMap(this.owner.WorldMap, movementCoords);
+      this.owner.placeOnMap({worldMap: this.owner.WorldMap, coords: movementCoords});
       return true;
     }
     return false;

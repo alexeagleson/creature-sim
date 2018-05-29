@@ -1,4 +1,4 @@
-function createWorldObject(objectName) {
+function createWorldObject(objectName, arg = {}) {
   let createdObject = new WorldObject(objectName);
 
   if (objectName === 'Player') {
@@ -57,22 +57,23 @@ function createWorldObject(objectName) {
     }
     applyItem(createdObject);
 
+  } else if (objectName === 'Treasure') {
+    applyBasePrototypes(createdObject);
+    createdObject.char = 'T';
+    isEngine('RotJs')
+      ? createdObject.RotJsObject.fgColour = HEX_GREEN
+      : createdObject.PhaserObject.spriteFilename = 'Carrot';
+    applyItem(createdObject);
+
   } else if (objectName === 'Portal') {
     applyBasePrototypes(createdObject);
     createdObject.char = 'P';
     isEngine('RotJs')
       ? createdObject.RotJsObject.fgColour = HEX_YELLOW
       : createdObject.PhaserObject.spriteFilename = 'Hotdog1';
-      applyPortal(createdObject, arg = {warpToMap: 'Map 2'});
+    applyPortal(createdObject, arg);
 
   }
-
-  World.allObjects.push(createdObject);
-
-  if (objectName === 'Player') { return createdObject; }
-
-  createdObject.WorldMap = World.player.WorldMap;
-  createdObject.WorldTile = getRandomFreeTile(World.player.WorldMap);
   return createdObject;
 };
 

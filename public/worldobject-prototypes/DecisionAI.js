@@ -19,7 +19,8 @@ const DecisionAI = function(worldObject, arg = {}) {
 
       consumableObjectsOnMyMap.some((consumableObject) => {
         if ((consumableObject.Consumable.hungerValue > 0 && this.owner.Consumer.hunger < CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && this.owner.Consumer.thirst < CONCERNED_VALUE)) {
-          this.owner.Pathing.createPath(consumableObject.myCoords());
+          //this.owner.Pathing.createPath(consumableObject.myCoords());
+          this.owner.Pathing.createMultiMapPath();
           publishEvent(`${this.owner.name} wants to consume ${consumableObject.name}.`);
 
           this.currentAction = () => {
@@ -93,7 +94,7 @@ const DecisionAI = function(worldObject, arg = {}) {
         };
 
         this.successCondition = () => {
-          return this.owner.isAdjacentTo(itemObject);
+          return this.owner.isAdjacentTo(itemObject, INTERACT_MAX_DISTANCE);
         };
 
         this.onSuccess = () => {

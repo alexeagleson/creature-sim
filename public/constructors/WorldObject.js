@@ -1,4 +1,5 @@
 const WorldObject = function(objectName, arg = {}) {
+  World.allObjects.push(this);
   this.name = objectName;
   this.uniqueID = uniqueNumber();
 
@@ -40,14 +41,18 @@ const WorldObject = function(objectName, arg = {}) {
     }
   };
 
-  this.placeOnMap = function(worldMap, coords, ignoreTriggers = false) {
-    const mapTransition = (this.WorldMap != null && this.WorldMap != worldMap) ? true : false;
+  this.placeOnMap = function(arg = {worldMap: null, coords: null, ignoreTriggers: null}) {
+    arg.coords = arg.coords || getRandomFreeTile(arg.worldMap).myCoords();
+    arg.ignoreTriggers = arg.ignoreTriggers || false;
+    const mapTransition = (this.WorldMap != null && this.WorldMap != arg.worldMap) ? true : false;
+
     if (mapTransition) { this.removeLocationData(); }
+
     if (this === World.player && mapTransition) { World.playerMapTransition = true; }
-    this.WorldMap = worldMap;
-    this.WorldTile = this.WorldMap.getTile(coords);
+    this.WorldMap = arg.worldMap;
+    this.WorldTile = this.WorldMap.getTile(arg.coords);
     if (onSameMap(this, World.player)) {
-      this.placeSprite(coords);
+      this.placeSprite(arg.coords);
     }
 
     const walkTriggers = World.allObjects.filter(worldObject => worldObject.onStep).filter(isOnMapOfObject.bind(this)).filter(isOnTile.bind(this.WorldTile)).filter(isNotObject.bind(this));

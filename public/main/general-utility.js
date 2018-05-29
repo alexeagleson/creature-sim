@@ -24,7 +24,11 @@ function pickRandom(arrayOfThings) {
 };
 
 function runXTimes(givenFunction, numberOfTimes, optionalArg = null) {
-  for (let i = 0; i < numberOfTimes; i++) { givenFunction(optionalArg); }
+  const functionResults = [];
+  for (let i = 0; i < numberOfTimes; i++) {
+    functionResults.push(givenFunction(optionalArg));
+  }
+  return functionResults;
 };
 
 function randBetween(min, max) {

@@ -39,9 +39,6 @@ function keydownHandler(keyboardEvent) {
   } else if (keyboardEvent.key === 'f') {
     World.player.myTile().wall = true;
     World.player.myTile().char = '#';
-  } else if (keyboardEvent.key === 'g') {
-    const newMap = getMapByName('Map 2');
-    World.player.placeOnMap(newMap, getRandomFreeTile(newMap).myCoords());
   } else if (keyboardEvent.key === 'ArrowUp') {
     World.player.Moving.moveRelative(directionTextToCoords('up'));
   } else if (keyboardEvent.key === 'ArrowDown') {

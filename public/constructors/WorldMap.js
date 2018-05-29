@@ -1,4 +1,5 @@
 const WorldMap = function(mapName, arg = {mapWidth: null, mapHeight: null, mapTemp: null, mapType: null}) {
+  World.allMaps.push(this);
   this.name = mapName;
   this.uniqueID = uniqueNumber();
   this.mapWidth = arg.mapWidth || 70;

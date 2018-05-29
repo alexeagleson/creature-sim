@@ -2,14 +2,31 @@ const Pathing = function(worldObject, arg = {}) {
   this.owner = worldObject;
   if (!this.owner.Moving) { applyMoving(this.owner); }
 
-  this.createPath = function(toCoords) {
-    this.currentPath = this.calculatePath(toCoords);
+  this.createMultiMapPath = function() {
+    let portal = World.allObjects.filter(isPortal).filter(isOnMapOfObject.bind(this.owner));
+    portal = portal ? portal[0] : null;
+
+    let treasure = World.allObjects.filter((object) => object.name === 'Treasure');
+    treasure = treasure ? treasure[0] : null;
+
+    let firstPath = this.calculatePath(portal.myCoords());
+    let secondPath = this.calculatePath(treasure.myCoords(), fromCoords = portal.Portal.warpCoords);
+
+    this.currentPath = firstPath.concat(secondPath);
   };
 
-  this.calculatePath = function(toCoords) {
+  this.createPath = function(toCoords, fromCoords = null) {
+    this.currentPath = this.calculatePath(toCoords, fromCoords);
+  };
+
+  this.calculatePath = function(toCoords, fromCoords = null) {
+    if (!fromCoords) { fromCoords = this.owner.myCoords(); }
+
     this.todo = [];
     this.done = {};
 
+    const fromX = fromCoords[0];
+    const fromY = fromCoords[1];
     const toX = toCoords[0];
     const toY = toCoords[1];
     const finalPath = [];
@@ -23,7 +40,7 @@ const Pathing = function(worldObject, arg = {}) {
       let id = thisNode.x + "," + thisNode.y;
       if (id in this.done) { continue; }
       this.done[id] = thisNode;
-      if (thisNode.x == this.owner.WorldTile.x && thisNode.y == this.owner.WorldTile.y) { break; }
+      if (thisNode.x == fromX && thisNode.y == fromY) { break; }
 
       let neighbors = this.getNeighbors(thisNode.x, thisNode.y);
 
@@ -37,7 +54,7 @@ const Pathing = function(worldObject, arg = {}) {
       }
     }
 
-    thisNode = this.done[this.owner.WorldTile.x + "," + this.owner.WorldTile.y];
+    thisNode = this.done[fromX + "," + fromY];
     if (!thisNode) { return finalPath; }
 
     while (thisNode) {

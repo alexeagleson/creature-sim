@@ -7,6 +7,11 @@ separate arrays for separate types of objects
 sort array by closeness
 different maps (internal maps)
 temperature
+multi map pathing in progress
+
+<strong>Version 0.1.06</strong>
+--------------
+(*) First stages of multiple-map pathing implemented
 
 <strong>Version 0.1.05</strong>
 --------------

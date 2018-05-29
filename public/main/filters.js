@@ -40,6 +40,10 @@ function isItem(worldObject) {
   return worldObject.Item != undefined;
 };
 
+function isPortal(worldObject) {
+  return worldObject.Portal != undefined;
+};
+
 function isOnAMap(worldObject) {
   if (!worldObject.WorldMap) { return false; }
   return worldObject.WorldTile != null;

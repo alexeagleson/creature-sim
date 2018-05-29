@@ -1,11 +1,10 @@
 const Portal = function(worldObject, arg = {}) {
   this.owner = worldObject;
-
   this.warpToMap = getMapByName(arg.warpToMap) || null;
   this.warpCoords = (arg.warpToTileX && arg.warpToTileY) ? [arg.warpToTileX, arg.warpToTileY] : getRandomFreeTile(this.warpToMap).myCoords();
 
   this.owner.onStep = (objectThatTriggered) => {
-    objectThatTriggered.placeOnMap(this.warpToMap, this.warpCoords);
+    objectThatTriggered.placeOnMap(arg = {worldMap: this.warpToMap, coords: this.warpCoords});
   };
 };
 
