@@ -1,0 +1,6 @@
+// Other
+const INTERACT_MAX_DISTANCE = 1.5;
+const SPEAK_MAX_DISTANCE = 3;
+const EXAMINE_MAX_DISTANCE = 5;
+
+const CONCERNED_VALUE = 75;

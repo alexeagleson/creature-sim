@@ -101,5 +101,15 @@ function prepareContextMenu(arg = { writtenText: null, objectActivating: null, o
     }
   }
 
+  if (arg.objectActivating.Living) {
+    if (arg.objectActivating.Living.canIExamineObject(arg.objectBeingActivated)) {
+      buttonText.push('Examine');
+      buttonFunctions.push(() => {
+        arg.objectActivating.Living.examineObject(arg.objectBeingActivated);
+        World.allUI.selectUI.hide();
+      });
+    }
+  }
+
   return { writtenText: arg.writtenText, buttonText: buttonText, buttonFunctions: buttonFunctions };
 };

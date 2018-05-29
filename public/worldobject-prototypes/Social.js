@@ -2,14 +2,19 @@ const Social = function(worldObject, arg = {}) {
   this.owner = worldObject;
   if (!this.owner.Living) { applyLiving(this.owner); }
 
+  this.socialLevel = 50;
+
   this.canISpeakTo = function(worldObject) {
     if (!worldObject.Social) { return false; }
-    if (!this.owner.isAdjacentTo(worldObject)) { return false; }
+    if (!this.owner.isAdjacentTo(worldObject, SPEAK_MAX_DISTANCE)) { return false; }
     return true;
   };
 
   this.speak = function(objectSpeakTo) {
-    publishEvent(`${this.owner.name} says: Hello ${objectSpeakTo.name}!`);
+    const dialogue = `Hello ${objectSpeakTo.name}!`;
+    publishEvent(`${this.owner.name} says: ${dialogue}`);
+    displayDialogue(this.owner, dialogue);
+    this.socialLevel += 10;
   };
 };
 

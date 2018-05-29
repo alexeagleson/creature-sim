@@ -3,7 +3,7 @@ const STAMINA_LOSS_PER_MILLISECOND = 0.0001;
 const Living = function(worldObject, arg = {}) {
   this.owner = worldObject;
   if (!this.owner.Destructible) { applyDestructible(this.owner); }
-  
+
   this.stamina = 100;
 
   this.adjustStamina = function(timePassedMilliseconds) {
@@ -22,6 +22,21 @@ const Living = function(worldObject, arg = {}) {
     if (actionName === 'Attack') {
       this.stamina -= 10;
     }
+  };
+
+  this.canIExamineObject = function(worldObject) {
+    if (!this.owner.isAdjacentTo(worldObject, EXAMINE_MAX_DISTANCE)) { return false; }
+    return true;
+  };
+
+  this.examineObject = function(examineTarget) {
+    publishEvent(`${this.owner.name} exmaines ${examineTarget.name}.`);
+
+    //badCode
+    World.allUI.hudUI.hudTargetObject = examineTarget;
+    setTimeout(() => { World.allUI.hudUI.hudTargetObject = World.player; }, 3000);
+
+    return true;
   };
 
   this.death = function() {

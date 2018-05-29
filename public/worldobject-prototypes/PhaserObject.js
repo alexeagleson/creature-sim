@@ -2,6 +2,7 @@ const PhaserObject = function(worldObject, arg = {}) {
   this.owner = worldObject;
 
   this.spriteFilename = arg.spriteFilename || 'Rabbit';
+  this.defaultFrameNumber = arg.defaultFrameNumber || 0;
   this.sprite = null;
 
   this.destroySprite = function() {

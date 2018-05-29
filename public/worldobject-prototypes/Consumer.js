@@ -8,6 +8,10 @@ const Consumer = function(worldObject, arg = {}) {
   this.hunger = 50;
   this.thirst = 100;
 
+  this.hungerImportance = 5;
+  this.thirstImportance = 10;
+
+
   this.canIConsumeObject = function(worldObject) {
     if (!worldObject.Consumable) { return false; }
     if (!this.owner.inMyInventoryOrAdjacent(worldObject)) { return false; }
@@ -34,6 +38,8 @@ const Consumer = function(worldObject, arg = {}) {
     this.thirst -= THIRST_LOSS_PER_MILLISECOND * timePassedMilliseconds;
     this.thirst = normalizeToValue(this.thirst, 0, 100);
   };
+
+
 
 };
 

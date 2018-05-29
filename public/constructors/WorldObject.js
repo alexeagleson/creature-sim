@@ -47,9 +47,9 @@ const WorldObject = function(objectName, arg = {}) {
     if (this === World.player) { World.Camera.updatePosition(); }
   };
 
-  this.isAdjacentTo = function(worldObject) {
+  this.isAdjacentTo = function(worldObject, maxDistance = INTERACT_MAX_DISTANCE) {
     if (!this.WorldTile || !worldObject.WorldTile) { return false; }
-    if (distanceTo(this.myCoords(), worldObject.myCoords()) <= OBJECT_INTERACT_MIN_DISTANCE) { return true; }
+    if (distanceTo(this.myCoords(), worldObject.myCoords()) <= maxDistance) { return true; }
     return false;
   };
 

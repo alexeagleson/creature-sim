@@ -22,6 +22,7 @@ function initializeWorld() {
   createWorldObject('Acorn');
   createWorldObject('Rabbit');
   createWorldObject('Carrot');
+  runXTimes(createWorldObject, 10, 'Trash');
 };
 
 function initializeUiTimeAndCamera() {

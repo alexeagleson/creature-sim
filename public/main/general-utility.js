@@ -23,6 +23,10 @@ function pickRandom(arrayOfThings) {
   return arrayOfThings[randomPosition];
 };
 
+function runXTimes(givenFunction, numberOfTimes, optionalArg = null) {
+  for (let i = 0; i < numberOfTimes; i++) { givenFunction(optionalArg); }
+};
+
 function randBetween(min, max) {
   // Function is inclusive of max number
   return Math.floor(Math.random() * (max - min + 1) + min);

@@ -60,9 +60,6 @@ const FONT_FAMILY = 'dejavu sans mono, consolas, monospace';
 // Time
 const WORLD_TIME_MULTIPLIER = 3000;
 
-// Other
-const OBJECT_INTERACT_MIN_DISTANCE = 1.5;
-
 const World = {
   Time: {},
   Camera: {},

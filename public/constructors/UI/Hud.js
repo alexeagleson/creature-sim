@@ -21,6 +21,10 @@ const Hud = function(uiObject) {
   this.objectThirst.innerHTML = `Thirst: ${World.player.Consumer.thirst}/100`;
   this.owner.htmlElement.append(this.objectThirst);
 
+  this.objectSocial = document.createElement('p');
+  this.objectSocial.innerHTML = `Social: ${World.player.Social.socialLevel}/100`;
+  this.owner.htmlElement.append(this.objectSocial);
+
   this.objectTemp = document.createElement('p');
   this.objectTemp.innerHTML = `Temperature: ${World.player.Temperature.temp}`;
   this.owner.htmlElement.append(this.objectTemp);
@@ -39,6 +43,7 @@ const Hud = function(uiObject) {
     this.objectStamina.innerHTML = this.owner.hudTargetObject.Living ? `Stamina: ${Math.round(this.owner.hudTargetObject.Living.stamina)}/100` : `Stamina: N/A`;
     this.objectHunger.innerHTML = this.owner.hudTargetObject.Consumer ? `Hunger: ${Math.round(this.owner.hudTargetObject.Consumer.hunger)}/100` : `Hunger: N/A`;
     this.objectThirst.innerHTML = this.owner.hudTargetObject.Consumer ? `Thirst: ${Math.round(this.owner.hudTargetObject.Consumer.thirst)}/100` : `Thirst: N/A`;
+    this.objectSocial.innerHTML = this.owner.hudTargetObject.Social ? `Social: ${Math.round(this.owner.hudTargetObject.Social.socialLevel)}/100` : `Social: N/A`;
     this.objectTemp.innerHTML = this.owner.hudTargetObject.Temperature ? `Temperature: ${Math.round(this.owner.hudTargetObject.Temperature.temp)}` : `Temperature: N/A`;
     this.objectEquipment.innerHTML = this.owner.hudTargetObject.Living
       ? this.owner.hudTargetObject.Equipper.currentEquipment

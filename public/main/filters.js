@@ -32,6 +32,14 @@ function isConsumable(worldObject) {
   return worldObject.Consumable != undefined;
 };
 
+function isSocial(worldObject) {
+  return worldObject.Social != undefined;
+};
+
+function isItem(worldObject) {
+  return worldObject.Item != undefined;
+};
+
 function isOnAMap(worldObject) {
   if (!worldObject.WorldMap) { return false; }
   return worldObject.WorldTile != null;

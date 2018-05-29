@@ -75,6 +75,27 @@ function displayNamesOfObjects(objectsAtCoords) {
   }
 };
 
+function displayDialogue(speakerObject, dialogue) {
+  let dialogueElement = document.getElementById('dialogueElement');
+
+  if (!dialogueElement) {
+    dialogueElement = document.createElement('p');
+    dialogueElement.id = 'dialogueElement';
+    dialogueElement.className = 'strokeme';
+    World.allUI.mainWrapper.htmlElement.append(dialogueElement);
+  }
+
+  const pixelCoords = tileToPixel(actualToScreen(speakerObject.myCoords()));
+  dialogueElement.innerHTML = dialogue;
+  dialogueElement.style['left'] = `${pixelCoords[0]}px`;
+  dialogueElement.style['top'] = `${pixelCoords[1]}px`;
+  dialogueElement.style['position'] = "absolute";
+  dialogueElement.style['z-index'] = "2";
+  dialogueElement.style['pointer-events'] = "none";
+
+  setTimeout(() => { removeAllChildren(dialogueElement); }, 2000);
+};
+
 function initializeUI() {
   World.MainDisplay.canvas.className = 'displayCanvas';
   World.allUI.mainWrapper = new UI(arg = {id: 'mainWrapper', class: 'mainWrapper', width: World.MainDisplay.canvas.width, height: World.MainDisplay.canvas.height});

@@ -2,17 +2,21 @@ const playGame = new Phaser.Class({
   Extends: Phaser.Scene,
 
   initialize: function playGame() {
-    Phaser.Scene.call(this, {key: "PlayGame"});
+    Phaser.Scene.call(this, {key: 'PlayGame'});
   },
 
   preload: function() {
-    this.load.image("Squirrel", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Squirrel.png");
-    this.load.image("Acorn", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Acorn.png");
-    this.load.image("Rabbit", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Rabbit.png");
-    this.load.image("Carrot", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Carrot.png");
-    this.load.image("Floor_Grass", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Grass.png");
-    this.load.image("Floor_Ice", "https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Ice.png");
-    this.load.image("Tree", "https://kalospace.com/gameassets/active_game_assets/sprites/32x64/Tree.png");
+    // 32x32
+    this.load.spritesheet('Squirrel', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Squirrel.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
+    this.load.spritesheet('Acorn', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Acorn.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
+    this.load.spritesheet('Rabbit', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Rabbit.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
+    this.load.spritesheet('Carrot', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Carrot.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
+    this.load.spritesheet('Floor_Grass', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Grass.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
+    this.load.spritesheet('Floor_Ice', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Ice.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
+    this.load.spritesheet('Trash', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Trash.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
+
+    // 32x64
+    this.load.spritesheet('Tree', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x64/Tree.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE * 2});
   },
 
   create: function() {
@@ -35,7 +39,7 @@ const PhaserDisplay = function(mainDisplay) {
       type: Phaser.WEBGL,
       width: SCREEN_WIDTH,
       height: SCREEN_HEIGHT,
-      backgroundColor: "#000044",
+      backgroundColor: '#000044',
       scene: [playGame]
     });
     this.owner.canvas = this.engine.canvas;
@@ -55,7 +59,7 @@ const PhaserDisplay = function(mainDisplay) {
 
   this.drawObject = function(worldObject) {
     const pixelCoords = tileToPixel(worldObject.myCoords());
-    worldObject.PhaserObject.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], worldObject.PhaserObject.spriteFilename, 0);
+    worldObject.PhaserObject.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], worldObject.PhaserObject.spriteFilename, worldObject.PhaserObject.defaultFrameNumber);
   };
 
   this.stopDisplayEngine = function() {

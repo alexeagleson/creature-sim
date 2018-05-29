@@ -5,8 +5,13 @@ improve inventory system
 filters for message system
 separate arrays for separate types of objects
 sort array by closeness
+different maps (internal maps)
 
 
+<strong>Version 0.1.04</strong>
+--------------
+(*) Added priority decision for hunger, thirst, social and object pickup.
+(*) Added custom distance values for different actions defined as constants.
 
 <strong>Version 0.1.03</strong>
 --------------

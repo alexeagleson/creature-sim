@@ -46,6 +46,18 @@ function createWorldObject(objectName) {
     applyConsumable(createdObject);
     createdObject.Consumable.hungerValue = 100;
 
+  } else if (objectName === 'Trash') {
+    applyBasePrototypes(createdObject);
+    createdObject.char = '%';
+    if(isEngine('RotJs')) {
+      createdObject.RotJsObject.fgColour = HEX_ORANGE
+    } else {
+      createdObject.PhaserObject.spriteFilename = 'Trash';
+      createdObject.PhaserObject.defaultFrameNumber = randBetween(0, 3);
+    }
+
+    applyItem(createdObject);
+
   }
 
   World.allObjects.push(createdObject);
