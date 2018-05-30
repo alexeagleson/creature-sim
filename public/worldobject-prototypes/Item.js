@@ -1,5 +1,7 @@
 const Item = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsItem.push(this.owner);
+
   this.inInventoryOf = null;
   this.weight = 100;
 };

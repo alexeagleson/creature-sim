@@ -1,5 +1,7 @@
 const Pathing = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsPathing.push(this.owner);
+
   if (!this.owner.Moving) { applyMoving(this.owner); }
 
   this.createMultiMapPath = function() {
@@ -122,6 +124,9 @@ const Pathing = function(worldObject, arg = {}) {
     }
     return false;
   };
+
+
+  this.calculateMapPath
 };
 
 function applyPathing(worldObject, arg = {}) {

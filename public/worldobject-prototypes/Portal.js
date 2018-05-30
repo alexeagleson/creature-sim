@@ -1,5 +1,7 @@
 const Portal = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsPortal.push(this.owner);
+
   this.warpToMap = getMapByName(arg.warpToMap) || null;
   this.warpCoords = (arg.warpToTileX && arg.warpToTileY) ? [arg.warpToTileX, arg.warpToTileY] : convertToCoords(getRandomFreeTile(this.warpToMap));
 

@@ -1,5 +1,6 @@
 const Moving = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsMoving.push(this.owner);
 
   this.move = function(movementCoords) {
     if (!this.owner.WorldMap.getTile(movementCoords).wall) {

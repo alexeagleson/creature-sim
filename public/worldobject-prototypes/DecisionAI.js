@@ -1,5 +1,7 @@
 const DecisionAI = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsDecisionAI.push(this.owner);
+
   if (!this.owner.TurnTaking) { applyTurnTaking(this.owner); }
 
   this.resetObjective = function() {
@@ -20,7 +22,6 @@ const DecisionAI = function(worldObject, arg = {}) {
       consumableObjectsOnMyMap.some((consumableObject) => {
         if ((consumableObject.Consumable.hungerValue > 0 && this.owner.Consumer.hunger < CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && this.owner.Consumer.thirst < CONCERNED_VALUE)) {
           this.owner.Pathing.createPath({pathTo: consumableObject});
-          //this.owner.Pathing.createMultiMapPath();
           publishEvent(`${this.owner.name} wants to consume ${consumableObject.name}.`);
 
           this.currentAction = () => {

@@ -100,3 +100,18 @@ function convertToCoords(argument) {
   }
   return displayError(`Could not convert to coords: ${argument} or ${argument.name}`);
 };
+
+function convertToMap(argument) {
+  if (argument instanceof WorldMap) {
+    return argument;
+  }
+  let mapGet = null;
+  if (typeof argument === 'number') {
+    mapGet = World.allMapsMap.get(argument);
+    if (mapGet) { return mapGet; }
+  } else if (typeof argument === 'string') {
+    mapGet = getMapByName(argument);
+    if (mapGet) { return mapGet; }
+  }
+  return displayError(`Could not convert to map: ${argument} or ${argument.name}`);
+};

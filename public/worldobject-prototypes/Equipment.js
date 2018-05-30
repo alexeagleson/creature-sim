@@ -1,5 +1,7 @@
 const Equipment = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsEquipment.push(this.owner);
+  
   if (!this.owner.Item) { applyItem(this.owner); }
 
   this.bonusAttack = arg.bonusAttack || 0;

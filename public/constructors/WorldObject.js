@@ -21,8 +21,28 @@ const WorldObject = function(objectName, arg = {}) {
 
   this.removeFromUniverse = function() {
     this.removeLocationData();
-    World.allObjectsMap.delete(this.uniqueID);
+
+    World.allObjectsCombat = World.allObjectsCombat.filter(isNotObject.bind(this));
+    World.allObjectsConsumable = World.allObjectsConsumable.filter(isNotObject.bind(this));
+    World.allObjectsConsumer = World.allObjectsConsumer.filter(isNotObject.bind(this));
+    World.allObjectsDecisionAI = World.allObjectsDecisionAI.filter(isNotObject.bind(this));
+    World.allObjectsDestructible = World.allObjectsDestructible.filter(isNotObject.bind(this));
+    World.allObjectsEquipment = World.allObjectsEquipment.filter(isNotObject.bind(this));
+    World.allObjectsEquipper = World.allObjectsEquipper.filter(isNotObject.bind(this));
+    World.allObjectsInventory = World.allObjectsInventory.filter(isNotObject.bind(this));
+    World.allObjectsItem = World.allObjectsItem.filter(isNotObject.bind(this));
+    World.allObjectsLiving = World.allObjectsLiving.filter(isNotObject.bind(this));
+    World.allObjectsMoving = World.allObjectsMoving.filter(isNotObject.bind(this));
+    World.allObjectsPathing = World.allObjectsPathing.filter(isNotObject.bind(this));
+    World.allObjectsPhaserObject = World.allObjectsPhaserObject.filter(isNotObject.bind(this));
+    World.allObjectsPortal = World.allObjectsPortal.filter(isNotObject.bind(this));
+    World.allObjectsRotJsObject = World.allObjectsRotJsObject.filter(isNotObject.bind(this));
+    World.allObjectsSocial = World.allObjectsSocial.filter(isNotObject.bind(this));
+    World.allObjectsTemperature = World.allObjectsTemperature.filter(isNotObject.bind(this));
+    World.allObjectsTurnTaking = World.allObjectsTurnTaking.filter(isNotObject.bind(this));
+
     World.allObjects = World.allObjects.filter(isNotObject.bind(this));
+    World.allObjectsMap.delete(this.uniqueID);
   };
 
   this.destroySprite = function() {

@@ -1,4 +1,4 @@
-const RENDER_ENGINE = 'Phaser';
+const RENDER_ENGINE = 'RotJs';
 const CANVAS_SIZE = 0.75;
 
 const isEngine = (engineName) => {
@@ -66,11 +66,33 @@ const World = {
   allUI: {},
 
   MainDisplay: null,
+  MapNodeTree: null,
 
   allEvents: [],
   allMaps: [],
   allObjects: [],
+
+  allMapsMap: new Map(),
   allObjectsMap: new Map(),
+
+  allObjectsCombat: [],
+  allObjectsConsumable: [],
+  allObjectsConsumer: [],
+  allObjectsDecisionAI: [],
+  allObjectsDestructible: [],
+  allObjectsEquipment: [],
+  allObjectsEquipper: [],
+  allObjectsInventory: [],
+  allObjectsItem: [],
+  allObjectsLiving: [],
+  allObjectsMoving: [],
+  allObjectsPathing: [],
+  allObjectsPhaserObject: [],
+  allObjectsPortal: [],
+  allObjectsRotJsObject: [],
+  allObjectsSocial: [],
+  allObjectsTemperature: [],
+  allObjectsTurnTaking: [],
 
   worldPaused: false,
   worldEnd: false,

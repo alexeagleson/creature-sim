@@ -1,5 +1,7 @@
 const Combat = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsCombat.push(this.owner);
+
   if (!this.owner.Living) { applyLiving(this.owner); }
 
   this.baseAttack = arg.baseAttack || 10;

@@ -1,5 +1,6 @@
 const PhaserObject = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsPhaserObject.push(this.owner);
 
   this.spriteFilename = arg.spriteFilename || 'Rabbit';
   this.defaultFrameNumber = arg.defaultFrameNumber || 0;

@@ -1,7 +1,7 @@
-const STAMINA_LOSS_PER_MILLISECOND = 0.0001;
-
 const Living = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsLiving.push(this.owner);
+  
   if (!this.owner.Destructible) { applyDestructible(this.owner); }
 
   this.stamina = 100;

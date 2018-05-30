@@ -1,5 +1,6 @@
 const Social = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsSocial.push(this.owner);
   if (!this.owner.Living) { applyLiving(this.owner); }
 
   this.socialLevel = 50;

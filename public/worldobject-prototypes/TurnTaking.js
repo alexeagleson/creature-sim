@@ -1,8 +1,9 @@
 const TurnTaking = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsTurnTaking.push(this.owner);
 
   this.lastTurnMilliseconds = arg.lastTurnMilliseconds || 0;
-  this.millisecondsBetweenTurns = arg.millisecondsBetweenTurns || 100;
+  this.millisecondsBetweenTurns = arg.millisecondsBetweenTurns || 500;
 
   this.checkForTurnReady = function() {
     if (World.Time.millisecondsElapsed - this.lastTurnMilliseconds > this.millisecondsBetweenTurns) {

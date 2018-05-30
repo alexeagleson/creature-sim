@@ -1,5 +1,7 @@
 const Destructible = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsDestructible.push(this.owner);
+
   this.condition = 100;
   this.baseArmour = arg.baseArmour || 0;
 

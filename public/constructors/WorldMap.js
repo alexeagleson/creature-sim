@@ -2,6 +2,9 @@ const WorldMap = function(mapName, arg = {mapWidth: null, mapHeight: null, mapTe
   World.allMaps.push(this);
   this.name = mapName;
   this.uniqueID = uniqueNumber();
+
+  World.allMapsMap.set(this.uniqueID, this);
+
   this.mapWidth = arg.mapWidth || 70;
   this.mapHeight = arg.mapHeight || 40;
   this.mapTemp =  arg.mapTemp || 20;

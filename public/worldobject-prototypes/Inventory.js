@@ -1,5 +1,6 @@
 const Inventory = function(worldObject, arg = {}) {
   this.owner = worldObject;
+  World.allObjectsInventory.push(this.owner);
 
   this.canIAddToInventory = function(worldObject) {
     if (!worldObject.Item) { return false; }
