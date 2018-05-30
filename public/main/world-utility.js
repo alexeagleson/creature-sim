@@ -44,6 +44,7 @@ function withinMapBounds(WorldMap, coords) {
 };
 
 function onSameMap(worldObject1, worldObject2) {
+  if (!worldObject1.WorldTile || !worldObject2.WorldTile) { return false; }
   if (!worldObject1.WorldMap || !worldObject2.WorldMap) { return false; }
   return worldObject1.WorldMap === worldObject2.WorldMap;
 };
@@ -97,5 +98,5 @@ function convertToCoords(argument) {
     // If argument passed was already in coords format
     if (argument.length === 2) { return argument; }
   }
-  return displayError(`Could not convert to coords: ${argument}`);
+  return displayError(`Could not convert to coords: ${argument} or ${argument.name}`);
 };

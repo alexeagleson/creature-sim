@@ -22,7 +22,7 @@ const PhaserObject = function(worldObject, arg = {}) {
     this.sprite.y = pixelCoords[1];
     this.sprite.visible = true;
     this.sprite.depth = 1;
-  };
+    };
 };
 
 function applyPhaserObject(worldObject, arg = {}) {

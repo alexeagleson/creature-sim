@@ -88,6 +88,7 @@ const DecisionAI = function(worldObject, arg = {}) {
       itemObjectsOnMyMap.some((itemObject) => {
         this.owner.Pathing.createPath({pathTo: itemObject});
         publishEvent(`${this.owner.name} wants to pick up ${itemObject.name}.`);
+        displayDialogue(this.owner, pickRandom(['time to go pick up some garbage', 'look at this mess']));
 
         this.currentAction = () => {
           return this.owner.Pathing.movePath();
@@ -98,6 +99,7 @@ const DecisionAI = function(worldObject, arg = {}) {
         };
 
         this.onSuccess = () => {
+          displayDialogue(this.owner, pickRandom(['who is leaving all this shit everywhere?', 'all i do is clean']));
           return this.owner.Inventory.addToInventory(itemObject);
         };
 
@@ -132,7 +134,7 @@ const DecisionAI = function(worldObject, arg = {}) {
         };
 
         this.onFail = () => {
-          publishEvent(`${this.owner.name} fails to pick up ${itemObject.name}.`);
+          publishEvent(`${this.owner.name} fails to pick up ${treasureObject.name}.`);
         };
 
         this.hasObjective = true;

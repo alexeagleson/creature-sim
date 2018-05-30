@@ -1,4 +1,4 @@
-const RENDER_ENGINE = 'ROtJs';
+const RENDER_ENGINE = 'Phaser';
 const CANVAS_SIZE = 0.75;
 
 const isEngine = (engineName) => {

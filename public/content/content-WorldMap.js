@@ -14,7 +14,7 @@ function createWorldMap(mapName) {
     createWorldObject('Rabbit').placeOnMap({worldMap: createdMap});
     createWorldObject('Carrot').placeOnMap({worldMap: createdMap});
     createWorldObject('Portal', arg = {warpToMap: 'Map 2'}).placeOnMap({worldMap: createdMap});
-    runXTimes(createWorldObject, 10, 'Trash').forEach((object) => { object.placeOnMap({worldMap: createdMap}); });
+    runXTimes(createWorldObject, 6, 'Trash').forEach((object) => { object.placeOnMap({worldMap: createdMap}); });
 
   } else if (mapName === 'Map 2') {
     createdMap = new WorldMap(mapName, arg = {mapType: 'Cellular'});

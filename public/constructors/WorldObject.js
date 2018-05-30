@@ -30,7 +30,7 @@ const WorldObject = function(objectName, arg = {}) {
   };
 
   this.placeSprite = function(tileCoords) {
-    if (isEngine('Phaser') && this.PhaserObject) {
+    if (isEngine('Phaser') && this.PhaserObject && World.MainDisplay) {
       this.PhaserObject.generateSprite();
       this.PhaserObject.placeSprite(tileCoords);
     }
@@ -46,6 +46,7 @@ const WorldObject = function(objectName, arg = {}) {
     if (this === World.player && mapTransition) { World.playerMapTransition = true; }
     this.WorldMap = arg.worldMap;
     this.WorldTile = this.WorldMap.getTile(arg.coords);
+
     if (onSameMap(this, World.player)) {
       this.placeSprite(arg.coords);
     }
@@ -55,8 +56,7 @@ const WorldObject = function(objectName, arg = {}) {
   };
 
   this.isAdjacentTo = function(worldObject, maxDistance = INTERACT_MAX_DISTANCE) {
-    if (!this.WorldTile || !worldObject.WorldTile) { return false; }
-    if (!this.WorldMap || !worldObject.WorldMap) { return false; }
+    if (!onSameMap(this, worldObject)) { return false; }
     if (distanceTo(convertToCoords(this), convertToCoords(worldObject)) <= maxDistance) { return true; }
     return false;
   };
