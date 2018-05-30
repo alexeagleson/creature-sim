@@ -70,6 +70,7 @@ const World = {
   allEvents: [],
   allMaps: [],
   allObjects: [],
+  allObjectsMap: new Map(),
 
   worldPaused: false,
   worldEnd: false,

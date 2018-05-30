@@ -21,6 +21,11 @@ function isInInventoryOf(worldObject) {
   return worldObject.Item.inInventoryOf === this;
 };
 
+function isNamed(worldObject) {
+  // Bind 'this' to desired name
+  return worldObject.name.toLowerCase() === this.toLowerCase();
+};
+
 
 
 // Filters no bind
@@ -71,8 +76,8 @@ function shortestPathToSort(objectA, objectB) {
   const objectACoords = [objectA.WorldTile.x, objectA.WorldTile.y];
   const objectBCoords = [objectB.WorldTile.x, objectB.WorldTile.y];
 
-  const objectAPathLength = this.Pathing.calculatePath(objectACoords).length || 9999;
-  const objectBPathLength = this.Pathing.calculatePath(objectBCoords).length || 9999;
+  const objectAPathLength = this.Pathing.calculatePath({pathTo: objectACoords}).length || 9999;
+  const objectBPathLength = this.Pathing.calculatePath({pathTo: objectBCoords}).length || 9999;
 
   return objectAPathLength - objectBPathLength;
 };

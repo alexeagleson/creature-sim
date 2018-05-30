@@ -1,22 +1,16 @@
 const WorldObject = function(objectName, arg = {}) {
-  World.allObjects.push(this);
   this.name = objectName;
   this.uniqueID = uniqueNumber();
+
+  World.allObjects.push(this);
+  World.allObjectsMap.set(this.uniqueID, this);
 
   this.char = arg.char || null;
   this.WorldMap = arg.WorldMap || null;
   this.WorldTile = arg.WorldMap || null;
 
   this.myTile = function() {
-    return this.WorldMap.getTile(this.myCoords());
-  };
-
-  this.myCoords = function() {
-    if (!this.WorldTile) {
-      displayError(`${this.name} is not on a tile and cannot call myCoords.`);
-      return null;
-    }
-    return [this.WorldTile.x, this.WorldTile.y];
+    return this.WorldMap.getTile(convertToCoords(this));
   };
 
   this.removeLocationData = function() {
@@ -27,6 +21,7 @@ const WorldObject = function(objectName, arg = {}) {
 
   this.removeFromUniverse = function() {
     this.removeLocationData();
+    World.allObjectsMap.delete(this.uniqueID);
     World.allObjects = World.allObjects.filter(isNotObject.bind(this));
   };
 
@@ -42,7 +37,7 @@ const WorldObject = function(objectName, arg = {}) {
   };
 
   this.placeOnMap = function(arg = {worldMap: null, coords: null, ignoreTriggers: null}) {
-    arg.coords = arg.coords || getRandomFreeTile(arg.worldMap).myCoords();
+    arg.coords = arg.coords || convertToCoords(getRandomFreeTile(arg.worldMap));
     arg.ignoreTriggers = arg.ignoreTriggers || false;
     const mapTransition = (this.WorldMap != null && this.WorldMap != arg.worldMap) ? true : false;
 
@@ -62,7 +57,7 @@ const WorldObject = function(objectName, arg = {}) {
   this.isAdjacentTo = function(worldObject, maxDistance = INTERACT_MAX_DISTANCE) {
     if (!this.WorldTile || !worldObject.WorldTile) { return false; }
     if (!this.WorldMap || !worldObject.WorldMap) { return false; }
-    if (distanceTo(this.myCoords(), worldObject.myCoords()) <= maxDistance) { return true; }
+    if (distanceTo(convertToCoords(this), convertToCoords(worldObject)) <= maxDistance) { return true; }
     return false;
   };
 

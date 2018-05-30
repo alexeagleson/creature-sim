@@ -20,7 +20,7 @@ const RotJsDisplay = function(mainDisplay) {
   };
 
   this.drawObject = function(worldObject) {
-    const screenTileCoords = actualToScreen(worldObject.myCoords());
+    const screenTileCoords = actualToScreen(convertToCoords(worldObject));
     this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldObject.char, worldObject.RotJsObject.fgColour, worldObject.RotJsObject.bgColour);
   };
 

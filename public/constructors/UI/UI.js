@@ -65,7 +65,7 @@ function displayNamesOfObjects(objectsAtCoords) {
 
   objectNamesElement.innerHTML = objectNames;
   if (objectsAtCoords.length > 0) {
-    const pixelCoords = tileToPixel(actualToScreen(objectsAtCoords[0].myCoords()));
+    const pixelCoords = tileToPixel(actualToScreen(convertToCoords(objectsAtCoords[0])));
     objectNamesElement.innerHTML = objectNames;
     objectNamesElement.style['left'] = `${pixelCoords[0]}px`;
     objectNamesElement.style['top'] = `${pixelCoords[1]}px`;
@@ -85,7 +85,7 @@ function displayDialogue(speakerObject, dialogue) {
     World.allUI.mainWrapper.htmlElement.append(dialogueElement);
   }
 
-  const pixelCoords = tileToPixel(actualToScreen(speakerObject.myCoords()));
+  const pixelCoords = tileToPixel(actualToScreen(convertToCoords(speakerObject)));
   dialogueElement.innerHTML = dialogue;
   dialogueElement.style['left'] = `${pixelCoords[0]}px`;
   dialogueElement.style['top'] = `${pixelCoords[1]}px`;

@@ -14,13 +14,13 @@ const DecisionAI = function(worldObject, arg = {}) {
     const objectsOnMyMap = World.allObjects.filter(isOnMapOfObject.bind(this.owner)).filter(isNotObject.bind(this.owner));
 
     if (this.owner.Consumer && (this.owner.Consumer.hunger < CONCERNED_VALUE || this.owner.Consumer.thirst < CONCERNED_VALUE)) {
-      let consumableObjectsOnMyMap = objectsOnMyMap.filter(isConsumable);
+      const consumableObjectsOnMyMap = objectsOnMyMap.filter(isConsumable);
       consumableObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
 
       consumableObjectsOnMyMap.some((consumableObject) => {
         if ((consumableObject.Consumable.hungerValue > 0 && this.owner.Consumer.hunger < CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && this.owner.Consumer.thirst < CONCERNED_VALUE)) {
-          //this.owner.Pathing.createPath(consumableObject.myCoords());
-          this.owner.Pathing.createMultiMapPath();
+          this.owner.Pathing.createPath({pathTo: consumableObject});
+          //this.owner.Pathing.createMultiMapPath();
           publishEvent(`${this.owner.name} wants to consume ${consumableObject.name}.`);
 
           this.currentAction = () => {
@@ -50,11 +50,11 @@ const DecisionAI = function(worldObject, arg = {}) {
     if (this.hasObjective) { return true; }
 
     if (this.owner.Social && this.owner.Social.socialLevel < CONCERNED_VALUE) {
-      let socialObjectsOnMyMap = objectsOnMyMap.filter(isSocial);
+      const socialObjectsOnMyMap = objectsOnMyMap.filter(isSocial);
       socialObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
 
       socialObjectsOnMyMap.some((socialObject) => {
-        this.owner.Pathing.createPath(socialObject.myCoords());
+        this.owner.Pathing.createPath({pathTo: socialObject});
         publishEvent(`${this.owner.name} wants to talk to ${socialObject.name}.`);
 
         this.currentAction = () => {
@@ -82,11 +82,11 @@ const DecisionAI = function(worldObject, arg = {}) {
     if (this.hasObjective) { return true; }
 
     if (this.owner.Inventory) {
-      let itemObjectsOnMyMap = objectsOnMyMap.filter(isItem);
+      const itemObjectsOnMyMap = objectsOnMyMap.filter(isItem);
       itemObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
 
       itemObjectsOnMyMap.some((itemObject) => {
-        this.owner.Pathing.createPath(itemObject.myCoords());
+        this.owner.Pathing.createPath({pathTo: itemObject});
         publishEvent(`${this.owner.name} wants to pick up ${itemObject.name}.`);
 
         this.currentAction = () => {
@@ -99,6 +99,36 @@ const DecisionAI = function(worldObject, arg = {}) {
 
         this.onSuccess = () => {
           return this.owner.Inventory.addToInventory(itemObject);
+        };
+
+        this.onFail = () => {
+          publishEvent(`${this.owner.name} fails to pick up ${itemObject.name}.`);
+        };
+
+        this.hasObjective = true;
+        return true;
+      });
+    }
+
+    if (this.hasObjective) { return true; }
+
+    if (this.owner.Inventory) {
+      const treasureObjects = World.allObjects.filter(isNamed.bind('Treasure'));
+
+      treasureObjects.some((treasureObject) => {
+        this.owner.Pathing.createPath({pathTo: treasureObject});
+        publishEvent(`${this.owner.name} wants to go search for ${treasureObject.name}.`);
+
+        this.currentAction = () => {
+          return this.owner.Pathing.movePath();
+        };
+
+        this.successCondition = () => {
+          return this.owner.isAdjacentTo(treasureObject, INTERACT_MAX_DISTANCE);
+        };
+
+        this.onSuccess = () => {
+          return this.owner.Inventory.addToInventory(treasureObject);
         };
 
         this.onFail = () => {

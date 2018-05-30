@@ -85,3 +85,17 @@ function pauseSim() {
 function resumeSim() {
   World.worldPaused = false;
 };
+
+function convertToCoords(argument) {
+  if (argument instanceof WorldObject) {
+    if (argument.WorldMap && argument.WorldTile) { return [argument.WorldTile.x, argument.WorldTile.y]; }
+  }
+  if (argument instanceof WorldTile) {
+    return [argument.x, argument.y];
+  }
+  if (typeof argument === 'object') {
+    // If argument passed was already in coords format
+    if (argument.length === 2) { return argument; }
+  }
+  return displayError(`Could not convert to coords: ${argument}`);
+};

@@ -1,7 +1,7 @@
 const Portal = function(worldObject, arg = {}) {
   this.owner = worldObject;
   this.warpToMap = getMapByName(arg.warpToMap) || null;
-  this.warpCoords = (arg.warpToTileX && arg.warpToTileY) ? [arg.warpToTileX, arg.warpToTileY] : getRandomFreeTile(this.warpToMap).myCoords();
+  this.warpCoords = (arg.warpToTileX && arg.warpToTileY) ? [arg.warpToTileX, arg.warpToTileY] : convertToCoords(getRandomFreeTile(this.warpToMap));
 
   this.owner.onStep = (objectThatTriggered) => {
     objectThatTriggered.placeOnMap(arg = {worldMap: this.warpToMap, coords: this.warpCoords});

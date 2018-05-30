@@ -9,26 +9,37 @@ const Pathing = function(worldObject, arg = {}) {
     let treasure = World.allObjects.filter((object) => object.name === 'Treasure');
     treasure = treasure ? treasure[0] : null;
 
-    let firstPath = this.calculatePath(portal.myCoords());
-    let secondPath = this.calculatePath(treasure.myCoords(), fromCoords = portal.Portal.warpCoords);
+    let firstPath = this.calculatePath({pathTo: portal});
+    let secondPath = this.calculatePath({pathTo: treasure, pathFrom: portal.Portal.warpCoords, worldMap: treasure.WorldMap});
 
     this.currentPath = firstPath.concat(secondPath);
   };
 
-  this.createPath = function(toCoords, fromCoords = null) {
-    this.currentPath = this.calculatePath(toCoords, fromCoords);
+  this.createPath = function(arg = {pathTo: null, pathFrom: null, worldMap: null}) {
+    this.currentPath = this.calculatePath(arg);
   };
 
-  this.calculatePath = function(toCoords, fromCoords = null) {
-    if (!fromCoords) { fromCoords = this.owner.myCoords(); }
+  this.calculatePath = function(arg = {pathTo: null, pathFrom: null, worldMap: null}) {
+    arg.worldMap = arg.worldMap
+      ? arg.worldMap
+      : arg.pathTo instanceof WorldObject
+        ? arg.worldMap = arg.pathTo.WorldMap
+        : arg.worldMap = this.owner.WorldMap
+
+    arg.pathTo = convertToCoords(arg.pathTo);
+
+    arg.pathFrom = arg.pathFrom
+      ? convertToCoords(arg.pathFrom)
+      : convertToCoords(this.owner);
 
     this.todo = [];
     this.done = {};
 
-    const fromX = fromCoords[0];
-    const fromY = fromCoords[1];
-    const toX = toCoords[0];
-    const toY = toCoords[1];
+    const fromX = arg.pathFrom[0];
+    const fromY = arg.pathFrom[1];
+    const toX = arg.pathTo[0];
+    const toY = arg.pathTo[1];
+    const worldMap = arg.worldMap;
     const finalPath = [];
 
     let thisNode = null;
@@ -42,7 +53,7 @@ const Pathing = function(worldObject, arg = {}) {
       this.done[id] = thisNode;
       if (thisNode.x == fromX && thisNode.y == fromY) { break; }
 
-      let neighbors = this.getNeighbors(thisNode.x, thisNode.y);
+      let neighbors = this.getNeighbors(thisNode.x, thisNode.y, worldMap);
 
       for (let i = 0; i < neighbors.length; i++) {
         const neighbor = neighbors[i];
@@ -64,7 +75,7 @@ const Pathing = function(worldObject, arg = {}) {
     return finalPath;
   };
 
-  this.getNeighbors = function(cx, cy) {
+  this.getNeighbors = function(cx, cy, worldMap) {
   	let result = [];
     const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
@@ -73,7 +84,7 @@ const Pathing = function(worldObject, arg = {}) {
   		const x = cx + dir[0];
   		const y = cy + dir[1];
 
-  		if (!this.owner.Moving.checkBlockedAgainstObject(x, y)) { continue; }
+  		if (!this.owner.Moving.checkBlockedAgainstObject(x, y, worldMap)) { continue; }
   		result.push([x, y]);
   	}
 
@@ -81,7 +92,7 @@ const Pathing = function(worldObject, arg = {}) {
   };
 
   this.add = function(x, y, prev) {
-    let h = distanceTo(this.owner.myCoords(), [x, y]);
+    let h = distanceTo(convertToCoords(this.owner), [x, y]);
     const obj = {
       x: x,
       y: y,

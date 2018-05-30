@@ -48,7 +48,7 @@ const PhaserDisplay = function(mainDisplay) {
 
   this.drawTile = function(tileCoords) {
     const worldTile = World.player.WorldMap.getTile(tileCoords);
-    const pixelCoords = tileToPixel(worldTile.myCoords());
+    const pixelCoords = tileToPixel(convertToCoords(worldTile));
 
     if (worldTile.char === '#') {
       this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0);
@@ -59,7 +59,7 @@ const PhaserDisplay = function(mainDisplay) {
   };
 
   this.drawObject = function(worldObject) {
-    const pixelCoords = tileToPixel(worldObject.myCoords());
+    const pixelCoords = tileToPixel(convertToCoords(worldObject));
     worldObject.PhaserObject.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], worldObject.PhaserObject.spriteFilename, worldObject.PhaserObject.defaultFrameNumber);
   };
 

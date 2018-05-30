@@ -18,15 +18,14 @@ const Moving = function(worldObject, arg = {}) {
     return this.moveRelative(relativeMovementCoords);
   };
 
-  this.checkBlockedAgainstObject = function(x, y) {
-    if (!this.owner.WorldMap) {
-      displayError(`${this.owner.name} must be on a map to call checkBlockedAgainstObject.`);
-      return null;
-    }
-    if (!withinMapBounds(this.owner.WorldMap, [x, y])) {
+  this.checkBlockedAgainstObject = function(x, y, worldMap = null) {
+    if (!worldMap) { worldMap = this.owner.WorldMap; }
+    if (!worldMap) { return displayError(`${this.owner.name} must be on a map to call checkBlockedAgainstObject.`); }
+
+    if (!withinMapBounds(worldMap, [x, y])) {
       return false;
     }
-    return this.owner.WorldMap.getTile([x, y]).checkBlocked(this.owner);
+    return worldMap.getTile([x, y]).checkBlocked(this.owner);
   };
 };
 

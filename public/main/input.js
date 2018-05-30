@@ -17,7 +17,7 @@ function pointerdownHandler(pointerEvent) {
   if (objectsAtCoords.length > 0) {
     promptSelectObject(objectsAtCoords);
   } else {
-    World.player.Pathing.createPath(clickedTileCoords);
+    World.player.Pathing.createPath({pathTo: clickedTileCoords});
     World.player.Pathing.movePath();
   }
 };
