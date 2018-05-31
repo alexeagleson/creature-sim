@@ -70,3 +70,14 @@ const WorldMap = function(mapName, arg = {mapWidth: null, mapHeight: null, mapTe
     this.generateMapByType({mapType: this.mapType});
   }
 };
+
+function connectMaps(arg = {mapTo: null, mapFrom: null, coordsTo: null, coordsFrom: null}) {
+  arg.mapTo = convertToMap(arg.mapTo);
+  arg.mapFrom = convertToMap(arg.mapFrom);
+
+  arg.coordsTo = arg.coordsTo || convertToCoords(getRandomFreeTile(arg.mapTo));
+  arg.coordsFrom = arg.coordsFrom || convertToCoords(getRandomFreeTile(arg.mapFrom));
+
+  createWorldObject('Portal', {warpToMap: arg.mapTo, warpCoords: arg.coordsTo}).placeOnMap({worldMap: arg.mapFrom, coords: arg.coordsFrom});
+  createWorldObject('Portal', {warpToMap: arg.mapFrom, warpCoords: arg.coordsFrom}).placeOnMap({worldMap: arg.mapTo, coords: arg.coordsTo});
+};

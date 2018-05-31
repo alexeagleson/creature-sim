@@ -1,4 +1,4 @@
-const RENDER_ENGINE = 'RotJs';
+const RENDER_ENGINE = 'Phaser';
 const CANVAS_SIZE = 0.75;
 
 const isEngine = (engineName) => {
@@ -71,6 +71,7 @@ const World = {
   allEvents: [],
   allMaps: [],
   allObjects: [],
+  allActiveTileSprites: [],
 
   allMapsMap: new Map(),
   allObjectsMap: new Map(),

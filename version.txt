@@ -9,6 +9,12 @@ different maps (internal maps)
 temperature
 multi map pathing in progress
 
+
+
+<strong>Version 0.1.08</strong>
+--------------
+(*) Added breadth-first search for map nodes
+
 <strong>Version 0.1.07</strong>
 --------------
 (*) Multi-map pathing improvements

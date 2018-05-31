@@ -51,10 +51,12 @@ const PhaserDisplay = function(mainDisplay) {
     const pixelCoords = tileToPixel(convertToCoords(worldTile));
 
     if (worldTile.char === '#') {
-      this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0);
-      this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Tree', 0).depth = 0.5;
+      World.allActiveTileSprites.push(this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0));
+      const tree = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Tree', 0);
+      tree.depth = 0.5;
+      World.allActiveTileSprites.push(tree);
     } else {
-      this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0);
+      World.allActiveTileSprites.push(this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0));
     }
   };
 
@@ -67,6 +69,10 @@ const PhaserDisplay = function(mainDisplay) {
     World.allObjects.forEach((object) => {
       if (object.PhaserObject) { object.PhaserObject.destroySprite(); }
     });
+    World.allActiveTileSprites.forEach((tileSprite) => {
+      tileSprite.destroy();
+    });
+    World.allActiveTileSprites = [];
   };
 
   this.stopDisplayEngine = function() {

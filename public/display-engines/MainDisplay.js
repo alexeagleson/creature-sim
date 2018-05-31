@@ -32,3 +32,18 @@ const MainDisplay = function() {
   this.displayEngineHandler = isEngine('Phaser') ? new PhaserDisplay(this) : new RotJsDisplay(this);
   this.displayEngineHandler.initialize();
 };
+
+function displayEngineIsActive() {
+  if (World.MainDisplay) {
+    if (World.MainDisplay.displayEngineHandler) {
+      if (isEngine('Phaser')) {
+        if (World.MainDisplay.displayEngineHandler.mainScene) {
+          return true;
+        }
+      } else if (isEngine('RotJs')) {
+        return true;
+      }
+    }
+  }
+  return false;
+};

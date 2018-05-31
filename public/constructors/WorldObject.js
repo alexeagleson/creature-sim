@@ -46,11 +46,13 @@ const WorldObject = function(objectName, arg = {}) {
   };
 
   this.destroySprite = function() {
-    if (isEngine('Phaser') && this.PhaserObject) { this.PhaserObject.destroySprite(); }
+    if (this.PhaserObject && displayEngineIsActive()) {
+      this.PhaserObject.destroySprite();
+    }
   };
 
   this.placeSprite = function(tileCoords) {
-    if (isEngine('Phaser') && this.PhaserObject && World.MainDisplay) {
+    if (this.PhaserObject && displayEngineIsActive()) {
       this.PhaserObject.generateSprite();
       this.PhaserObject.placeSprite(tileCoords);
     }
@@ -71,8 +73,10 @@ const WorldObject = function(objectName, arg = {}) {
       this.placeSprite(arg.coords);
     }
 
-    const walkTriggers = World.allObjects.filter(worldObject => worldObject.onStep).filter(isOnMapOfObject.bind(this)).filter(isOnTile.bind(this.WorldTile)).filter(isNotObject.bind(this));
-    walkTriggers.forEach((triggerObject) => { triggerObject.onStep(this); })
+    if (!arg.ignoreTriggers) {
+      const onStepTriggers = World.allObjects.filter(worldObject => worldObject.onStep).filter(isOnMapOfObject.bind(this)).filter(isOnTile.bind(this.WorldTile)).filter(isNotObject.bind(this));
+      onStepTriggers.forEach((triggerObject) => { triggerObject.onStep(this); })
+    }
   };
 
   this.isAdjacentTo = function(worldObject, maxDistance = INTERACT_MAX_DISTANCE) {

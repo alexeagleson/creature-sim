@@ -5,18 +5,7 @@ let oneTenthSecondInterval = 0;
 window.onload = () => {
   initializeWorld();
   World.MainDisplay = new MainDisplay();
-
-
-  let a = convertToMap('Home');
-  let b = convertToMap('Map 2');
-  let c = convertToMap('Map 3');
-
-  populateMapNodeTree();
-  bfs(World.MapNodeTree, a.uniqueID);
-
-  shortestPath(World.MapNodeTree, a.uniqueID, b.uniqueID);
-  shortestPath(World.MapNodeTree, a.uniqueID, c.uniqueID);
-
+  generateAllMaps();
   if (isEngine('RotJs')) {
     initializeUiTimeAndCamera();
     window.requestAnimationFrame(rotJsLoop);
@@ -26,7 +15,7 @@ window.onload = () => {
 function initializeWorld() {
   World.MapNodeTree = new MapNodeTree();
   World.player = createWorldObject('Player');
-  World.player.placeOnMap({worldMap: getMapByName('Home')});
+  World.player.placeOnMap({worldMap: convertToMap('Home')});
 };
 
 function initializeUiTimeAndCamera() {
