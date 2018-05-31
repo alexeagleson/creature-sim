@@ -9,7 +9,6 @@ const Inventory = function(worldObject, arg = {}) {
   };
 
   this.addToInventory = function(worldObject) {
-    if (worldObject.name === 'Treasure') alert('what');
     worldObject.removeLocationData();
     worldObject.Item.inInventoryOf = this.owner;
     publishEvent(`${this.owner.name} picks up ${worldObject.name}.`);

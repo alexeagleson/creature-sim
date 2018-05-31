@@ -9,7 +9,13 @@ different maps (internal maps)
 temperature
 multi map pathing in progress
 
+<strong>2018/05/31 -- Version 0.1.10</strong>
+----------------------------
+(*) BFS is now fully implemented with pathing across multiple maps
 
+<strong>2018/05/31 -- Version 0.1.09</strong>
+----------------------------
+(*) Improved BFS
 
 <strong>Version 0.1.08</strong>
 --------------

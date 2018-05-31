@@ -31,9 +31,13 @@ function bfs(mapNodeTree, source) {
   }
 };
 
-function shortestPath(mapNodeTree, source, target) {
+function shortestPath(sourceMap, targetMap) {
+  const mapNodeTree = World.MapNodeTree;
+  const source = sourceMap.uniqueID;
+  const target = targetMap.uniqueID;
+
   // If node you are searching for is the one you start on this runs
-  if (source == target) { return null; }
+  if (source == target) { return [target]; }
 
   const queue = [source];
   const visited = {source: true};

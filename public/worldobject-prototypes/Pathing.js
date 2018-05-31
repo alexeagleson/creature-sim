@@ -4,43 +4,39 @@ const Pathing = function(worldObject, arg = {}) {
 
   if (!this.owner.Moving) { applyMoving(this.owner); }
 
-  this.createMultiMapPath = function() {
-    let portal = World.allObjects.filter(isPortal).filter(isOnMapOfObject.bind(this.owner));
-    portal = portal ? portal[0] : null;
-
-    let treasure = World.allObjects.filter((object) => object.name === 'Treasure');
-    treasure = treasure ? treasure[0] : null;
-
-    let firstPath = this.calculatePath({pathTo: portal});
-    let secondPath = this.calculatePath({pathTo: treasure, pathFrom: portal.Portal.warpCoords, worldMap: treasure.WorldMap});
-
-    this.currentPath = firstPath.concat(secondPath);
-  };
-
-  this.createPath = function(arg = {pathTo: null, pathFrom: null, worldMap: null}) {
+  this.createPath = function(arg = {pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null}) {
     this.currentPath = this.calculatePath(arg);
   };
 
-  this.calculatePath = function(arg = {pathTo: null, pathFrom: null, worldMap: null}) {
-    arg.worldMap = arg.worldMap
-      ? arg.worldMap
-      : arg.pathTo instanceof WorldObject
-        ? arg.worldMap = arg.pathTo.WorldMap
-        : arg.worldMap = this.owner.WorldMap
+  this.calculatePath = function(arg = {pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null}) {
+    if (!arg.pathTo) { return displayError(`Invalid argument given for pathTo: ${arg.pathTo}.`) }
+    arg.pathFrom = arg.pathFrom || this.owner;
+
+    arg.worldMapTo = arg.worldMapTo || convertToMap(arg.pathTo) || this.owner.WorldMap;
+    arg.worldMapFrom = arg.worldMapFrom || convertToMap(arg.pathFrom) || this.owner.WorldMap;
 
     arg.pathTo = convertToCoords(arg.pathTo);
+    arg.pathFrom = convertToCoords(arg.pathFrom);
 
-    arg.pathFrom = arg.pathFrom
-      ? convertToCoords(arg.pathFrom)
-      : convertToCoords(this.owner);
+    const mapPathIDs = shortestPath(arg.worldMapFrom, arg.worldMapTo);
 
+    if (mapPathIDs.length > 1) {
+      const nextMapID = mapPathIDs[1];
+      const portal = World.allObjectsPortal.filter((portalObject) => portalObject.Portal.warpToMap.uniqueID === nextMapID)[0];
+      return this.calculateSinglePath({pathToCoords: convertToCoords(portal), pathFromCoords: arg.pathFrom, worldMap: arg.worldMapFrom});
+    }
+
+    return this.calculateSinglePath({pathToCoords: arg.pathTo, pathFromCoords: arg.pathFrom, worldMap: arg.worldMapFrom});
+  };
+
+  this.calculateSinglePath = function(arg = {pathToCoords: null, pathFromCoords: null, worldMap: null}) {
     this.todo = [];
     this.done = {};
 
-    const fromX = arg.pathFrom[0];
-    const fromY = arg.pathFrom[1];
-    const toX = arg.pathTo[0];
-    const toY = arg.pathTo[1];
+    const fromX = arg.pathFromCoords[0];
+    const fromY = arg.pathFromCoords[1];
+    const toX = arg.pathToCoords[0];
+    const toY = arg.pathToCoords[1];
     const worldMap = arg.worldMap;
     const finalPath = [];
 

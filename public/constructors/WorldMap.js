@@ -5,8 +5,8 @@ const WorldMap = function(mapName, arg = {mapWidth: null, mapHeight: null, mapTe
 
   World.allMapsMap.set(this.uniqueID, this);
 
-  this.mapWidth = arg.mapWidth || 70;
-  this.mapHeight = arg.mapHeight || 40;
+  this.mapWidth = arg.mapWidth || 60;
+  this.mapHeight = arg.mapHeight || 30;
   this.mapTemp =  arg.mapTemp || 20;
   this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};

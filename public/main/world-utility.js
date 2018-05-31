@@ -102,16 +102,14 @@ function convertToCoords(argument) {
 };
 
 function convertToMap(argument) {
-  if (argument instanceof WorldMap) {
-    return argument;
-  }
-  let mapGet = null;
-  if (typeof argument === 'number') {
-    mapGet = World.allMapsMap.get(argument);
-    if (mapGet) { return mapGet; }
-  } else if (typeof argument === 'string') {
-    mapGet = getMapByName(argument);
-    if (mapGet) { return mapGet; }
-  }
-  return displayError(`Could not convert to map: ${argument} or ${argument.name}`);
+  let foundMap = null;
+  if (argument instanceof WorldMap) { foundMap = argument; }
+  if (argument instanceof WorldObject) { foundMap = argument.WorldMap; }
+  if (argument instanceof WorldTile) { foundMap = argument.WorldMap; }
+  if (typeof argument === 'number') { foundMap = World.allMapsMap.get(argument); }
+  if (typeof argument === 'string') { foundMap = getMapByName(argument); }
+
+  if (foundMap) { return foundMap; }
+  return null;
+  //return displayError(`Could not convert to map: ${argument} or ${argument.name}`);
 };
