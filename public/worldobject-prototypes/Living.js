@@ -1,49 +1,49 @@
-const Living = function(worldObject, arg = {}) {
+import { normalizeToValue } from './../main/general-utility';
+
+function Living(worldObject) {
   this.owner = worldObject;
   World.allObjectsLiving.push(this.owner);
-  
+
   if (!this.owner.Destructible) { applyDestructible(this.owner); }
 
   this.stamina = 100;
 
-  this.adjustStamina = function(timePassedMilliseconds) {
-    this.stamina -= STAMINA_LOSS_PER_MILLISECOND * timePassedMilliseconds;
+  this.adjustStamina = (timePassedMilliseconds) => {
+    this.stamina -= ProtoCs.STAMINA_LOSS_PER_MILLISECOND * timePassedMilliseconds;
     this.stamina = normalizeToValue(this.stamina, 0, 100);
   };
 
-  this.checkAdequateStaminaForAction = function(actionName) {
+  this.checkAdequateStaminaForAction = (actionName) => {
     if (actionName === 'Attack' && this.stamina > 10) {
       return true;
     }
     return false;
   };
 
-  this.reduceStaminaBasedOnAction = function(actionName) {
+  this.reduceStaminaBasedOnAction = (actionName) => {
     if (actionName === 'Attack') {
       this.stamina -= 10;
     }
   };
 
-  this.canIExamineObject = function(worldObject) {
-    if (!this.owner.isAdjacentTo(worldObject, EXAMINE_MAX_DISTANCE)) { return false; }
+  this.canIExamineObject = (worldObject) => {
+    if (!this.owner.isAdjacentTo(worldObject, ProtoCs.EXAMINE_MAX_DISTANCE)) { return false; }
     return true;
   };
 
-  this.examineObject = function(examineTarget) {
+  this.examineObject = (examineTarget) => {
     publishEvent(`${this.owner.name} exmaines ${examineTarget.name}.`);
 
-    //badCode
+    // badcode
     World.allUI.hudUI.hudTargetObject = examineTarget;
     setTimeout(() => { World.allUI.hudUI.hudTargetObject = World.player; }, 3000);
 
     return true;
   };
 
-  this.death = function() {
-    // game handles destruction, only need living-specific death code here
-  };
-};
+  this.death = () => {};
+}
 
-function applyLiving(worldObject, arg = {}) {
+export default function applyLiving(worldObject, arg = {}) {
   worldObject.Living = worldObject.Living || new Living(worldObject, arg);
-};
+}

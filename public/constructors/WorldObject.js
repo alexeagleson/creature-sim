@@ -1,4 +1,9 @@
-const WorldObject = function(objectName, arg = {}) {
+import { displayEngineIsActive } from './../display-engines/MainDisplay';
+import { uniqueNumber } from './../main/general-utility';
+import { distanceTo, convertToCoords, getRandomFreeTile, onSameMap } from './../main/world-utility';
+import { isOnMapOfObject, isInInventoryOf, isOnTile, isNotObject } from './../main/filters';
+
+export default function WorldObject(objectName, arg = {}) {
   this.name = objectName;
   this.uniqueID = uniqueNumber();
 
@@ -9,17 +14,15 @@ const WorldObject = function(objectName, arg = {}) {
   this.WorldMap = arg.WorldMap || null;
   this.WorldTile = arg.WorldMap || null;
 
-  this.myTile = function() {
-    return this.WorldMap.getTile(convertToCoords(this));
-  };
+  this.myTile = () => this.WorldMap.getTile(convertToCoords(this));
 
-  this.removeLocationData = function() {
+  this.removeLocationData = () => {
     this.destroySprite();
     this.WorldMap = null;
     this.WorldTile = null;
   };
 
-  this.removeFromUniverse = function() {
+  this.removeFromUniverse = () => {
     this.removeLocationData();
 
     World.allObjectsCombat = World.allObjectsCombat.filter(isNotObject.bind(this));
@@ -45,51 +48,50 @@ const WorldObject = function(objectName, arg = {}) {
     World.allObjectsMap.delete(this.uniqueID);
   };
 
-  this.destroySprite = function() {
+  this.destroySprite = () => {
     if (this.PhaserObject && displayEngineIsActive()) {
       this.PhaserObject.destroySprite();
     }
   };
 
-  this.placeSprite = function(tileCoords) {
+  this.placeSprite = (tileCoords) => {
     if (this.PhaserObject && displayEngineIsActive()) {
       this.PhaserObject.generateSprite();
       this.PhaserObject.placeSprite(tileCoords);
     }
   };
 
-  this.placeOnMap = function(arg = {worldMap: null, coords: null, ignoreTriggers: null}) {
-    arg.coords = arg.coords || convertToCoords(getRandomFreeTile(arg.worldMap));
-    arg.ignoreTriggers = arg.ignoreTriggers || false;
-    const mapTransition = (this.WorldMap != null && this.WorldMap != arg.worldMap) ? true : false;
+  this.placeOnMap = (placeOnMapArg = { worldMap: null, coords: null, ignoreTriggers: null }) => {
+    const coords = placeOnMapArg.coords || convertToCoords(getRandomFreeTile(placeOnMapArg.worldMap));
+    const ignoreTriggers = placeOnMapArg.ignoreTriggers || false;
+    const mapTransition = (this.WorldMap !== null && this.WorldMap !== placeOnMapArg.worldMap) || false;
 
     if (mapTransition) { this.removeLocationData(); }
 
     if (this === World.player && mapTransition) { World.playerMapTransition = true; }
-    this.WorldMap = arg.worldMap;
-    this.WorldTile = this.WorldMap.getTile(arg.coords);
+    this.WorldMap = placeOnMapArg.worldMap;
+    this.WorldTile = this.WorldMap.getTile(placeOnMapArg.coords);
 
     if (onSameMap(this, World.player)) {
-      this.placeSprite(arg.coords);
+      this.placeSprite(coords);
     }
 
-    if (!arg.ignoreTriggers) {
+    if (!ignoreTriggers) {
       const onStepTriggers = World.allObjects.filter(worldObject => worldObject.onStep).filter(isOnMapOfObject.bind(this)).filter(isOnTile.bind(this.WorldTile)).filter(isNotObject.bind(this));
-      onStepTriggers.forEach((triggerObject) => { triggerObject.onStep(this); })
+      onStepTriggers.forEach(triggerObject => triggerObject.onStep(this));
     }
   };
 
-  this.isAdjacentTo = function(worldObject, maxDistance = INTERACT_MAX_DISTANCE) {
+  this.isAdjacentTo = (worldObject, maxDistance = ProtoCs.INTERACT_MAX_DISTANCE) => {
     if (!onSameMap(this, worldObject)) { return false; }
     if (distanceTo(convertToCoords(this), convertToCoords(worldObject)) <= maxDistance) { return true; }
     return false;
   };
 
-  this.inMyInventoryOrAdjacent = function(worldObject) {
+  this.inMyInventoryOrAdjacent = (worldObject) => {
     const myInventory = this.Inventory ? World.allObjects.filter(isInInventoryOf.bind(worldObject)) : false;
     const adjacentTo = this.isAdjacentTo(worldObject);
     if (!(myInventory.length > 0) && !adjacentTo) { return false; }
     return true;
   };
-
-};
+}

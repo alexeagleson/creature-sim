@@ -1,10 +1,18 @@
-const DecisionAI = function(worldObject, arg = {}) {
+import { publishEvent } from './../constructors/WorldEvent';
+
+import { pickRandom } from './../main/general-utility';
+
+import { isOnMapOfObject, isNotObject, isConsumable, isSocial, isItem, isNamed, shortestPathToSort } from './../main/filters';
+
+import { displayDialogue } from './../../src/UI/UI';
+
+function DecisionAI(worldObject) {
   this.owner = worldObject;
   World.allObjectsDecisionAI.push(this.owner);
 
   if (!this.owner.TurnTaking) { applyTurnTaking(this.owner); }
 
-  this.resetObjective = function() {
+  this.resetObjective = () => {
     this.hasObjective = false;
     this.currentAction = () => null;
     this.successCondition = () => null;
@@ -12,15 +20,15 @@ const DecisionAI = function(worldObject, arg = {}) {
     this.onFail = () => null;
   };
 
-  this.determineAction = function() {
+  this.determineAction = () => {
     const objectsOnMyMap = World.allObjects.filter(isOnMapOfObject.bind(this.owner)).filter(isNotObject.bind(this.owner));
 
-    if (this.owner.Consumer && (this.owner.Consumer.hunger < CONCERNED_VALUE || this.owner.Consumer.thirst < CONCERNED_VALUE)) {
+    if (this.owner.Consumer && (this.owner.Consumer.hunger < ProtoCs.CONCERNED_VALUE || this.owner.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
       const consumableObjectsOnMyMap = objectsOnMyMap.filter(isConsumable);
       consumableObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
 
       consumableObjectsOnMyMap.some((consumableObject) => {
-        if ((consumableObject.Consumable.hungerValue > 0 && this.owner.Consumer.hunger < CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && this.owner.Consumer.thirst < CONCERNED_VALUE)) {
+        if ((consumableObject.Consumable.hungerValue > 0 && this.owner.Consumer.hunger < ProtoCs.CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && this.owner.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
           this.owner.Pathing.createPath({pathTo: consumableObject});
           publishEvent(`${this.owner.name} wants to consume ${consumableObject.name}.`);
 
@@ -50,7 +58,7 @@ const DecisionAI = function(worldObject, arg = {}) {
 
     if (this.hasObjective) { return true; }
 
-    if (this.owner.Social && this.owner.Social.socialLevel < CONCERNED_VALUE) {
+    if (this.owner.Social && this.owner.Social.socialLevel < ProtoCs.CONCERNED_VALUE) {
       const socialObjectsOnMyMap = objectsOnMyMap.filter(isSocial);
       socialObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
 
@@ -63,7 +71,7 @@ const DecisionAI = function(worldObject, arg = {}) {
         };
 
         this.successCondition = () => {
-          return this.owner.isAdjacentTo(socialObject, SPEAK_MAX_DISTANCE);
+          return this.owner.isAdjacentTo(socialObject, ProtoCs.SPEAK_MAX_DISTANCE);
         };
 
         this.onSuccess = () => {
@@ -96,7 +104,7 @@ const DecisionAI = function(worldObject, arg = {}) {
         };
 
         this.successCondition = () => {
-          return this.owner.isAdjacentTo(itemObject, INTERACT_MAX_DISTANCE);
+          return this.owner.isAdjacentTo(itemObject, ProtoCs.INTERACT_MAX_DISTANCE);
         };
 
         this.onSuccess = () => {
@@ -127,7 +135,7 @@ const DecisionAI = function(worldObject, arg = {}) {
         };
 
         this.successCondition = () => {
-          return this.owner.isAdjacentTo(treasureObject, INTERACT_MAX_DISTANCE);
+          return this.owner.isAdjacentTo(treasureObject, ProtoCs.INTERACT_MAX_DISTANCE);
         };
 
         this.onSuccess = () => {
@@ -149,8 +157,8 @@ const DecisionAI = function(worldObject, arg = {}) {
   };
 
   this.resetObjective();
-};
+}
 
-function applyDecisionAI(worldObject, arg = {}) {
+export default function applyDecisionAI(worldObject, arg = {}) {
   worldObject.DecisionAI = worldObject.DecisionAI || new DecisionAI(worldObject, arg);
-};
+}

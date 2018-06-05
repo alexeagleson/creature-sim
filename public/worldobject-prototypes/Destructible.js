@@ -1,17 +1,19 @@
-const Destructible = function(worldObject, arg = {}) {
+import { normalizeToValue, rollDie } from './../main/general-utility';
+
+function Destructible(worldObject, arg = {}) {
   this.owner = worldObject;
   World.allObjectsDestructible.push(this.owner);
 
   this.condition = 100;
   this.baseArmour = arg.baseArmour || 0;
 
-  this.adjustConditionBy = function(value) {
+  this.adjustConditionBy = (value) => {
     this.condition += value;
     this.condition = normalizeToValue(this.condition, 0, 100);
     this.checkIfDestroyed();
   };
 
-  this.calculateDamageAttackedBy = function(attackerObject) {
+  this.calculateDamageAttackedBy = (attackerObject) => {
     const baseDamage = attackerObject.Combat.baseAttack;
     const baseArmour = this.baseArmour;
 
@@ -35,7 +37,7 @@ const Destructible = function(worldObject, arg = {}) {
     return damage;
   };
 
-  this.checkIfDestroyed = function() {
+  this.checkIfDestroyed = () => {
     if (this.condition <= 0) {
       if (this.owner.Living) { this.owner.Living.death(); }
       this.destroy();
@@ -44,11 +46,9 @@ const Destructible = function(worldObject, arg = {}) {
     return false;
   };
 
-  this.destroy = function() {
-    this.owner.removeFromUniverse();
-  };
+  this.destroy = () => this.owner.removeFromUniverse();
 }
 
-function applyDestructible(worldObject, arg = {}) {
+export default function applyDestructible(worldObject, arg = {}) {
   worldObject.Destructible = worldObject.Destructible || new Destructible(worldObject, arg);
 };

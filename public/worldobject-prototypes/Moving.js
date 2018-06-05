@@ -1,8 +1,10 @@
-const Moving = function(worldObject, arg = {}) {
+import { withinMapBounds } from './../main/world-utility';
+
+function Moving(worldObject) {
   this.owner = worldObject;
   World.allObjectsMoving.push(this.owner);
 
-  this.move = function(movementCoords) {
+  this.move = (movementCoords) => {
     if (!this.owner.WorldMap.getTile(movementCoords).wall) {
       this.owner.placeOnMap({worldMap: this.owner.WorldMap, coords: movementCoords});
       return true;
@@ -10,16 +12,16 @@ const Moving = function(worldObject, arg = {}) {
     return false;
   };
 
-  this.moveRelative = function(relativeMovementCoords) {
+  this.moveRelative = (relativeMovementCoords) => {
     return this.move([this.owner.WorldTile.x + relativeMovementCoords[0], this.owner.WorldTile.y + relativeMovementCoords[1]]);
   };
 
-  this.moveRandom = function() {
+  this.moveRandom = () => {
     const relativeMovementCoords = pickRandom([UP_COORDS, DOWN_COORDS, LEFT_COORDS, RIGHT_COORDS, NODIR_COORDS]);
     return this.moveRelative(relativeMovementCoords);
   };
 
-  this.checkBlockedAgainstObject = function(x, y, worldMap = null) {
+  this.checkBlockedAgainstObject = (x, y, worldMap = null) => {
     if (!worldMap) { worldMap = this.owner.WorldMap; }
     if (!worldMap) { return displayError(`${this.owner.name} must be on a map to call checkBlockedAgainstObject.`); }
 
@@ -30,6 +32,6 @@ const Moving = function(worldObject, arg = {}) {
   };
 };
 
-function applyMoving(worldObject, arg = {}) {
+export default function applyMoving(worldObject, arg = {}) {
   worldObject.Moving = worldObject.Moving || new Moving(worldObject, arg);
 };

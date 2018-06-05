@@ -1,3 +1,7 @@
+import { initializeUiTimeAndCamera, mainLoop } from './../main/app';
+
+import { tileToPixel, convertToCoords } from './../main/world-utility';
+
 const playGame = new Phaser.Class({
   Extends: Phaser.Scene,
 
@@ -7,17 +11,17 @@ const playGame = new Phaser.Class({
 
   preload: function() {
     // 32x32
-    this.load.spritesheet('Squirrel', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Squirrel.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
-    this.load.spritesheet('Acorn', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Acorn.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
-    this.load.spritesheet('Rabbit', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Rabbit.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
-    this.load.spritesheet('Carrot', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Carrot.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
-    this.load.spritesheet('Floor_Grass', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Grass.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
-    this.load.spritesheet('Floor_Ice', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Ice.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
-    this.load.spritesheet('Trash', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Trash.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
-    this.load.spritesheet('Hotdog1', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Hotdog1.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE});
+    this.load.spritesheet('Squirrel', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Squirrel.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Acorn', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Acorn.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Rabbit', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Rabbit.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Carrot', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Carrot.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Floor_Grass', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Grass.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Floor_Ice', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Ice.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Trash', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Trash.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Hotdog1', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Hotdog1.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
 
     // 32x64
-    this.load.spritesheet('Tree', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x64/Tree.png', {frameWidth: TILE_SIZE, frameHeight: TILE_SIZE * 2});
+    this.load.spritesheet('Tree', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x64/Tree.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE * 2});
   },
 
   create: function() {
@@ -31,22 +35,22 @@ const playGame = new Phaser.Class({
   }
 });
 
-const PhaserDisplay = function(mainDisplay) {
+export default function PhaserDisplay(mainDisplay) {
   this.owner = mainDisplay;
   this.mainScene = null;
 
-  this.initialize = function() {
+  this.initialize = () => {
     this.engine = new Phaser.Game({
       type: Phaser.WEBGL,
-      width: SCREEN_WIDTH,
-      height: SCREEN_HEIGHT,
+      width: ScreenCs.SCREEN_WIDTH,
+      height: ScreenCs.SCREEN_HEIGHT,
       backgroundColor: '#000044',
       scene: [playGame]
     });
     this.owner.canvas = this.engine.canvas;
   };
 
-  this.drawTile = function(tileCoords) {
+  this.drawTile = (tileCoords) => {
     const worldTile = World.player.WorldMap.getTile(tileCoords);
     const pixelCoords = tileToPixel(convertToCoords(worldTile));
 
@@ -60,12 +64,12 @@ const PhaserDisplay = function(mainDisplay) {
     }
   };
 
-  this.drawObject = function(worldObject) {
+  this.drawObject = (worldObject) => {
     const pixelCoords = tileToPixel(convertToCoords(worldObject));
     worldObject.PhaserObject.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], worldObject.PhaserObject.spriteFilename, worldObject.PhaserObject.defaultFrameNumber);
   };
 
-  this.destroyAllSprites = function() {
+  this.destroyAllSprites = () => {
     World.allObjects.forEach((object) => {
       if (object.PhaserObject) { object.PhaserObject.destroySprite(); }
     });
@@ -75,7 +79,7 @@ const PhaserDisplay = function(mainDisplay) {
     World.allActiveTileSprites = [];
   };
 
-  this.stopDisplayEngine = function() {
+  this.stopDisplayEngine = () => {
     this.engine.scene.stop();
   };
 };

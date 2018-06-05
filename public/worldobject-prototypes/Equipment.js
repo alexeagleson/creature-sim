@@ -1,7 +1,7 @@
-const Equipment = function(worldObject, arg = {}) {
+function Equipment(worldObject, arg = {}) {
   this.owner = worldObject;
   World.allObjectsEquipment.push(this.owner);
-  
+
   if (!this.owner.Item) { applyItem(this.owner); }
 
   this.bonusAttack = arg.bonusAttack || 0;
@@ -11,6 +11,6 @@ const Equipment = function(worldObject, arg = {}) {
   this.temperatureProtection = arg.temperatureProtection || 0;;
 };
 
-function applyEquipment(worldObject, arg = {}) {
+export default function applyEquipment(worldObject, arg = {}) {
   worldObject.Equipment = worldObject.Equipment || new Equipment(worldObject, arg);
 };

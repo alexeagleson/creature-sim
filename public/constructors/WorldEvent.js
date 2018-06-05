@@ -1,13 +1,15 @@
-const WorldEvent = function(text) {
+import { uniqueNumber } from './../main/general-utility';
+
+export default function WorldEvent(text) {
   this.uniqueID = uniqueNumber();
   this.text = text;
 
-  this.addToTimeline = function() {
+  this.addToTimeline = () => {
     World.allEvents.push(this);
   };
 }
 
-function publishEvent(text) {
+export function publishEvent(text) {
   const event = new WorldEvent(text);
   event.addToTimeline();
-};
+}

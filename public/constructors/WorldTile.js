@@ -1,16 +1,21 @@
-const WorldTile = function (x, y, WorldMap, wall) {
-  this.x = x;
-  this.y = y;
-  this.WorldMap = WorldMap;
-  this.wall = wall;
+import { isOnTile } from './../main/filters';
+
+export default function WorldTile(arg = {
+  x: null,
+  y: null,
+  worldMap: null,
+  wall: null,
+}) {
+  this.x = arg.x;
+  this.y = arg.y;
+  this.WorldMap = arg.worldMap;
+  this.wall = arg.wall;
   this.char = null;
 
-  this.checkBlocked = function(checkAgainstObject = null) {
-    return (!this.wall);
-  };
+  this.checkBlocked = () => !(this.wall);
 
-  this.objectsOnTile = function() {
+  this.objectsOnTile = () => {
     const listOfObjects = World.allObjects.filter(isOnTile.bind(this));
     return listOfObjects;
   };
-};
+}

@@ -13,61 +13,62 @@ const DOWNRIGHT_COORDS = [1, 1];
 
 let errorAlertHasBeenTriggered = false;
 
-function rollDie(dieSize) {
-  var value = Math.floor(Math.random() * (dieSize)) + 1;
+export function rollDie(dieSize) {
+  const value = Math.floor(Math.random() * (dieSize)) + 1;
   return value;
-};
+}
 
-function pickRandom(arrayOfThings) {
-  randomPosition = rollDie(arrayOfThings.length) - 1;
+export function pickRandom(arrayOfThings) {
+  const randomPosition = rollDie(arrayOfThings.length) - 1;
   return arrayOfThings[randomPosition];
-};
+}
 
-function runXTimes(givenFunction, numberOfTimes, optionalArg = null) {
+export function runXTimes(givenFunction, numberOfTimes, optionalArg = null) {
   const functionResults = [];
-  for (let i = 0; i < numberOfTimes; i++) {
+  for (let i = 0; i < numberOfTimes; i += 1) {
     functionResults.push(givenFunction(optionalArg));
   }
   return functionResults;
-};
+}
 
-function randBetween(min, max) {
+export function randBetween(min, max) {
   // Function is inclusive of max number
   return Math.floor(Math.random() * (max - min + 1) + min);
-};
+}
 
-function normalizeToValue(number, minValue, maxValue) {
+export function normalizeToValue(number, minValue, maxValue) {
   if (number < minValue) {
     number = minValue;
   } else if (number > maxValue) {
     number = maxValue;
   }
   return number;
-};
+}
 
+
+export function uniqueNumber() {
+  let date = Date.now();
+  // If created at same millisecond as previous
+  if (date <= uniqueNumber.previous) {
+    uniqueNumber.previous += 1;
+    date = uniqueNumber.previous;
+  } else {
+    uniqueNumber.previous = date;
+  }
+  return date;
+}
 uniqueNumber.previous = 0;
-function uniqueNumber() {
-    var date = Date.now();
 
-    // If created at same millisecond as previous
-    if (date <= uniqueNumber.previous) {
-        date = ++uniqueNumber.previous;
-    } else {
-        uniqueNumber.previous = date;
-    }
-    return date;
-};
-
-function displayError(errorText) {
+export function displayError(errorText) {
   if (!errorAlertHasBeenTriggered) {
     alert(`Error: ${errorText}`);
     errorAlertHasBeenTriggered = true;
   }
   console.log(`Error: ${errorText}`);
   return null;
-};
+}
 
-function directionTextToCoords(directionText) {
+export function directionTextToCoords(directionText) {
   if (directionText.toLowerCase() === 'up') {
     return UP_COORDS;
   } else if (directionText.toLowerCase() === 'down') {
@@ -76,10 +77,19 @@ function directionTextToCoords(directionText) {
     return LEFT_COORDS;
   } else if (directionText.toLowerCase() === 'right') {
     return RIGHT_COORDS;
+  } else if (directionText.toLowerCase() === 'up') {
+    return UP_COORDS;
+  } else if (directionText.toLowerCase() === 'downleft') {
+    return DOWNLEFT_COORDS;
+  } else if (directionText.toLowerCase() === 'downright') {
+    return DOWNRIGHT_COORDS;
+  } else if (directionText.toLowerCase() === 'upleft') {
+    return UPLEFT_COORDS;
+  } else if (directionText.toLowerCase() === 'upright') {
+    return UPRIGHT_COORDS;
   } else if (directionText.toLowerCase() === 'nodir') {
     return NODIR_COORDS;
-  } else {
-    displayError(`Invalid argument ${directionText} in function ${directionTextToCoords}.`);
-    return null;
   }
-};
+  displayError(`Invalid argument ${directionText} in function ${directionTextToCoords}.`);
+  return null;
+}

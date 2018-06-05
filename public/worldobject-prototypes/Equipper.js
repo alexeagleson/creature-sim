@@ -1,28 +1,30 @@
-const Equipper = function(worldObject, arg = {}) {
+import { publishEvent } from './../constructors/WorldEvent';
+
+function Equipper(worldObject) {
   this.owner = worldObject;
   World.allObjectsEquipper.push(this.owner);
-  
+
   if (!this.owner.Living) { applyLiving(this.owner); }
 
   this.currentEquipment = null;
 
-  this.canIEquipObject = function(worldObject) {
+  this.canIEquipObject = (worldObject) => {
     if (!worldObject.Equipment) { return false; }
     if (!this.owner.inMyInventoryOrAdjacent(worldObject)) { return false; }
     return true;
   };
 
-  this.equip = function(worldObject) {
+  this.equip = (worldObject) => {
     if (this.owner.isAdjacentTo(worldObject)) { this.owner.Inventory.addToInventory(worldObject); }
     this.currentEquipment = worldObject;
     publishEvent(`${this.owner.name} equips ${worldObject.name}.`);
   };
 
-  this.unequip = function() {
+  this.unequip = () => {
     this.currentEquipment = null;
-  };
-};
+  }
+}
 
-function applyEquipper(worldObject, arg = {}) {
+export default function applyEquipper(worldObject, arg = {}) {
   worldObject.Equipper = worldObject.Equipper || new Equipper(worldObject, arg);
-};
+}

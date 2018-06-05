@@ -1,14 +1,18 @@
-const Pathing = function(worldObject, arg = {}) {
+import { shortestPath } from './../constructors/MapNodeTree';
+
+import { distanceTo, convertToMap, convertToCoords } from './../main/world-utility';
+
+function Pathing(worldObject) {
   this.owner = worldObject;
   World.allObjectsPathing.push(this.owner);
 
   if (!this.owner.Moving) { applyMoving(this.owner); }
 
-  this.createPath = function(arg = {pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null}) {
+  this.createPath = (arg = {pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null}) => {
     this.currentPath = this.calculatePath(arg);
   };
 
-  this.calculatePath = function(arg = {pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null}) {
+  this.calculatePath = (arg = {pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null}) => {
     if (!arg.pathTo) { return displayError(`Invalid argument given for pathTo: ${arg.pathTo}.`) }
     arg.pathFrom = arg.pathFrom || this.owner;
 
@@ -29,7 +33,7 @@ const Pathing = function(worldObject, arg = {}) {
     return this.calculateSinglePath({pathToCoords: arg.pathTo, pathFromCoords: arg.pathFrom, worldMap: arg.worldMapFrom});
   };
 
-  this.calculateSinglePath = function(arg = {pathToCoords: null, pathFromCoords: null, worldMap: null}) {
+  this.calculateSinglePath = (arg = {pathToCoords: null, pathFromCoords: null, worldMap: null}) => {
     this.todo = [];
     this.done = {};
 
@@ -73,7 +77,7 @@ const Pathing = function(worldObject, arg = {}) {
     return finalPath;
   };
 
-  this.getNeighbors = function(cx, cy, worldMap) {
+  this.getNeighbors = (cx, cy, worldMap) => {
   	let result = [];
     const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
@@ -89,7 +93,7 @@ const Pathing = function(worldObject, arg = {}) {
   	return result;
   };
 
-  this.add = function(x, y, prev) {
+  this.add = (x, y, prev) => {
     let h = distanceTo(convertToCoords(this.owner), [x, y]);
     const obj = {
       x: x,
@@ -113,7 +117,7 @@ const Pathing = function(worldObject, arg = {}) {
     this.todo.push(obj);
   };
 
-  this.movePath = function() {
+  this.movePath = () => {
     this.currentPath.shift();
     if (this.currentPath.length > 0) {
       return this.owner.Moving.move(this.currentPath[0]);
@@ -125,6 +129,6 @@ const Pathing = function(worldObject, arg = {}) {
   this.calculateMapPath
 };
 
-function applyPathing(worldObject, arg = {}) {
+export default function applyPathing(worldObject, arg = {}) {
   worldObject.Pathing = worldObject.Pathing || new Pathing(worldObject, arg);
 };

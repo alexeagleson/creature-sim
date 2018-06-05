@@ -1,58 +1,60 @@
+import { onSameMap } from './../main/world-utility';
+
 // Filters
-function isOnTile(worldObject) {
+export function isOnTile(worldObject) {
   // Bind 'this' to desired lookup tile
   if (!worldObject.WorldMap || !worldObject.WorldTile) { return false; }
   return worldObject.WorldTile === this;
-};
+}
 
-function isOnMapOfObject(worldObject) {
+export function isOnMapOfObject(worldObject) {
   // Bind 'this' to desired lookup object
   return onSameMap(worldObject, this);
-};
+}
 
-function isNotObject(worldObject) {
+export function isNotObject(worldObject) {
   // Bind 'this' to desired lookup object
   return worldObject != this;
-};
+}
 
-function isInInventoryOf(worldObject) {
+export function isInInventoryOf(worldObject) {
   // Bind 'this' to desired lookup object
   if (!worldObject.Item) { return false; }
   return worldObject.Item.inInventoryOf === this;
-};
+}
 
-function isNamed(worldObject) {
+export function isNamed(worldObject) {
   // Bind 'this' to desired name
   return worldObject.name.toLowerCase() === this.toLowerCase();
-};
+}
 
 
 
 // Filters no bind
 function isTurnTaking(worldObject) {
-  return worldObject.TurnTaking != undefined;
-};
+  return worldObject.TurnTaking !== undefined;
+}
 
-function isConsumable(worldObject) {
-  return worldObject.Consumable != undefined;
-};
+export function isConsumable(worldObject) {
+  return worldObject.Consumable !== undefined;
+}
 
-function isSocial(worldObject) {
-  return worldObject.Social != undefined;
-};
+export function isSocial(worldObject) {
+  return worldObject.Social !== undefined;
+}
 
-function isItem(worldObject) {
-  return worldObject.Item != undefined;
-};
+export function isItem(worldObject) {
+  return worldObject.Item !== undefined;
+}
 
 function isPortal(worldObject) {
-  return worldObject.Portal != undefined;
-};
+  return worldObject.Portal !== undefined;
+}
 
-function isOnAMap(worldObject) {
+export function isOnAMap(worldObject) {
   if (!worldObject.WorldMap) { return false; }
   return worldObject.WorldTile != null;
-};
+}
 
 
 
@@ -66,9 +68,9 @@ function distanceToSort(objectA, objectB) {
   const targetCoords = [this.WorldTile.x, this.WorldTile.y];
 
   return distanceTo(objectACoords, targetCoords) - distanceTo(objectBCoords, targetCoords);
-};
+}
 
-function shortestPathToSort(objectA, objectB) {
+export function shortestPathToSort(objectA, objectB) {
   // Bind 'this' to desired lookup object
   if (!this.Pathing) { return displayError(`shortestPathToSort used on non-Pathing object $this.name}`); }
   if (!objectA.WorldTile || !objectB.WorldTile || !this.WorldTile) { return null; }
@@ -80,4 +82,4 @@ function shortestPathToSort(objectA, objectB) {
   const objectBPathLength = this.Pathing.calculatePath({pathTo: objectBCoords}).length || 9999;
 
   return objectAPathLength - objectBPathLength;
-};
+}
