@@ -1,0 +1,33 @@
+{
+    "extends": "airbnb",
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "rules": {
+        "linebreak-style": 0,
+        "max-len": [
+            "warn",
+            {
+                "code": 200,
+                "comments": 200,
+                "ignoreTrailingComments": true,
+                "ignoreUrls": true
+            }
+        ],
+        "import/named": [ 2 ],
+        "import/no-unresolved": [ 0 ],
+        "no-unused-expressions": ["error", {"allowTernary": true}],
+        "no-nested-ternary": 0,
+        "no-continue": 0,
+        "no-underscore-dangle": 0
+    },
+    "globals": {
+        "ROT": false,
+        "Phaser": false,
+        "World": false,
+        "ScreenCs": false,
+        "ProtoCs": false,
+        "Colours": false
+    }
+}
