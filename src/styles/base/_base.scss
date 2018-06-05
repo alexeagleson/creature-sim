@@ -1,30 +1,11 @@
+html {
+    font-size: 62.5%;
+
+}
+
 body {
-  background: #000000;
-  padding: 0px;
-  margin: 0px;
-}
-
-.mainWrapper {
-  position: absolute;
-  z-index: 0;
-  display: flex;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  user-select: none;
-}
-
-.displayCanvas {
-  position: absolute;
-  z-index: 1;
-}
-
-.basicMenu {
-  height: 50%;
-  z-index: 2;
-  margin: 0;
-  background-color: white;
-  font-family: dejavu sans mono, consolas, monospace;
+    font-size: 1.6rem;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 .strokeme {

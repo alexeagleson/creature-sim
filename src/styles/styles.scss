@@ -1,5 +1,11 @@
-$brand-color: blue;
+@import './base/settings';
 
-* {
-    color: $brand-color;
+@import './base/base';
+@import './components/header';
+@import './components/canvas-wrapper';
+@import './components/ui-wrapper';
+@import './components/status-bar';
+
+h1 {
+    font-size: 1rem;
 }

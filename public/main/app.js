@@ -12,6 +12,8 @@ import { isOnAMap } from './../main/filters';
 
 import { initializeUI, removeAllChildren } from './../../src/UI/UI';
 
+import buildUI from './../../src/app';
+
 let lastRender = 0;
 let oneSecondInterval = 0;
 let oneTenthSecondInterval = 0;
@@ -27,6 +29,8 @@ export function initializeUiTimeAndCamera() {
   initializeInput();
   World.Camera = new MainCamera();
   World.Time = new Time();
+  buildUI();
+  document.getElementById('canvas-wrapper-id').append(World.allUI.mainWrapper.htmlElement);
 }
 
 function rotJsLoop(timestamp) {

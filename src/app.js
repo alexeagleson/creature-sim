@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import startApp from './../public/main/app';
 
-import IndecisionApp from './components/IndecisionApp';
+import WorldUI from './components/WorldUI.jsx';
 
+import 'normalize.css/normalize.css';
 import './styles/styles.scss';
 
 window.onload = () => {
   startApp();
 };
 
-ReactDOM.render(<IndecisionApp />, document.getElementById('app'));
+export default function buildUI() { ReactDOM.render(<WorldUI />, document.getElementById('app')); }

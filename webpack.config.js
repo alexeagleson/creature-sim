@@ -10,7 +10,7 @@ module.exports = {
   module: {
     rules: [{
       loader: 'babel-loader',
-      test: /\.js$/,
+      test: /\.jsx?$/,
       exclude: /node_modules/,
       options: {
         presets: [
@@ -22,7 +22,7 @@ module.exports = {
         ],
       },
     }, {
-      test: /\.scss$/,
+      test: /\.s?css$/,
       use: [
         'style-loader',
         'css-loader',

@@ -9,7 +9,7 @@ const playGame = new Phaser.Class({
     Phaser.Scene.call(this, {key: 'PlayGame'});
   },
 
-  preload: function() {
+  preload() {
     // 32x32
     this.load.spritesheet('Squirrel', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Squirrel.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
     this.load.spritesheet('Acorn', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Acorn.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
@@ -24,15 +24,15 @@ const playGame = new Phaser.Class({
     this.load.spritesheet('Tree', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x64/Tree.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE * 2});
   },
 
-  create: function() {
+  create() {
     World.MainDisplay.displayEngineHandler.mainScene = this;
     World.MainDisplay.renderAll();
     initializeUiTimeAndCamera();
   },
 
-  update: function() {
-      if (!World.worldPaused) { mainLoop(); }
-  }
+  update() {
+    if (!World.worldPaused) { mainLoop(); }
+  },
 });
 
 export default function PhaserDisplay(mainDisplay) {
@@ -45,7 +45,7 @@ export default function PhaserDisplay(mainDisplay) {
       width: ScreenCs.SCREEN_WIDTH,
       height: ScreenCs.SCREEN_HEIGHT,
       backgroundColor: '#000044',
-      scene: [playGame]
+      scene: [playGame],
     });
     this.owner.canvas = this.engine.canvas;
   };
