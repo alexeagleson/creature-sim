@@ -17,6 +17,9 @@ module.exports = {
           'env',
           'react',
         ],
+        plugins: [
+          'transform-class-properties',
+        ],
       },
     }, {
       test: /\.scss$/,

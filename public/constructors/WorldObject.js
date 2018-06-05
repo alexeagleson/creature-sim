@@ -70,7 +70,7 @@ export default function WorldObject(objectName, arg = {}) {
 
     if (this === World.player && mapTransition) { World.playerMapTransition = true; }
     this.WorldMap = placeOnMapArg.worldMap;
-    this.WorldTile = this.WorldMap.getTile(placeOnMapArg.coords);
+    this.WorldTile = this.WorldMap.getTile(coords);
 
     if (onSameMap(this, World.player)) {
       this.placeSprite(coords);
