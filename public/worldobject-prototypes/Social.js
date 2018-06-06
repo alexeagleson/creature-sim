@@ -7,7 +7,7 @@ function Social(worldObject) {
   World.allObjectsSocial.push(this.owner);
   if (!this.owner.Living) { applyLiving(this.owner); }
 
-  this.socialLevel = 50;
+  this.socialLevel = 100;
 
   this.canISpeakTo = (worldObject) => {
     if (!worldObject.Social) { return false; }

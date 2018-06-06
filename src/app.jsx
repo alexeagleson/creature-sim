@@ -11,4 +11,4 @@ window.onload = () => {
   startApp();
 };
 
-export default function buildUI() { ReactDOM.render(<WorldUI />, document.getElementById('app')); }
+export default function buildUI() { ReactDOM.render(<WorldUI targetObject={World.player} />, document.getElementById('app')); }

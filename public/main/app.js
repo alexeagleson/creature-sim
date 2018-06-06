@@ -12,7 +12,7 @@ import { isOnAMap } from './../main/filters';
 
 import { initializeUI, removeAllChildren } from './../../src/UI/UI';
 
-import buildUI from './../../src/app';
+import buildUI from './../../src/app.jsx';
 
 let lastRender = 0;
 let oneSecondInterval = 0;
@@ -50,7 +50,7 @@ export function mainLoop() {
   });
 
   if (World.Time.millisecondsElapsed > oneTenthSecondInterval + 100) {
-    if (World.allUI.hudUI) { World.allUI.hudUI.Hud.update(); }
+    if (World.ReactUI.Hud) { World.ReactUI.Hud.updateState(); }
     oneTenthSecondInterval = World.Time.millisecondsElapsed;
   }
 
@@ -71,6 +71,8 @@ export function mainLoop() {
     World.playerMapTransition = false;
     World.MainDisplay.renderAll();
   }
+
+  
 }
 
 export default function startApp() {

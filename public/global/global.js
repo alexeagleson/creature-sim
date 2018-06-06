@@ -74,6 +74,8 @@ const World = {
   MapNodeTree: null,
   MainDisplay: null,
 
+  ReactUI: {},
+
   allEvents: [],
   allMaps: [],
   allObjects: [],

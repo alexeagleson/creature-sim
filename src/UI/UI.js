@@ -1,7 +1,6 @@
 import { displayError } from './../../public/main/general-utility';
 import { tileToPixel, actualToScreen, convertToCoords, pauseSim, resumeSim } from './../../public/main/world-utility';
 
-import Hud from './Hud';
 import Timeline from './Timeline';
 import Select from './Select';
 
@@ -112,9 +111,6 @@ export function initializeUI() {
   World.allUI.mainWrapper = new UI({id: 'mainWrapper', class: 'mainWrapper', width: World.MainDisplay.canvas.width, height: World.MainDisplay.canvas.height});
   document.body.append(World.allUI.mainWrapper.htmlElement);
   World.allUI.mainWrapper.htmlElement.append(World.MainDisplay.canvas);
-
-  World.allUI.hudUI = new UI({id: 'mainMenu', class: 'basicMenu top-left'});
-  World.allUI.hudUI.Hud = new Hud(World.allUI.hudUI);
 
   World.allUI.timelineUI = new UI({id: 'worldTimeline', class: 'basicMenu bottom-left'});
   World.allUI.timelineUI.Timeline = new Timeline(World.allUI.timelineUI);

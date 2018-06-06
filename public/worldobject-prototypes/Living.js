@@ -1,3 +1,4 @@
+import { publishEvent } from './../constructors/WorldEvent';
 import { normalizeToValue } from './../main/general-utility';
 
 function Living(worldObject) {
@@ -35,8 +36,8 @@ function Living(worldObject) {
     publishEvent(`${this.owner.name} exmaines ${examineTarget.name}.`);
 
     // badcode
-    World.allUI.hudUI.hudTargetObject = examineTarget;
-    setTimeout(() => { World.allUI.hudUI.hudTargetObject = World.player; }, 3000);
+    World.ReactUI.Hud.targetObject = examineTarget;
+    setTimeout(() => { World.ReactUI.Hud.targetObject = World.player; }, 3000);
 
     return true;
   };

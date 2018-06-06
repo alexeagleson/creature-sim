@@ -33,7 +33,7 @@ function keydownHandler(keyboardEvent) {
   if (keyboardEvent.key === 'q') {
     endSim();
   } else if (keyboardEvent.key === 'e') {
-    World.allUI.hudUI.toggle();
+    World.ReactUI.Hud.toggleHud();
   } else if (keyboardEvent.key === 't') {
     World.allUI.timelineUI.Timeline.update();
     World.allUI.timelineUI.toggle();

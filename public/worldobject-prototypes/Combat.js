@@ -22,12 +22,12 @@ function Combat(worldObject, arg = {}) {
     publishEvent(`${this.owner.name} attacks ${attackTarget.name} for ${damageNumber} damage.`);
 
     // badcode
-    World.allUI.hudUI.hudTargetObject = attackTarget;
-    setTimeout(() => { World.allUI.hudUI.hudTargetObject = World.player; }, 3000);
+    World.ReactUI.Hud.targetObject = attackTarget;
+    setTimeout(() => { World.ReactUI.Hud.targetObject = World.player; }, 3000);
 
     return true;
   };
-};
+}
 
 export default function applyCombat(worldObject, arg = {}) {
   worldObject.Combat = worldObject.Combat || new Combat(worldObject, arg);

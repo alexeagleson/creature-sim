@@ -1,41 +1,47 @@
  $indicator-height: 20px;
 
 .indicator {
-height: $indicator-height;
+    height: $indicator-height;
 }
 
 .bar-container {
-background-color: #000000;
-color: #fff;
-padding: 5px;
+    color: #fff;
+    padding: 5px;
 
-.bar-indicator-container {
-    width: 200px;
-    height: $indicator-height;
-    display: inline-block;
+    .bar-indicator-container {
+        width: 200px;
+        height: $indicator-height;
+        display: inline-block;
 
-    .bar-indicator {
-    text-align: center;
-    float: left;
-    width: 100%;
-    }
-    .bar-indicator, .bar {
-    height: $indicator-height;
+        .bar-indicator {
+            text-align: center;
+            float: left;
+            width: 100%;
+        }
+        .bar-indicator, .bar {
+            height: $indicator-height;
+        }
     }
 }
-}
 
 
-.bar-container.condition .bar-indicator-container {
+.bar-container.red .bar-indicator-container {
     background-color: #000;
     > .bar {
         background-color: #ff3047;
     }
 }
 
-.bar-container.stamina .bar-indicator-container {
+.bar-container.green .bar-indicator-container {
     background-color: #000;
     > .bar {
         background-color: #1fd82f;
+    }
+}
+
+.bar-container.blue .bar-indicator-container {
+    background-color: #000;
+    > .bar {
+        background-color: #397ce2;
     }
 }
