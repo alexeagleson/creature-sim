@@ -3,7 +3,7 @@ function TurnTaking(worldObject, arg = {}) {
   World.allObjectsTurnTaking.push(this.owner);
 
   this.lastTurnMilliseconds = arg.lastTurnMilliseconds || 0;
-  this.millisecondsBetweenTurns = arg.millisecondsBetweenTurns || 1000;
+  this.millisecondsBetweenTurns = arg.millisecondsBetweenTurns || 300;
 
   this.checkForTurnReady = () => {
     if (World.Time.millisecondsElapsed - this.lastTurnMilliseconds > this.millisecondsBetweenTurns) {

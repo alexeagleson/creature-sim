@@ -59,6 +59,8 @@ const ProtoCs = {
   SPEAK_MAX_DISTANCE: 3,
   EXAMINE_MAX_DISTANCE: 5,
 
+  DIALOGUE_DURATION_MILLISECONDS: 3000,
+
   CONCERNED_VALUE: 75,
 
   HUNGER_LOSS_PER_MILLISECOND: 0.0001,
@@ -70,7 +72,6 @@ const ProtoCs = {
 const World = {
   Time: {},
   Camera: {},
-  allUI: {},
   MapNodeTree: null,
   MainDisplay: null,
 

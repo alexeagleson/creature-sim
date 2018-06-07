@@ -1,6 +1,6 @@
 import { publishEvent } from './../constructors/WorldEvent';
 
-import { displayDialogue } from './../../src/UI/UI';
+import { displayDialogue } from './../../src/components/HoveringText';
 
 function Social(worldObject) {
   this.owner = worldObject;

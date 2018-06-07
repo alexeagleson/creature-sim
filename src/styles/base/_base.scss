@@ -1,11 +1,11 @@
 html {
     font-size: 62.5%;
-
 }
 
 body {
     font-size: 1.6rem;
     font-family: Helvetica, Arial, sans-serif;
+    background: black;
 }
 
 .strokeme {
@@ -17,32 +17,45 @@ body {
   1px 1px 0 #000;
 }
 
-.top-left {
+.hover-text {
+  position: absolute;
+  z-index: 1;
 }
 
-.top-right {
-  margin-left: auto;
+.ui-left {
+  float: left;
+  margin-top: 10vh;
+  width: 10vw;
+  height: 10vh;
 }
 
-.bottom-right {
-  margin-left: auto;
-  margin-top: auto;
+.ui-right {
+  float: right;
+  margin-top: 10vh;
+  width: 10vw;
+  height: 10vh;
 }
 
-.bottom-left {
-  margin-top: auto;
+.ui-bottom {
+  width: 75vw;
+  position: absolute;
+  bottom: 0;
+  margin-left: 15vw;
+  height: 10vh;
+}
+
+.ui-top {
+  width: 75vw;
+  position: absolute;
+  top: 0;
+  margin-left: 15vw;
+  height: 10vh;
 }
 
 .no-click {
   pointer-events: none;
 }
 
-#worldTimeline {
-  width: auto;
-  height: auto;
-  display: none;
-}
-
-#selectObject {
-  display: none;
+.no-select {
+  user-select: none;
 }

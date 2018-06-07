@@ -1,7 +1,7 @@
 import { publishEvent } from './../constructors/WorldEvent';
 import { normalizeToValue, pickRandom } from './../main/general-utility';
 
-import { displayDialogue } from './../../src/UI/UI';
+import { displayDialogue } from './../../src/components/HoveringText';
 
 function Consumer(worldObject) {
   this.owner = worldObject;

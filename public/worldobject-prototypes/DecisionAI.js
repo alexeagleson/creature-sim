@@ -4,7 +4,7 @@ import { pickRandom } from './../main/general-utility';
 
 import { isOnMapOfObject, isNotObject, isConsumable, isSocial, isItem, isNamed, shortestPathToSort } from './../main/filters';
 
-import { displayDialogue } from './../../src/UI/UI';
+import { displayDialogue } from './../../src/components/HoveringText';
 
 function DecisionAI(worldObject) {
   this.owner = worldObject;

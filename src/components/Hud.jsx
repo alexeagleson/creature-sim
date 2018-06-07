@@ -1,22 +1,55 @@
 import React from 'react';
-
 import ProgressBar from './subcomponents/Bar.jsx';
 
-const Hud = props => (
-  <div>
-    <p>{props.name}</p>
-    <ProgressBar name="Condition:" value={props.condition} percentage={props.condition <= 100 ? props.condition : 100} barClass="red" />
-    <ProgressBar name="Stamina:" value={props.stamina} percentage={props.stamina <= 100 ? props.stamina : 100} barClass="green" />
-    <ProgressBar name="Hunger:" value={props.hunger} percentage={props.hunger <= 100 ? props.hunger : 100} barClass="blue" />
-    <ProgressBar name="Thirst:" value={props.thirst} percentage={props.thirst <= 100 ? props.thirst : 100} barClass="blue" />
-    <ProgressBar name="Social:" value={props.social} percentage={props.social <= 100 ? props.social : 100} barClass="blue" />
-    <p>Temperature: {props.temperature}C</p>
-    <p>Equipped: {props.equipped}</p>
-  </div>
-);
+export default class Hud extends React.Component {
+  constructor(props) {
+    super(props);
+    World.ReactUI.Hud = this;
 
-Hud.defaultProps = {
-  title: 'Hud',
-};
+    this.updateState = this.updateState.bind(this);
+    this.toggle = this.toggle.bind(this);
 
-export default Hud;
+    this.targetObject = World.player;
+    this.state = {
+      hudVisible: false,
+    };
+  }
+
+  componentWillMount() {
+    this.updateState();
+  }
+
+  updateState() {
+    this.setState({
+      name: this.targetObject.name,
+      condition: Math.round(this.targetObject.Destructible.condition),
+      stamina: Math.round(this.targetObject.Living.stamina),
+      hunger: Math.round(this.targetObject.Consumer.hunger),
+      thirst: Math.round(this.targetObject.Consumer.thirst),
+      social: Math.round(this.targetObject.Social.socialLevel),
+      temperature: Math.round(this.targetObject.Temperature.temp),
+      equipped: this.targetObject.Equipper.currentEquipment,
+    });
+  }
+
+  toggle() {
+    this.setState((prevState) => {
+      return { hudVisible: !prevState.hudVisible };
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <p>{this.state.name}</p>
+        <ProgressBar name="Condition:" value={this.state.condition} percentage={this.state.condition <= 100 ? this.state.condition : 100} barClass="red" />
+        <ProgressBar name="Stamina:" value={this.state.stamina} percentage={this.state.stamina <= 100 ? this.state.stamina : 100} barClass="green" />
+        <ProgressBar name="Hunger:" value={this.state.hunger} percentage={this.state.hunger <= 100 ? this.state.hunger : 100} barClass="blue" />
+        <ProgressBar name="Thirst:" value={this.state.thirst} percentage={this.state.thirst <= 100 ? this.state.thirst : 100} barClass="blue" />
+        <ProgressBar name="Social:" value={this.state.social} percentage={this.state.social <= 100 ? this.state.social : 100} barClass="blue" />
+        <p>Temperature: {this.state.temperature}C</p>
+        <p>Equipped: {this.state.equipped}</p>
+      </div>
+    );
+  }
+}

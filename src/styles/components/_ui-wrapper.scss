@@ -1,31 +1,83 @@
 .ui-wrapper {
-    position: absolute;
     z-index: 1;
-    margin: 0;
-    background-color: #000000;
     font-family: dejavu sans mono, consolas, monospace;
 
-    width: 230px;
-    height: 200px;
+    padding: 1rem;
     overflow: hidden;
-    float: left;
     word-break: break-all;
     word-spacing: -1px;  
-    margin-left: 15px; /* or 0px */
-    background-color: rgba(25, 25, 25, 0.2);
-    padding: 15px;
    
     transition: all 0.5s ease-in;
-
 }
 
   .ui-wrapper:hover {
-    width: 230px;
-    height: 300px;
-    margin-top: -50px;
+    background: black;
+    height: 50vh;
     overflow-y: scroll;
+
   }
   
   ::-webkit-scrollbar {width: 5px;} 
   ::-webkit-scrollbar-track {background-color: rgba(25, 25, 25, 0.2);}
   ::-webkit-scrollbar-thumb {background-color: rgba(25, 25, 25, 0.2);}
+
+
+.ui-border {
+  border-radius: 6px;
+  border-color: white;
+  border-width: 2px;
+  border-style: ridge;
+}
+
+
+.animate
+{
+	transition: all 0.1s;
+	-webkit-transition: all 0.1s;
+}
+
+.action-button
+{
+	position: relative;
+	padding: 10px 40px;
+  margin: 0px 10px 10px 0px;
+  float: left;
+	border-radius: 4px;
+	color: #FFF;
+	text-decoration: none;	
+}
+
+.button-blue
+{
+	background-color: #3498DB;
+	border-bottom: 5px solid #2980B9;
+	text-shadow: 0px -2px #2980B9;
+}
+
+.button-red
+{
+	background-color: #E74C3C;
+	border-bottom: 5px solid #BD3E31;
+	text-shadow: 0px -2px #BD3E31;
+}
+
+.button-green
+{
+	background-color: #82BF56;
+	border-bottom: 5px solid #669644;
+	text-shadow: 0px -2px #669644;
+}
+
+.button-yellow
+{
+	background-color: #F2CF66;
+	border-bottom: 5px solid #D1B358;
+	text-shadow: 0px -2px #D1B358;
+}
+
+.action-button:active
+{
+	transform: translate(0px,5px);
+  -webkit-transform: translate(0px,5px);
+	border-bottom: 1px solid;
+}

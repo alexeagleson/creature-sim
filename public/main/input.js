@@ -1,7 +1,6 @@
 import { endSim } from './../main/app';
 
-import { displayNamesOfObjects } from './../../src/UI/UI';
-import { promptSelectObject } from './../../src/UI/Select';
+import { displayNamesOfObjects } from './../../src/components/HoveringText';
 
 import { directionTextToCoords } from './../main/general-utility';
 import { screenToActual, pixelToTile, withinMapBounds } from './../main/world-utility';
@@ -22,7 +21,7 @@ function pointerdownHandler(pointerEvent) {
   const objectsAtCoords = World.player.WorldMap.getTile(clickedTileCoords).objectsOnTile().filter(isNotObject.bind(World.player));
 
   if (objectsAtCoords.length > 0) {
-    promptSelectObject(objectsAtCoords);
+    World.ReactUI.SelectObject.prompt(objectsAtCoords);
   } else {
     World.player.Pathing.createPath({ pathTo: clickedTileCoords });
     World.player.Pathing.movePath();
@@ -33,16 +32,12 @@ function keydownHandler(keyboardEvent) {
   if (keyboardEvent.key === 'q') {
     endSim();
   } else if (keyboardEvent.key === 'e') {
-    World.ReactUI.Hud.toggleHud();
-  } else if (keyboardEvent.key === 't') {
-    World.allUI.timelineUI.Timeline.update();
-    World.allUI.timelineUI.toggle();
+    World.ReactUI.Hud.toggle();
   } else if (keyboardEvent.key === 'r') {
-    if (!World.allUI.selectUI.isHidden()) {
-      World.allUI.selectUI.hide()
-    } else {
-      promptSelectObject(World.allObjects.filter(isInInventoryOf.bind(World.player)));
-    }
+    World.ReactUI.SelectAction.toggle();
+    World.ReactUI.SelectObject.prompt(World.allObjects.filter(isInInventoryOf.bind(World.player)));
+  } else if (keyboardEvent.key === 't') {
+    World.ReactUI.EventLog.toggle();
   } else if (keyboardEvent.key === 'f') {
     World.player.myTile().wall = true;
     World.player.myTile().char = '#';

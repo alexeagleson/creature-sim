@@ -10,8 +10,6 @@ import initializeInput from './../main/input';
 import { convertToMap, isEngine } from './../main/world-utility';
 import { isOnAMap } from './../main/filters';
 
-import { initializeUI, removeAllChildren } from './../../src/UI/UI';
-
 import buildUI from './../../src/app.jsx';
 
 let lastRender = 0;
@@ -25,12 +23,11 @@ function initializeWorld() {
 }
 
 export function initializeUiTimeAndCamera() {
-  initializeUI();
   initializeInput();
   World.Camera = new MainCamera();
   World.Time = new Time();
   buildUI();
-  document.getElementById('canvas-wrapper-id').append(World.allUI.mainWrapper.htmlElement);
+  document.getElementById('canvas-wrapper-id').append(World.MainDisplay.canvas);
 }
 
 function rotJsLoop(timestamp) {
@@ -46,11 +43,13 @@ export function mainLoop() {
   World.allObjectsTurnTaking.filter(isOnAMap).forEach((object) => {
     if (object.TurnTaking.checkForTurnReady()) {
       object.TurnTaking.takeTurn();
+      if (object.updateDialoguePosition) { object.updateDialoguePosition(); }
     }
   });
 
   if (World.Time.millisecondsElapsed > oneTenthSecondInterval + 100) {
-    if (World.ReactUI.Hud) { World.ReactUI.Hud.updateState(); }
+    World.ReactUI.Hud.updateState();
+    World.ReactUI.EventLog.updateState();
     oneTenthSecondInterval = World.Time.millisecondsElapsed;
   }
 
@@ -89,6 +88,5 @@ export function endSim() {
   World.worldEnd = true;
   World.worldPaused = true;
   World.MainDisplay.displayEngineHandler.stopDisplayEngine();
-  removeAllChildren(World.allUI.mainWrapper.htmlElement);
   alert('The simulation has ended.');
 }

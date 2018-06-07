@@ -76,9 +76,8 @@ function directionTo(coordsFrom, coordsTo) {
     return 'right';
   } else if (dx < 0 && angle <= 1) {
     return 'left';
-  } else {
-    return 'nodir';
   }
+  return 'nodir';
 }
 
 export function distanceTo(coordsFrom, coordsTo) {
@@ -127,4 +126,69 @@ export function convertToMap(argument) {
 
   if (foundMap) { return foundMap; }
   return null;
+}
+
+export function getValidContextActions(objectActivating, objectBeingActivated) {
+  if (!objectActivating || !objectBeingActivated) { return displayError(`${objectActivating.name} or ${objectBeingActivated.name} not defined in getValidContextActions.`); }
+
+  let validActions = {
+    consume: null,
+    pickUp: null,
+    speak: null,
+    attack: null,
+    examine: null,
+    equip: null,
+    activate: null,
+  };
+
+  if (objectActivating.Consumer) {
+    if (objectActivating.Consumer.canIConsumeObject(objectBeingActivated)) {
+      validActions.consume = () => { objectActivating.Consumer.consume(objectBeingActivated); };
+    }
+  }
+
+  if (objectActivating.Inventory) {
+    if (objectActivating.Inventory.canIAddToInventory(objectBeingActivated)) {
+      validActions.pickUp = () => { objectActivating.Inventory.addToInventory(objectBeingActivated); };
+    }
+  }
+
+  if (objectActivating.Social) {
+    if (objectActivating.Social.canISpeakTo(objectBeingActivated)) {
+      validActions.speak = () => { objectActivating.Social.speak(objectBeingActivated); };
+    }
+  }
+
+  if (objectActivating.Combat) {
+    if (objectActivating.Combat.canIAttackObject(objectBeingActivated)) {
+      validActions.attack = () => { objectActivating.Combat.attackObject(objectBeingActivated); };
+    }
+  }
+
+  if (objectActivating.Living) {
+    if (objectActivating.Living.canIExamineObject(objectBeingActivated)) {
+      validActions.examine = () => { objectActivating.Living.examineObject(objectBeingActivated); };
+    }
+  }
+
+  if (objectActivating.Equipper) {
+    if (objectActivating.Equipper.canIEquipObject(objectBeingActivated)) {
+      validActions.equip = () => { objectActivating.Equipper.equip(objectBeingActivated); };
+    }
+  }
+
+  validActions.activate = () => { alert('implement later'); };
+
+  validActions = {
+    consume: () => { null; },
+    pickUp: () => { null; },
+    speak: () => { null; },
+    attack: () => { null; },
+    examine: () => { null; },
+    equip: () => { null; },
+    activate: () => { null; },
+  };
+
+
+  return validActions;
 }

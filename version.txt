@@ -9,6 +9,19 @@ different maps (internal maps)
 temperature
 multi map pathing in progress
 
+
+
+UI
+--
+event log (clickable?)
+player hud
+target hud
+logo top
+context menu for object
+select list of objects
+dialogue
+hower names
+
 <strong>2018/05/31 -- Version 0.1.10</strong>
 ----------------------------
 (*) BFS is now fully implemented with pathing across multiple maps
