@@ -2,9 +2,10 @@
 
 @import './base/base';
 @import './components/canvas-wrapper';
-@import './components/ui-wrapper';
+@import './components/hud';
+@import './components/logo';
+@import './components/main-wrapper';
 @import './components/status-bar';
+@import './components/event-log';
+@import './components/select-buttons';
 
-h1 {
-    font-size: 1rem;
-}

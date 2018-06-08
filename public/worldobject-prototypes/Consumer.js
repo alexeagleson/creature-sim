@@ -31,6 +31,7 @@ function Consumer(worldObject) {
 
     worldObject.removeFromUniverse();
     publishEvent(`${this.owner.name} consumes ${worldObject.name}.`);
+    World.ReactUI.SelectAction.hide();
     displayDialogue(this.owner, pickRandom(['yum!', '*crunch*']));
   };
 

@@ -1,0 +1,19 @@
+.main-wrapper {
+  display: flex;  
+  flex-flow: row wrap;
+}
+
+.main-wrapper > * {
+  flex: 1 100%;
+}
+
+@media all {
+  .hud { flex: 1 auto; }
+  .canvas-wrapper { flex: 3 0px; }
+  .hud-player { order: 1; } 
+  .canvas-wrapper { order: 2; }
+  .hud-target { order: 3; }
+  .event-log  { order: 4; }
+}
+
+

@@ -1,55 +1,54 @@
 import React from 'react';
 
-import { getValidContextActions } from './../../public/main/world-utility';
+import { tileToPixel, actualToScreen, convertToCoords, getValidContextActions } from './../../public/main/world-utility';
 
 export default class SelectAction extends React.Component {
   constructor(props) {
     super(props);
     World.ReactUI.SelectAction = this;
 
-    this.updateState = this.updateState.bind(this);
-    this.toggle = this.toggle.bind(this);
+    this.hide = this.hide.bind(this);
+    this.prompt = this.prompt.bind(this);
 
-    this.validActions = getValidContextActions({}, {});
     this.state = {
-      selectActionVisible: true,
+      selectActionVisible: false,
     };
   }
 
-  componentWillMount() {
-    this.updateState();
-  }
-
-  updateState() {
+  hide() {
     this.setState({
-      consume: this.validActions.consume || null,
-      pickUp: this.validActions.pickUp || null,
-      speak: this.validActions.speak || null,
-      attack: this.validActions.attack || null,
-      examine: this.validActions.examine || null,
-      equip: this.validActions.equip || null,
-      activate: this.validActions.activate || null,
+      selectActionVisible: false,
     });
   }
 
-  toggle() {
-    this.setState((prevState) => {
-      return { selectActionVisible: !prevState.selectActionVisible };
+  prompt(objectToPrompt) {
+    World.ReactUI.SelectObject.hide();
+    const validActions = getValidContextActions(World.player, objectToPrompt);
+    this.setState({
+      consume: validActions.consume || null,
+      pickUp: validActions.pickUp || null,
+      speak: validActions.speak || null,
+      attack: validActions.attack || null,
+      examine: validActions.examine || null,
+      equip: validActions.equip || null,
+      activate: validActions.activate || null,
+      selectActionVisible: true,
     });
   }
 
   render() {
     return (
-      <div>
+      <div id="select-action-id">
         {this.state.selectActionVisible &&
-          <div>
-            {!!this.state.consume && <button className="action-button animate button-green" onClick={this.state.consume}>Consume</button>}
-            {!!this.state.pickUp && <button className="action-button animate button-green" onClick={this.state.pickUp}>Pick Up</button>}
-            {!!this.state.speak && <button className="action-button animate button-green" onClick={this.state.speak}>Speak</button>}
-            {!!this.state.attack && <button className="action-button animate button-green" onClick={this.state.attack}>Attack</button>}
-            {!!this.state.examine && <button className="action-button animate button-green" onClick={this.state.examine}>Examine</button>}
-            {!!this.state.equip && <button className="action-button animate button-green" onClick={this.state.equip}>Equip</button>}
-            {!!this.state.activate && <button className="action-button animate button-green" onClick={this.state.activate}>Activate</button>}
+          <div className="select-menu ui-border">
+            <p className="strokeme">Select action:</p>
+            {!!this.state.pickUp && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.pickUp}>Pick Up</button>}
+            {!!this.state.consume && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.consume}>Consume</button>}
+            {!!this.state.examine && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.examine}>Examine</button>}
+            {!!this.state.speak && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.speak}>Speak</button>}
+            {!!this.state.attack && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.attack}>Attack</button>}
+            {!!this.state.equip && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.equip}>Equip</button>}
+            {!!this.state.activate && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.activate}>Activate</button>}
           </div>
         }
       </div>

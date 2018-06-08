@@ -13,8 +13,12 @@ export function pixelToTile(pixelCoordsArray) {
 }
 
 export function tileToPixel(tileCoordsArray) {
+  const canvasOffsetObject = document.getElementById('canvas-wrapper-id').getBoundingClientRect();
+  const canvasOffsetX = canvasOffsetObject.x;
+  const canvasOffsetY = canvasOffsetObject.y;
+
   const pixelOffset = Math.floor(ScreenCs.TILE_SIZE / 2);
-  return [tileCoordsArray[0] * ScreenCs.TILE_SIZE + pixelOffset, tileCoordsArray[1] * ScreenCs.TILE_SIZE + pixelOffset];
+  return [tileCoordsArray[0] * ScreenCs.TILE_SIZE + pixelOffset + canvasOffsetX, tileCoordsArray[1] * ScreenCs.TILE_SIZE + pixelOffset + canvasOffsetY];
 }
 
 export function screenToActual(coords) {
@@ -177,18 +181,7 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
     }
   }
 
-  validActions.activate = () => { alert('implement later'); };
-
-  validActions = {
-    consume: () => { null; },
-    pickUp: () => { null; },
-    speak: () => { null; },
-    attack: () => { null; },
-    examine: () => { null; },
-    equip: () => { null; },
-    activate: () => { null; },
-  };
-
+  validActions.activate = null;
 
   return validActions;
 }

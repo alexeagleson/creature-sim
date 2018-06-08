@@ -14,9 +14,10 @@ function Inventory(worldObject) {
     worldObject.removeLocationData();
     worldObject.Item.inInventoryOf = this.owner;
     publishEvent(`${this.owner.name} picks up ${worldObject.name}.`);
+    World.ReactUI.SelectAction.hide();
   };
-};
+}
 
 export default function applyInventory(worldObject, arg = {}) {
   worldObject.Inventory = worldObject.Inventory || new Inventory(worldObject, arg);
-};
+}

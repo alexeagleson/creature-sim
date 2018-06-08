@@ -1,11 +1,19 @@
 html {
-    font-size: 62.5%;
+  font-size: 62.5%;
 }
 
 body {
-    font-size: 1.6rem;
-    font-family: Helvetica, Arial, sans-serif;
-    background: black;
+  font-size: 1.4rem;
+  font-family: Verdana, Open Sans, Consolas, Helvetica, Arial, sans-serif;
+  //font-family: dejavu sans mono, consolas, monospace;
+  background: black;
+}
+
+.ui-border {
+  border-radius: 6px;
+  border-color: white;
+  border-width: 2px;
+  border-style: ridge;
 }
 
 .strokeme {
@@ -20,36 +28,6 @@ body {
 .hover-text {
   position: absolute;
   z-index: 1;
-}
-
-.ui-left {
-  float: left;
-  margin-top: 10vh;
-  width: 10vw;
-  height: 10vh;
-}
-
-.ui-right {
-  float: right;
-  margin-top: 10vh;
-  width: 10vw;
-  height: 10vh;
-}
-
-.ui-bottom {
-  width: 75vw;
-  position: absolute;
-  bottom: 0;
-  margin-left: 15vw;
-  height: 10vh;
-}
-
-.ui-top {
-  width: 75vw;
-  position: absolute;
-  top: 0;
-  margin-left: 15vw;
-  height: 10vh;
 }
 
 .no-click {

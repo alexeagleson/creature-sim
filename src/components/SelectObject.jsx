@@ -1,29 +1,42 @@
 import React from 'react';
 
+import { tileToPixel, actualToScreen, convertToCoords } from './../../public/main/world-utility';
+
 export default class SelectObject extends React.Component {
   constructor(props) {
     super(props);
     World.ReactUI.SelectObject = this;
 
+    this.hide = this.hide.bind(this);
     this.prompt = this.prompt.bind(this);
 
-    this.objectsToSelect = [];
     this.state = {
-      selectObjectVisible: true,
+      selectObjectVisible: false,
     };
+  }
+
+  hide() {
+    this.setState({
+      selectObjectVisible: false,
+    });
   }
 
   prompt(objectsToPrompt) {
     this.setState({
-      objectButtons: objectsToPrompt.map(object => <button key={object.uniqueID} className="action-button animate button-yellow">{object.name}</button>),
+      objectButtons: objectsToPrompt.map(object => <button key={object.uniqueID} onClick={object.promptAction} className="action-button animate button-blue ui-border strokeme">{object.name}</button>),
       selectObjectVisible: true,
     });
   }
 
   render() {
     return (
-      <div>
-        {this.state.selectObjectVisible && this.state.objectButtons}
+      <div id="select-object-id">
+        {this.state.selectObjectVisible &&
+          <div className="select-menu ui-border">
+            <p className="strokeme">Select object:</p>
+            {this.state.objectButtons}
+          </div>
+        }
       </div>
     );
   }

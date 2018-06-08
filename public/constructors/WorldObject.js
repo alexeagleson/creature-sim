@@ -94,4 +94,9 @@ export default function WorldObject(objectName, arg = {}) {
     if (!(myInventory.length > 0) && !adjacentTo) { return false; }
     return true;
   };
+
+  this.promptAction = () => {
+    World.ReactUI.HudTarget.targetObject = this;
+    World.ReactUI.SelectAction.prompt(this);
+  };
 }

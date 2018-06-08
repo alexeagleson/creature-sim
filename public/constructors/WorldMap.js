@@ -17,8 +17,8 @@ export default function WorldMap(mapName, arg = {
 
   World.allMapsMap.set(this.uniqueID, this);
 
-  this.mapWidth = arg.mapWidth || 60;
-  this.mapHeight = arg.mapHeight || 30;
+  this.mapWidth = arg.mapWidth || 75;
+  this.mapHeight = arg.mapHeight || 40;
   this.mapTemp = arg.mapTemp || 20;
   this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};

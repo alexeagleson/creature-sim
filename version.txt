@@ -9,7 +9,10 @@ different maps (internal maps)
 temperature
 multi map pathing in progress
 
-
+game pause with menu
+attack button
+clean up HUD menus
+use VScode colours for menus
 
 UI
 --
@@ -21,6 +24,7 @@ context menu for object
 select list of objects
 dialogue
 hower names
+modal
 
 <strong>2018/05/31 -- Version 0.1.10</strong>
 ----------------------------

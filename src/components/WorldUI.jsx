@@ -1,25 +1,28 @@
 import React from 'react';
 import Hud from './Hud.jsx';
+import Logo from './Logo.jsx';
 import SelectAction from './SelectAction.jsx';
 import SelectObject from './SelectObject.jsx';
 import EventLog from './EventLog.jsx';
 
 const WorldUI = props => (
-  <div>
+  <div className="main-wrapper no-select">
+    <header className="logo ui-border">
+      <Logo />
+    </header>
     <div id="canvas-wrapper-id" className="canvas-wrapper ui-border">
-    </div>
-    <div className="ui-wrapper ui-border ui-left strokeme">
-      <Hud />
-    </div>
-    <div className="ui-wrapper ui-border ui-right strokeme no-select">
       <SelectAction />
-    </div>
-    <div className="ui-wrapper ui-border ui-top strokeme no-select">
       <SelectObject />
     </div>
-    <div className="ui-wrapper ui-border ui-bottom strokeme no-select">
+    <aside className="hud hud-player ui-border strokeme">
+      <Hud targetObject={World.player} />
+    </aside>
+    <aside className="hud hud-target ui-border strokeme">
+      <Hud targetObject={null} />
+    </aside>
+    <footer className="event-log strokeme ui-border">
       <EventLog />
-    </div>
+    </footer>
   </div>
 );
 

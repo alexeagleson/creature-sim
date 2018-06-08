@@ -33,12 +33,8 @@ function Living(worldObject) {
   };
 
   this.examineObject = (examineTarget) => {
-    publishEvent(`${this.owner.name} exmaines ${examineTarget.name}.`);
-
-    // badcode
-    World.ReactUI.Hud.targetObject = examineTarget;
-    setTimeout(() => { World.ReactUI.Hud.targetObject = World.player; }, 3000);
-
+    publishEvent(`${this.owner.name} examines ${examineTarget.name}.`);
+    World.ReactUI.SelectAction.hide();
     return true;
   };
 

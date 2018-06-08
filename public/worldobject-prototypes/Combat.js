@@ -21,10 +21,7 @@ function Combat(worldObject, arg = {}) {
     attackTarget.Destructible.adjustConditionBy(0 - damageNumber);
     publishEvent(`${this.owner.name} attacks ${attackTarget.name} for ${damageNumber} damage.`);
 
-    // badcode
-    World.ReactUI.Hud.targetObject = attackTarget;
-    setTimeout(() => { World.ReactUI.Hud.targetObject = World.player; }, 3000);
-
+    World.ReactUI.SelectAction.hide();
     return true;
   };
 }

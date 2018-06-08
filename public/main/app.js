@@ -48,7 +48,8 @@ export function mainLoop() {
   });
 
   if (World.Time.millisecondsElapsed > oneTenthSecondInterval + 100) {
-    World.ReactUI.Hud.updateState();
+    if (World.ReactUI.HudPlayer) { World.ReactUI.HudPlayer.updateState(); }
+    if (World.ReactUI.HudTarget) { World.ReactUI.HudTarget.updateState(); }
     World.ReactUI.EventLog.updateState();
     oneTenthSecondInterval = World.Time.millisecondsElapsed;
   }

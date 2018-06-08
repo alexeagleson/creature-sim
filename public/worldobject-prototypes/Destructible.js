@@ -33,7 +33,7 @@ function Destructible(worldObject, arg = {}) {
       }
     }
 
-    damage = normalizeToValue(((baseDamage + bonusDamage) - (baseArmour + bonusArmour)), 1, 9999);
+    const damage = normalizeToValue(((baseDamage + bonusDamage) - (baseArmour + bonusArmour)), 1, 9999);
     return damage;
   };
 

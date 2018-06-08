@@ -18,6 +18,9 @@ function pointerdownHandler(pointerEvent) {
   const clickedTileCoords = screenToActual(pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]));
   if (!withinMapBounds(World.player.WorldMap, clickedTileCoords)) { return; }
 
+  World.ReactUI.SelectObject.hide();
+  World.ReactUI.SelectAction.hide();
+
   const objectsAtCoords = World.player.WorldMap.getTile(clickedTileCoords).objectsOnTile().filter(isNotObject.bind(World.player));
 
   if (objectsAtCoords.length > 0) {
@@ -31,11 +34,8 @@ function pointerdownHandler(pointerEvent) {
 function keydownHandler(keyboardEvent) {
   if (keyboardEvent.key === 'q') {
     endSim();
-  } else if (keyboardEvent.key === 'e') {
-    World.ReactUI.Hud.toggle();
   } else if (keyboardEvent.key === 'r') {
-    World.ReactUI.SelectAction.toggle();
-    World.ReactUI.SelectObject.prompt(World.allObjects.filter(isInInventoryOf.bind(World.player)));
+    // World.ReactUI.SelectObject.prompt(World.allObjects.filter(isInInventoryOf.bind(World.player)));
   } else if (keyboardEvent.key === 't') {
     World.ReactUI.EventLog.toggle();
   } else if (keyboardEvent.key === 'f') {

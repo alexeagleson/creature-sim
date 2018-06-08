@@ -1,17 +1,16 @@
- $indicator-height: 20px;
+$indicator-height: 2vh;
 
 .indicator {
     height: $indicator-height;
 }
 
 .bar-container {
-    color: #fff;
-    padding: 5px;
 
     .bar-indicator-container {
-        width: 200px;
+        width: 95%;
         height: $indicator-height;
         display: inline-block;
+        padding: 0.25rem;
 
         .bar-indicator {
             text-align: center;
@@ -20,6 +19,10 @@
         }
         .bar-indicator, .bar {
             height: $indicator-height;
+            border-style: solid;
+            border-color: white;
+            border-width: 1px;
+            border-radius: 4px;
         }
     }
 }
@@ -28,20 +31,20 @@
 .bar-container.red .bar-indicator-container {
     background-color: #000;
     > .bar {
-        background-color: #ff3047;
+        background-color: $light-red;
     }
 }
 
 .bar-container.green .bar-indicator-container {
     background-color: #000;
     > .bar {
-        background-color: #1fd82f;
+        background-color: $light-green;
     }
 }
 
 .bar-container.blue .bar-indicator-container {
     background-color: #000;
     > .bar {
-        background-color: #397ce2;
+        background-color: $light-blue;
     }
 }
