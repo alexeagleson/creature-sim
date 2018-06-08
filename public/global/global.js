@@ -1,4 +1,4 @@
-const renderEngine = 'RotJs';
+const renderEngine = 'Phaser';
 const canvasSize = 0.75;
 
 // Phaser constants
@@ -24,8 +24,6 @@ const screenWidth = renderEngine === 'RotJs'
 const screenHeight = renderEngine === 'RotJs'
   ? Math.floor(window.innerHeight * canvasSize)
   : Math.floor(window.innerHeight * canvasSize);
-
-
 
 const screenTileWidth = renderEngine === 'RotJs'
   ? Math.floor(screenWidth / rotFontSize)
@@ -82,11 +80,10 @@ const ProtoCs = {
 const World = {
   Time: {},
   Camera: {},
+  AllSounds: {},
   MapNodeTree: null,
   MainDisplay: null,
-
   ReactUI: {},
-
   allEvents: [],
   allMaps: [],
   allObjects: [],

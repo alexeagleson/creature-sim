@@ -23,7 +23,7 @@ function Living(worldObject) {
 
   this.reduceStaminaBasedOnAction = (actionName) => {
     if (actionName === 'Attack') {
-      this.stamina -= 10;
+      this.stamina -= 1;
     }
   };
 

@@ -34,6 +34,11 @@ function pointerdownHandler(pointerEvent) {
 function keydownHandler(keyboardEvent) {
   if (keyboardEvent.key === 'q') {
     endSim();
+  } else if (keyboardEvent.key === 'e') {
+    const nearbyObjectToAttack = World.allObjectsDestructible.filter(object => World.player.Combat.canIAttackObject(object)).filter(isNotObject.bind(World.player));
+    if (nearbyObjectToAttack.length > 0) {
+      World.player.Combat.attackObject(nearbyObjectToAttack[0]);
+    }
   } else if (keyboardEvent.key === 'r') {
     // World.ReactUI.SelectObject.prompt(World.allObjects.filter(isInInventoryOf.bind(World.player)));
   } else if (keyboardEvent.key === 't') {

@@ -7,7 +7,7 @@ class ProgressBar extends React.Component {
         <div>{ this.props.name }</div>
         <div className="bar-indicator-container">
           <div className="bar-indicator">{ this.props.value }</div>
-          <div className="bar" style={{ transition: '0.25s width ease-in', width: `${this.props.percentage}%`}}></div>
+          <div className="bar" style={{ transition: '0.15s width ease-in', width: `${this.props.percentage}%`}}></div>
         </div>
       </div>
     );

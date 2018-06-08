@@ -5,6 +5,7 @@ import MapNodeTree from './../constructors/MapNodeTree';
 import Time from './../constructors/Time';
 import MainDisplay from './../display-engines/MainDisplay';
 import MainCamera from './../display-engines/MainCamera';
+import AllSounds from './../main/audio';
 
 import initializeInput from './../main/input';
 import { convertToMap, isEngine } from './../main/world-utility';
@@ -26,7 +27,7 @@ export function initializeUiTimeAndCamera() {
   initializeInput();
   World.Camera = new MainCamera();
   World.Time = new Time();
-  buildUI();
+  World.AllSounds = new AllSounds();
   document.getElementById('canvas-wrapper-id').append(World.MainDisplay.canvas);
 }
 
@@ -71,12 +72,11 @@ export function mainLoop() {
     World.playerMapTransition = false;
     World.MainDisplay.renderAll();
   }
-
-  
 }
 
 export default function startApp() {
   initializeWorld();
+  buildUI();
   World.MainDisplay = new MainDisplay();
   generateAllMaps();
   if (isEngine('RotJs')) {
