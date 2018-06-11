@@ -1,4 +1,4 @@
-import { initializeUiTimeAndCamera, mainLoop } from './../main/app';
+import { initializeInputimeAndCamera, mainLoop } from './../main/app';
 
 import { tileToPixel, convertToCoords } from './../main/world-utility';
 
@@ -27,7 +27,7 @@ const playGame = new Phaser.Class({
   create() {
     World.MainDisplay.displayEngineHandler.mainScene = this;
     World.MainDisplay.renderAll();
-    initializeUiTimeAndCamera();
+    initializeInputimeAndCamera();
   },
 
   update() {

@@ -6,6 +6,8 @@ import createWorldMap from './../content/content-WorldMap';
 
 import { randBetween, displayError } from './../main/general-utility';
 
+import { hideMenusAndResume } from './../../src/components/WorldUI.jsx';
+
 export function pixelToTile(pixelCoordsArray) {
   const tileX = Math.floor(pixelCoordsArray[0] / ScreenCs.TILE_SIZE);
   const tileY = Math.floor(pixelCoordsArray[1] / ScreenCs.TILE_SIZE);
@@ -13,12 +15,8 @@ export function pixelToTile(pixelCoordsArray) {
 }
 
 export function tileToPixel(tileCoordsArray) {
-  const canvasOffsetObject = document.getElementById('canvas-wrapper-id').getBoundingClientRect();
-  const canvasOffsetX = canvasOffsetObject.x;
-  const canvasOffsetY = canvasOffsetObject.y;
-
   const pixelOffset = Math.floor(ScreenCs.TILE_SIZE / 2);
-  return [tileCoordsArray[0] * ScreenCs.TILE_SIZE + pixelOffset + canvasOffsetX, tileCoordsArray[1] * ScreenCs.TILE_SIZE + pixelOffset + canvasOffsetY];
+  return [tileCoordsArray[0] * ScreenCs.TILE_SIZE + pixelOffset, tileCoordsArray[1] * ScreenCs.TILE_SIZE + pixelOffset];
 }
 
 export function screenToActual(coords) {
@@ -31,6 +29,13 @@ export function actualToScreen(coords) {
   const cameraX = World.Camera.tileX ? World.Camera.tileX : 0;
   const cameraY = World.Camera.tileY ? World.Camera.tileY : 0;
   return [coords[0] - cameraX, coords[1] - cameraY];
+}
+
+export function canvasPixelOffset(pixelCoordsArray) {
+  const canvasOffsetObject = document.getElementById('canvas-wrapper-id').getBoundingClientRect();
+  const canvasOffsetX = canvasOffsetObject.x;
+  const canvasOffsetY = canvasOffsetObject.y;
+  return [pixelCoordsArray[0] + canvasOffsetX, pixelCoordsArray[1] + canvasOffsetY]; 
 }
 
 export function getRandomFreeTile(WorldMap) {
@@ -109,7 +114,7 @@ export function convertToCoords(argument) {
     // If argument passed was already in coords format
     if (argument.length === 2) { return argument; }
   }
-  return displayError(`Could not convert to coords: ${argument} or ${argument.name}`);
+  return displayError(`Could not convert to coords: ${argument} or ${argument.name}.`);
 }
 
 export function isEngine(engineName) {
@@ -142,42 +147,70 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
     attack: null,
     examine: null,
     equip: null,
+    drop: null,
     activate: null,
   };
 
   if (objectActivating.Consumer) {
     if (objectActivating.Consumer.canIConsumeObject(objectBeingActivated)) {
-      validActions.consume = () => { objectActivating.Consumer.consume(objectBeingActivated); };
+      validActions.consume = () => {
+        objectActivating.Consumer.consume(objectBeingActivated);
+        hideMenusAndResume();
+      };
     }
   }
 
   if (objectActivating.Inventory) {
     if (objectActivating.Inventory.canIAddToInventory(objectBeingActivated)) {
-      validActions.pickUp = () => { objectActivating.Inventory.addToInventory(objectBeingActivated); };
+      validActions.pickUp = () => {
+        objectActivating.Inventory.addToInventory(objectBeingActivated);
+        hideMenusAndResume();
+      };
     }
   }
 
   if (objectActivating.Social) {
     if (objectActivating.Social.canISpeakTo(objectBeingActivated)) {
-      validActions.speak = () => { objectActivating.Social.speak(objectBeingActivated); };
+      validActions.speak = () => {
+        objectActivating.Social.speak(objectBeingActivated);
+        hideMenusAndResume();
+      };
     }
   }
 
   if (objectActivating.Combat) {
     if (objectActivating.Combat.canIAttackObject(objectBeingActivated)) {
-      validActions.attack = () => { objectActivating.Combat.attackObject(objectBeingActivated); };
+      validActions.attack = () => {
+        objectActivating.Combat.attackObject(objectBeingActivated);
+        hideMenusAndResume();
+      };
     }
   }
 
   if (objectActivating.Living) {
     if (objectActivating.Living.canIExamineObject(objectBeingActivated)) {
-      validActions.examine = () => { objectActivating.Living.examineObject(objectBeingActivated); };
+      validActions.examine = () => {
+        objectActivating.Living.examineObject(objectBeingActivated);
+        hideMenusAndResume();
+      };
     }
   }
 
   if (objectActivating.Equipper) {
     if (objectActivating.Equipper.canIEquipObject(objectBeingActivated)) {
-      validActions.equip = () => { objectActivating.Equipper.equip(objectBeingActivated); };
+      validActions.equip = () => {
+        objectActivating.Equipper.equip(objectBeingActivated);
+        hideMenusAndResume();
+      };
+    }
+  }
+
+  if (objectActivating.Inventory) {
+    if (objectActivating.Inventory.canIRemoveFromInventory(objectBeingActivated)) {
+      validActions.drop = () => {
+        objectActivating.Inventory.removeFromInventory(objectBeingActivated);
+        hideMenusAndResume();
+      };
     }
   }
 

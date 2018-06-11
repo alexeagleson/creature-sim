@@ -5,6 +5,8 @@ import SelectAction from './SelectAction.jsx';
 import SelectObject from './SelectObject.jsx';
 import EventLog from './EventLog.jsx';
 
+import { resumeSim } from './../../public/main/world-utility';
+
 const WorldUI = props => (
   <div className="main-wrapper no-select">
     <header className="logo ui-border">
@@ -27,3 +29,9 @@ const WorldUI = props => (
 );
 
 export default WorldUI;
+
+export function hideMenusAndResume() {
+  World.ReactUI.SelectObject.hide();
+  World.ReactUI.SelectAction.hide();
+  resumeSim();
+}

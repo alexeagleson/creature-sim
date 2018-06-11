@@ -1,6 +1,6 @@
 import { displayEngineIsActive } from './../display-engines/MainDisplay';
-import { uniqueNumber } from './../main/general-utility';
-import { distanceTo, convertToCoords, getRandomFreeTile, onSameMap } from './../main/world-utility';
+import { uniqueNumber, displayError } from './../main/general-utility';
+import { distanceTo, convertToCoords, convertToMap, getRandomFreeTile, onSameMap } from './../main/world-utility';
 import { isOnMapOfObject, isInInventoryOf, isOnTile, isNotObject } from './../main/filters';
 
 export default function WorldObject(objectName, arg = {}) {
@@ -69,7 +69,7 @@ export default function WorldObject(objectName, arg = {}) {
     if (mapTransition) { this.removeLocationData(); }
 
     if (this === World.player && mapTransition) { World.playerMapTransition = true; }
-    this.WorldMap = placeOnMapArg.worldMap;
+    this.WorldMap = convertToMap(placeOnMapArg.worldMap) || displayError(`Could not convert to map: ${placeOnMapArg.worldMap}`);
     this.WorldTile = this.WorldMap.getTile(coords);
 
     if (onSameMap(this, World.player)) {
@@ -89,7 +89,7 @@ export default function WorldObject(objectName, arg = {}) {
   };
 
   this.inMyInventoryOrAdjacent = (worldObject) => {
-    const myInventory = this.Inventory ? World.allObjects.filter(isInInventoryOf.bind(worldObject)) : false;
+    const myInventory = this.Inventory ? World.allObjects.filter(isInInventoryOf.bind(this)) : false;
     const adjacentTo = this.isAdjacentTo(worldObject);
     if (!(myInventory.length > 0) && !adjacentTo) { return false; }
     return true;

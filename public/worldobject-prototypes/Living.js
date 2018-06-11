@@ -34,7 +34,6 @@ function Living(worldObject) {
 
   this.examineObject = (examineTarget) => {
     publishEvent(`${this.owner.name} examines ${examineTarget.name}.`);
-    World.ReactUI.SelectAction.hide();
     return true;
   };
 

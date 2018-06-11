@@ -21,7 +21,6 @@ function Combat(worldObject, arg = {}) {
     attackTarget.Destructible.adjustConditionBy(0 - damageNumber);
     publishEvent(`${this.owner.name} attacks ${attackTarget.name} for ${damageNumber} damage.`);
 
-    World.ReactUI.SelectAction.hide();
     World.ReactUI.HudTarget.targetObject = attackTarget;
     World.AllSounds.hotDog.play();
     return true;

@@ -1,4 +1,4 @@
-import { tileToPixel, actualToScreen, convertToCoords, onSameMap } from './../../public/main/world-utility';
+import { tileToPixel, canvasPixelOffset, actualToScreen, convertToCoords, onSameMap } from './../../public/main/world-utility';
 
 export function displayNamesOfObjects(objectsAtCoords) {
   let objectNamesElement = document.getElementById('objectNames');
@@ -23,7 +23,7 @@ export function displayNamesOfObjects(objectsAtCoords) {
   objectNames = objectNames.slice(0, -2);
   objectNamesElement.innerHTML = objectNames;
 
-  const pixelCoords = tileToPixel(actualToScreen(convertToCoords(objectsAtCoords[0])));
+  const pixelCoords = canvasPixelOffset(tileToPixel(actualToScreen(convertToCoords(objectsAtCoords[0]))));
   objectNamesElement.style.left = `${pixelCoords[0]}px`;
   objectNamesElement.style.top = `${pixelCoords[1]}px`;
 }
@@ -47,7 +47,7 @@ export function displayDialogue(speakerObject, dialogue) {
       return;
     }
     dialogueElement.innerHTML = dialogue;
-    const pixelCoords = tileToPixel(actualToScreen(convertToCoords(speakerObject)));
+    const pixelCoords = canvasPixelOffset(tileToPixel(actualToScreen(convertToCoords(speakerObject))));
     dialogueElement.style.left = `${pixelCoords[0]}px`;
     dialogueElement.style.top = `${pixelCoords[1]}px`;
   };

@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { tileToPixel, actualToScreen, convertToCoords } from './../../public/main/world-utility';
+import { pauseSim } from './../../public/main/world-utility';
+
+import { hideMenusAndResume } from './../components/WorldUI.jsx';
 
 export default class SelectObject extends React.Component {
   constructor(props) {
@@ -22,6 +24,8 @@ export default class SelectObject extends React.Component {
   }
 
   prompt(objectsToPrompt) {
+    hideMenusAndResume();
+    pauseSim();
     this.setState({
       objectButtons: objectsToPrompt.map(object => <button key={object.uniqueID} onClick={object.promptAction} className="action-button animate button-blue ui-border strokeme">{object.name}</button>),
       selectObjectVisible: true,

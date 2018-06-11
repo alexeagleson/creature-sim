@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { tileToPixel, actualToScreen, convertToCoords, getValidContextActions } from './../../public/main/world-utility';
+import { getValidContextActions, pauseSim } from './../../public/main/world-utility';
 
 export default class SelectAction extends React.Component {
   constructor(props) {
@@ -31,6 +31,7 @@ export default class SelectAction extends React.Component {
       attack: validActions.attack || null,
       examine: validActions.examine || null,
       equip: validActions.equip || null,
+      drop: validActions.drop || null,
       activate: validActions.activate || null,
       selectActionVisible: true,
     });
@@ -48,6 +49,7 @@ export default class SelectAction extends React.Component {
             {!!this.state.speak && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.speak}>Speak</button>}
             {!!this.state.attack && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.attack}>Attack</button>}
             {!!this.state.equip && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.equip}>Equip</button>}
+            {!!this.state.drop && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.drop}>Drop</button>}
             {!!this.state.activate && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.activate}>Activate</button>}
           </div>
         }

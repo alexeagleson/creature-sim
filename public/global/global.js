@@ -1,4 +1,4 @@
-const renderEngine = 'Phaser';
+const renderEngine = 'RotJs';
 const canvasSize = 0.75;
 
 // Phaser constants

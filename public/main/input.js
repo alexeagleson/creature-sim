@@ -6,6 +6,8 @@ import { directionTextToCoords } from './../main/general-utility';
 import { screenToActual, pixelToTile, withinMapBounds } from './../main/world-utility';
 import { isNotObject, isInInventoryOf } from './../main/filters';
 
+import { hideMenusAndResume } from './../../src/components/WorldUI.jsx';
+
 function mousemoveHandler(mousemoveEvent) {
   const hoverTileCoords = screenToActual(pixelToTile([mousemoveEvent.offsetX, mousemoveEvent.offsetY]));
   if (!withinMapBounds(World.player.WorldMap, hoverTileCoords)) { return; }
@@ -18,8 +20,7 @@ function pointerdownHandler(pointerEvent) {
   const clickedTileCoords = screenToActual(pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]));
   if (!withinMapBounds(World.player.WorldMap, clickedTileCoords)) { return; }
 
-  World.ReactUI.SelectObject.hide();
-  World.ReactUI.SelectAction.hide();
+  hideMenusAndResume();
 
   const objectsAtCoords = World.player.WorldMap.getTile(clickedTileCoords).objectsOnTile().filter(isNotObject.bind(World.player));
 
@@ -40,7 +41,7 @@ function keydownHandler(keyboardEvent) {
       World.player.Combat.attackObject(nearbyObjectToAttack[0]);
     }
   } else if (keyboardEvent.key === 'r') {
-    // World.ReactUI.SelectObject.prompt(World.allObjects.filter(isInInventoryOf.bind(World.player)));
+    World.ReactUI.SelectObject.prompt(World.allObjectsItem.filter(isInInventoryOf.bind(World.player)));
   } else if (keyboardEvent.key === 't') {
     World.ReactUI.EventLog.toggle();
   } else if (keyboardEvent.key === 'f') {

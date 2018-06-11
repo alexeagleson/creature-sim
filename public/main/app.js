@@ -23,7 +23,7 @@ function initializeWorld() {
   World.player.placeOnMap({ worldMap: convertToMap('Home') });
 }
 
-export function initializeUiTimeAndCamera() {
+export function initializeInputimeAndCamera() {
   initializeInput();
   World.Camera = new MainCamera();
   World.Time = new Time();
@@ -80,7 +80,7 @@ export default function startApp() {
   World.MainDisplay = new MainDisplay();
   generateAllMaps();
   if (isEngine('RotJs')) {
-    initializeUiTimeAndCamera();
+    initializeInputimeAndCamera();
     window.requestAnimationFrame(rotJsLoop);
   }
 }
