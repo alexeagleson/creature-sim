@@ -1,3 +1,4 @@
+import { randomDirectionCoords } from './../main/general-utility';
 import { withinMapBounds } from './../main/world-utility';
 
 function Moving(worldObject) {
@@ -5,21 +6,19 @@ function Moving(worldObject) {
   World.allObjectsMoving.push(this.owner);
 
   this.move = (movementCoords) => {
-    if (!this.owner.WorldMap.getTile(movementCoords).wall) {
-      this.owner.placeOnMap({worldMap: this.owner.WorldMap, coords: movementCoords});
+    const moveTile = this.owner.WorldMap.getTile(movementCoords);
+    if (!moveTile) { return false; }
+
+    if (!moveTile.wall) {
+      this.owner.placeOnMap({ worldMap: this.owner.WorldMap, coords: movementCoords });
       return true;
     }
     return false;
   };
 
-  this.moveRelative = (relativeMovementCoords) => {
-    return this.move([this.owner.WorldTile.x + relativeMovementCoords[0], this.owner.WorldTile.y + relativeMovementCoords[1]]);
-  };
+  this.moveRelative = relativeMovementCoords => this.move([this.owner.WorldTile.x + relativeMovementCoords[0], this.owner.WorldTile.y + relativeMovementCoords[1]]);
 
-  this.moveRandom = () => {
-    const relativeMovementCoords = pickRandom([UP_COORDS, DOWN_COORDS, LEFT_COORDS, RIGHT_COORDS, NODIR_COORDS]);
-    return this.moveRelative(relativeMovementCoords);
-  };
+  this.moveRandom = () => this.moveRelative(randomDirectionCoords());
 
   this.checkBlockedAgainstObject = (x, y, worldMap = null) => {
     if (!worldMap) { worldMap = this.owner.WorldMap; }

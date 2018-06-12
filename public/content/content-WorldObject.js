@@ -71,7 +71,6 @@ export default function createWorldObject(objectName, arg = {}) {
       ? createdObject.RotJsObject.fgColour = Colours.HEX_GREEN
       : createdObject.PhaserObject.spriteFilename = 'Acorn';
     applyConsumable(createdObject);
-    applyItem(createdObject);
     createdObject.Consumable.hungerValue = 100;
 
   } else if (objectName === 'Rabbit') {
@@ -91,7 +90,6 @@ export default function createWorldObject(objectName, arg = {}) {
       : createdObject.PhaserObject.spriteFilename = 'Carrot';
 
     applyConsumable(createdObject);
-    applyItem(createdObject);
     createdObject.Consumable.hungerValue = 100;
 
   } else if (objectName === 'Trash') {

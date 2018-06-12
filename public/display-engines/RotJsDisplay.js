@@ -26,7 +26,14 @@ export default function RotJsDisplay(mainDisplay) {
     this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldObject.char, worldObject.RotJsObject.fgColour, worldObject.RotJsObject.bgColour);
   };
 
-  this.destroyAllSprites = () => {};
+  this.destroyAllSprites = () => {
+    for (let i = 0; i < this.owner.displayScreenTileWidth; i += 1) {
+      for (let j = 0; j < this.owner.displayScreenTileHeight; j += 1) {
+        // Clear the screen before map transition
+        this.engine.draw(i, j, ' ');
+      }
+    }
+  };
 
   this.stopDisplayEngine = () => {};
-};
+}

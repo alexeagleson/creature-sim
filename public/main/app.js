@@ -56,10 +56,13 @@ export function mainLoop() {
   }
 
   if (World.Time.millisecondsElapsed > oneSecondInterval + 1000) {
-    World.player.Living.adjustStamina((World.Time.millisecondsElapsed - oneSecondInterval));
-    World.player.Consumer.adjustHunger((World.Time.millisecondsElapsed - oneSecondInterval));
-    World.player.Consumer.adjustThirst((World.Time.millisecondsElapsed - oneSecondInterval));
-    World.player.Temperature.adjustTemperature((World.Time.millisecondsElapsed - oneSecondInterval));
+    World.allObjectsLiving.forEach(object => object.Living.adjustStamina((World.Time.millisecondsElapsed - oneSecondInterval)));
+    World.allObjectsTemperature.forEach(object => object.Temperature.adjustTemperature((World.Time.millisecondsElapsed - oneSecondInterval)));
+    World.allObjectsConsumer.forEach((object) => {
+      object.Consumer.adjustHunger((World.Time.millisecondsElapsed - oneSecondInterval));
+      object.Consumer.adjustThirst((World.Time.millisecondsElapsed - oneSecondInterval));
+    });
+
     oneSecondInterval = World.Time.millisecondsElapsed;
   }
 

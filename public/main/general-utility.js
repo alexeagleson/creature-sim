@@ -45,7 +45,6 @@ export function normalizeToValue(number, minValue, maxValue) {
   return number;
 }
 
-
 export function uniqueNumber() {
   let date = Date.now();
   // If created at same millisecond as previous
@@ -66,6 +65,12 @@ export function displayError(errorText) {
   }
   console.log(`Error: ${errorText}`);
   return null;
+}
+
+export function randomDirectionCoords(noDirAllowed = true) {
+  const directionOptions = [UP_COORDS, DOWN_COORDS, LEFT_COORDS, RIGHT_COORDS];
+  if (noDirAllowed) { directionOptions.push(NODIR_COORDS); }
+  return pickRandom(directionOptions);
 }
 
 export function directionTextToCoords(directionText) {

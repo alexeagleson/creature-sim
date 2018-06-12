@@ -38,22 +38,6 @@ export function canvasPixelOffset(pixelCoordsArray) {
   return [pixelCoordsArray[0] + canvasOffsetX, pixelCoordsArray[1] + canvasOffsetY]; 
 }
 
-export function getRandomFreeTile(WorldMap) {
-  let randomTile = null;
-  for (let i = 0; i < 9999; i++) {
-    const randomX = randBetween(0, WorldMap.mapWidth - 1);
-    const randomY = randBetween(0, WorldMap.mapHeight - 1);
-    if (!WorldMap.getTile([randomX, randomY]).wall) {
-      randomTile = WorldMap.getTile([randomX, randomY]);
-      break;
-    }
-  }
-  if (!randomTile) {
-    displayError(`No available empty tile found in ${WorldMap.name}.`);
-  }
-  return randomTile;
-}
-
 export function withinMapBounds(WorldMap, coords) {
   if (coords[0] < 0 || coords[0] >= WorldMap.mapWidth) { return false; }
   if (coords[1] < 0 || coords[1] >= WorldMap.mapHeight) { return false; }
@@ -114,7 +98,7 @@ export function convertToCoords(argument) {
     // If argument passed was already in coords format
     if (argument.length === 2) { return argument; }
   }
-  return displayError(`Could not convert to coords: ${argument} or ${argument.name}.`);
+  return displayError(`Could not convert to coords: ${argument}.`);
 }
 
 export function isEngine(engineName) {

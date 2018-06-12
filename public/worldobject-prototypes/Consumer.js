@@ -9,7 +9,7 @@ function Consumer(worldObject) {
 
   if (!this.owner.Living) { applyLiving(this.owner); }
 
-  this.hunger = 100;
+  this.hunger = 50;
   this.thirst = 100;
 
   this.hungerImportance = 5;

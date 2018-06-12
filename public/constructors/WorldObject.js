@@ -1,6 +1,7 @@
+import { getAvailableTile } from './../constructors/WorldMap';
 import { displayEngineIsActive } from './../display-engines/MainDisplay';
 import { uniqueNumber, displayError } from './../main/general-utility';
-import { distanceTo, convertToCoords, convertToMap, getRandomFreeTile, onSameMap } from './../main/world-utility';
+import { distanceTo, convertToCoords, convertToMap, onSameMap } from './../main/world-utility';
 import { isOnMapOfObject, isInInventoryOf, isOnTile, isNotObject } from './../main/filters';
 
 export default function WorldObject(objectName, arg = {}) {
@@ -62,7 +63,7 @@ export default function WorldObject(objectName, arg = {}) {
   };
 
   this.placeOnMap = (placeOnMapArg = { worldMap: null, coords: null, ignoreTriggers: null }) => {
-    const coords = placeOnMapArg.coords || convertToCoords(getRandomFreeTile(placeOnMapArg.worldMap));
+    const coords = placeOnMapArg.coords || convertToCoords(getAvailableTile({ worldMap: placeOnMapArg.worldMap }));
     const ignoreTriggers = placeOnMapArg.ignoreTriggers || false;
     const mapTransition = (this.WorldMap !== null && this.WorldMap !== placeOnMapArg.worldMap) || false;
 

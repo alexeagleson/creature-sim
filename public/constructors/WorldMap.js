@@ -1,9 +1,10 @@
 import WorldTile from './../constructors/WorldTile';
 
 import createWorldObject from './../content/content-WorldObject';
+import createWorldMap from './../content/content-WorldMap';
 
-import { uniqueNumber } from './../main/general-utility';
-import { convertToMap, convertToCoords, getRandomFreeTile } from './../main/world-utility';
+import { displayError, uniqueNumber, randBetween } from './../main/general-utility';
+import { convertToMap, convertToCoords } from './../main/world-utility';
 
 export default function WorldMap(mapName, arg = {
   mapWidth: null,
@@ -94,6 +95,46 @@ export default function WorldMap(mapName, arg = {
   }
 }
 
+
+export function getAvailableTile(arg = { worldMap: null, radius: null, checkForWall: null, checkForObjects: null, checkForBuildings: null }) {
+  const { worldMap } = arg;
+  let { radius, checkForWall, checkForObjects, checkForBuildings } = arg;
+
+  radius = (radius !== undefined) ? radius : 0;
+  checkForWall = (checkForWall !== undefined) ? checkForWall : true;
+  checkForObjects = (checkForObjects !== undefined) ? checkForObjects : false;
+  checkForBuildings = (checkForBuildings !== undefined) ? checkForBuildings : false;
+
+  let randomTile = null;
+  for (let i = 0; i < 9999; i += 1) {
+    const randomX = randBetween(1 + radius, (worldMap.mapWidth - 2) - radius);
+    const randomY = randBetween(1 + radius, (worldMap.mapHeight - 2) - radius);
+
+    let conflictFound = false;
+    for (let x = (randomX - radius); x <= (randomX + radius); x += 1) {
+      if (conflictFound) { break; }
+      for (let y = (randomY - radius); y <= (randomY + radius); y += 1) {
+        if (conflictFound) { break; }
+        const thisTile = worldMap.getTile([x, y]);
+
+        if (checkForWall && thisTile.wall) { conflictFound = true; }
+        if (checkForObjects && (thisTile.objectsOnTile().length > 0)) { conflictFound = true; }
+        if (checkForBuildings && thisTile.buildingLot) { conflictFound = true; }
+      }
+    }
+
+    if (!conflictFound) {
+      randomTile = worldMap.getTile([randomX, randomY]);
+      break;
+    }
+  }
+  if (!randomTile) {
+    displayError(`No available empty tile found in ${worldMap.name}.`);
+  }
+  return randomTile;
+}
+
+
 export function connectMaps(arg = {
   mapTo: null,
   mapFrom: null,
@@ -103,9 +144,47 @@ export function connectMaps(arg = {
   const mapTo = convertToMap(arg.mapTo);
   const mapFrom = convertToMap(arg.mapFrom);
 
-  const coordsTo = arg.coordsTo || convertToCoords(getRandomFreeTile(arg.mapTo));
-  const coordsFrom = arg.coordsFrom || convertToCoords(getRandomFreeTile(arg.mapFrom));
+  const coordsTo = arg.coordsTo || convertToCoords(getAvailableTile({ worldMap: arg.mapTo }));
+  const coordsFrom = arg.coordsFrom || convertToCoords(getAvailableTile({ worldMap: arg.mapFrom }));
+
+  mapTo.getTile(coordsTo).toggleWall(false);
+  mapFrom.getTile(coordsFrom).toggleWall(false);
 
   createWorldObject('Portal', { warpToMap: mapTo, warpCoords: coordsTo }).placeOnMap({ worldMap: mapFrom, coords: coordsFrom });
   createWorldObject('Portal', { warpToMap: mapFrom, warpCoords: coordsFrom }).placeOnMap({ worldMap: mapTo, coords: coordsTo });
+}
+
+
+export function digBuildingLot(arg = { worldMap: null, size: null, outerPadding: null }) {
+  const { worldMap } = arg;
+  let { size, outerPadding } = arg;
+  size = size || 2;
+  outerPadding = outerPadding || 1;
+  outerPadding = (outerPadding >= size) ? (size - 1) : outerPadding;
+
+  const centreCoords = convertToCoords(getAvailableTile({ worldMap, radius: (size + outerPadding), checkForWall: false, checkForObjects: false, checkForBuildings: true }));
+
+  for (let x = (centreCoords[0] - size); x <= (centreCoords[0] + size); x += 1) {
+    for (let y = (centreCoords[1] - size - 1); y < (centreCoords[1] + size); y += 1) {
+      worldMap.getTile([x, y]).toggleWall(false).toggleBuildingLot(true);
+    }
+  }
+  return { worldMap, size: (size - outerPadding), centreCoords };
+}
+
+
+export function createBuilding(buildingName, arg = { worldMap: null, size: null, centreCoords: null }) {
+  const { worldMap, size, centreCoords } = arg;
+  const doorwayCoords = [centreCoords[0], centreCoords[1] + (size - 1)];
+
+  for (let x = (centreCoords[0] - size); x <= (centreCoords[0] + size); x += 1) {
+    for (let y = (centreCoords[1] - size - 1); y < (centreCoords[1] + size); y += 1) {
+      worldMap.getTile([x, y]).toggleWall(true);
+    }
+  }
+  const thisBuilding = createWorldMap(buildingName, (size * 2) + 1, (size * 2) + 1);
+  const buildingDoorwayCoords = [Math.floor(thisBuilding.mapWidth / 2), (thisBuilding.mapHeight - 1)];
+
+  connectMaps({ mapFrom: worldMap, mapTo: thisBuilding, coordsFrom: doorwayCoords, coordsTo: buildingDoorwayCoords });
+  return thisBuilding;
 }
