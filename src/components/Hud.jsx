@@ -32,6 +32,7 @@ export default class Hud extends React.Component {
       thirst: this.targetObject.Consumer ? Math.round(this.targetObject.Consumer.thirst) : null,
       social: this.targetObject.Social ? Math.round(this.targetObject.Social.socialLevel) : null,
       temperature: this.targetObject.Temperature ? Math.round(this.targetObject.Temperature.temp) : null,
+      environmentTemp: this.targetObject.WorldMap ? Math.round(this.targetObject.WorldMap.mapTemp) : null,
       equipped: this.targetObject.Equipper ? this.targetObject.Equipper.currentEquipment : null,
     });
   }
@@ -45,8 +46,23 @@ export default class Hud extends React.Component {
         {Number.isInteger(this.state.hunger) && <ProgressBar name="Hunger:" value={this.state.hunger} percentage={this.state.hunger <= 100 ? this.state.hunger : 100} barClass="blue" />}
         {Number.isInteger(this.state.thirst) && <ProgressBar name="Thirst:" value={this.state.thirst} percentage={this.state.thirst <= 100 ? this.state.thirst : 100} barClass="blue" />}
         {Number.isInteger(this.state.social) && <ProgressBar name="Social:" value={this.state.social} percentage={this.state.social <= 100 ? this.state.social : 100} barClass="blue" />}
-        {Number.isInteger(this.state.temperature) && <p>Temperature: {this.state.temperature}C</p>}
         {this.state.equipped && <p>Equipped: {this.state.equipped}</p>}
+        {Number.isInteger(this.state.temperature) && <ProgressBar name="My Temp(C):" value={this.state.temperature} percentage="100" barClass={
+          this.state.temperature > 35
+            ? 'red'
+            : this.state.temperature < 5
+              ? 'blue'
+              : 'green'
+          }
+        />}
+        {Number.isInteger(this.state.environmentTemp) && <ProgressBar name="Environment Temp(C):" value={this.state.environmentTemp} percentage="100" barClass={
+          this.state.environmentTemp > 35
+            ? 'red'
+            : this.state.environmentTemp < 5
+              ? 'blue'
+              : 'green'
+          }
+        />}
       </div>
     );
   }
