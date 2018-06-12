@@ -17,23 +17,26 @@ function Pathing(worldObject) {
 
   this.calculatePath = (arg = { pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null }) => {
     if (!arg.pathTo) { return displayError(`Invalid argument given for pathTo: ${arg.pathTo}.`); }
-    arg.pathFrom = arg.pathFrom || this.owner;
 
-    arg.worldMapTo = arg.worldMapTo || convertToMap(arg.pathTo) || this.owner.WorldMap;
-    arg.worldMapFrom = arg.worldMapFrom || convertToMap(arg.pathFrom) || this.owner.WorldMap;
+    let { pathTo, pathFrom, worldMapTo, worldMapFrom } = arg;
+    pathFrom = pathFrom || this.owner;
 
-    arg.pathTo = convertToCoords(arg.pathTo);
-    arg.pathFrom = convertToCoords(arg.pathFrom);
+    // Very important that these stay in this order
+    worldMapTo = worldMapTo || convertToMap(pathTo) || this.owner.WorldMap;
+    worldMapFrom = worldMapFrom || convertToMap(pathFrom) || this.owner.WorldMap;
+    pathTo = convertToCoords(pathTo);
+    pathFrom = convertToCoords(pathFrom);
 
-    const mapPathIDs = shortestPath(arg.worldMapFrom, arg.worldMapTo);
+    const mapPathIDs = shortestPath(worldMapFrom, worldMapTo);
 
+    // This occurs when the path destination is not on the same map as the pathing object
     if (mapPathIDs.length > 1) {
       const nextMapID = mapPathIDs[1];
       const portal = World.allObjectsPortal.filter(isOnMapOfObject.bind(this.owner)).filter(portalObject => portalObject.Portal.warpToMap.uniqueID === nextMapID)[0];
-      return this.calculateSinglePath({ pathToCoords: convertToCoords(portal), pathFromCoords: arg.pathFrom, worldMap: arg.worldMapFrom });
+      return this.calculateSinglePath({ pathToCoords: convertToCoords(portal), pathFromCoords: pathFrom, worldMap: worldMapFrom });
     }
 
-    return this.calculateSinglePath({ pathToCoords: arg.pathTo, pathFromCoords: arg.pathFrom, worldMap: arg.worldMapFrom });
+    return this.calculateSinglePath({ pathToCoords: pathTo, pathFromCoords: pathFrom, worldMap: worldMapFrom });
   };
 
   this.calculateSinglePath = (arg = { pathToCoords: null, pathFromCoords: null, worldMap: null }) => {
@@ -121,13 +124,14 @@ function Pathing(worldObject) {
   };
 
   this.movePath = () => {
-    // Travel through portal if it is the object's only remaining move
-    if (this.currentPath.length === 1 && World.allObjectsPortal.filter(isOnTile.bind(this.owner.myTile())).length > 0) {
+    // If standing on a portal that the object wants to use
+    if (this.currentPath.length === 1 && this.currentPath[0][0] === this.owner.WorldTile.x && this.currentPath[0][1] === this.owner.WorldTile.y) {
       this.owner.Moving.move(this.currentPath[0]);
+      this.currentPath.shift();
+      return false;
     }
 
     this.currentPath.shift();
-
     if (this.currentPath.length > 0) {
       return this.owner.Moving.move(this.currentPath[0]);
     }

@@ -34,8 +34,7 @@ export default function createWorldMap(mapName, width, height) {
     createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
     createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
 
-
-    runXTimes(createWorldObject, 2, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
+    // runXTimes(createWorldObject, 2, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
   } else if (mapName === 'Map 2') {
     createdMap = new WorldMap(mapName, { mapType: 'Cellular' });
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 6, outerPadding: 1 }));
