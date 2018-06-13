@@ -3,7 +3,7 @@
     word-break: break-all;
     word-spacing: -1px;  
     padding: 1rem;
-    //transition: 0.5s ease-in;
+    transition: 0.5s ease-in;
     height: 12vh;
     z-index: 2;
     background: black;
@@ -17,6 +17,22 @@
     background: black;
     height: 40vh;
     overflow-y: scroll;
+  }
+
+  .colour-white {
+    color: white;
+  }
+
+  .colour-red {
+    color: $light-red;
+  }
+  
+  .colour-blue {
+    color: $light-blue;
+  }
+  
+  .colour-green {
+    color: $light-green;
   }
   
   ::-webkit-scrollbar {width: 5px;} 

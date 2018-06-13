@@ -1,11 +1,9 @@
+import { getInventory } from './../constructors/WorldObject';
 import { endSim } from './../main/app';
-
-import { displayNamesOfObjects } from './../../src/components/HoveringText';
-
 import { directionTextToCoords } from './../main/general-utility';
 import { screenToActual, pixelToTile, withinMapBounds } from './../main/world-utility';
-import { isNotObject, isInInventoryOf } from './../main/filters';
-
+import { isNotObject } from './../main/filters';
+import { displayNamesOfObjects } from './../../src/components/HoveringText';
 import { hideMenusAndResume } from './../../src/components/WorldUI.jsx';
 
 function mousemoveHandler(mousemoveEvent) {
@@ -36,13 +34,12 @@ function keydownHandler(keyboardEvent) {
   if (keyboardEvent.key === 'q') {
     endSim();
   } else if (keyboardEvent.key === 'e') {
-    World.ReactUI.SelectOption.prompt(['hello', 'there', 'Farmers do not like  from living in fear. They are meant to provide safety for citizens. Our government in America consists of a legislative branch']);
     const nearbyObjectToAttack = World.allObjectsDestructible.filter(object => World.player.Combat.canIAttackObject(object)).filter(isNotObject.bind(World.player));
     if (nearbyObjectToAttack.length > 0) {
       World.player.Combat.attackObject(nearbyObjectToAttack[0]);
     }
   } else if (keyboardEvent.key === 'r') {
-    World.ReactUI.SelectObject.prompt(World.allObjectsItem.filter(isInInventoryOf.bind(World.player)));
+    World.ReactUI.SelectObject.prompt(getInventory(World.player));
   } else if (keyboardEvent.key === 't') {
     World.ReactUI.EventLog.toggle();
   } else if (keyboardEvent.key === 'f') {

@@ -1,5 +1,7 @@
 import { publishEvent } from './../constructors/WorldEvent';
+import { isNotObject } from './../main/filters';
 import { normalizeToValue } from './../main/general-utility';
+import { getActivePrototypesByName } from './../main/world-utility';
 
 function Living(worldObject) {
   this.owner = worldObject;
@@ -27,17 +29,21 @@ function Living(worldObject) {
     }
   };
 
-  this.canIExamineObject = (worldObject) => {
-    if (!this.owner.isAdjacentTo(worldObject, ProtoCs.EXAMINE_MAX_DISTANCE)) { return false; }
-    return true;
+  this.canIExamineObject = examineTargetObject => this.owner.isAdjacentTo(examineTargetObject, ProtoCs.EXAMINE_MAX_DISTANCE);
+
+  this.examineObject = examineTargetObject => publishEvent(`${this.owner.name} examines ${examineTargetObject.name}.`);
+
+  this.death = () => {
+    if (this.owner.RotJsObject) this.owner.RotJsObject.fgColour = Colours.HEX_RED;
+    this.owner.char = '%';
+    this.owner.name = `Remains of ${this.owner.name}`;
+    getActivePrototypesByName(this.owner, ['Consumer', 'DecisionAI', 'Inventory', 'Living', 'Moving', 'Pathing', 'Social', 'Temperature']).forEach(objectProtoype => objectProtoype.revokePrototype());
   };
 
-  this.examineObject = (examineTarget) => {
-    publishEvent(`${this.owner.name} examines ${examineTarget.name}.`);
-    return true;
+  this.revokePrototype = () => {
+    World.allObjectsLiving = World.allObjectsLiving.filter(isNotObject.bind(this.owner));
+    this.owner.Living = null;
   };
-
-  this.death = () => {};
 }
 
 export default function applyLiving(worldObject, arg = {}) {

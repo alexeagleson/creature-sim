@@ -1,4 +1,5 @@
 import { publishEvent } from './../constructors/WorldEvent';
+import { isNotObject } from './../main/filters';
 
 function Combat(worldObject, arg = {}) {
   this.owner = worldObject;
@@ -18,12 +19,18 @@ function Combat(worldObject, arg = {}) {
     if (!this.owner.Living.checkAdequateStaminaForAction('Attack')) { return false; }
     this.owner.Living.reduceStaminaBasedOnAction('Attack');
     const damageNumber = attackTarget.Destructible.calculateDamageAttackedBy(this.owner);
-    attackTarget.Destructible.adjustConditionBy(0 - damageNumber);
+    const causeOfConditionLoss = 'being attacked';
+    attackTarget.Destructible.adjustConditionBy(0 - damageNumber, causeOfConditionLoss);
     publishEvent(`${this.owner.name} attacks ${attackTarget.name} for ${damageNumber} damage.`);
 
     World.ReactUI.HudTarget.targetObject = attackTarget;
     World.AllSounds.hotDog.play();
     return true;
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsCombat = World.allObjectsCombat.filter(isNotObject.bind(this.owner));
+    this.owner.Combat = null;
   };
 }
 

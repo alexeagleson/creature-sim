@@ -1,6 +1,6 @@
 import { shortestPath } from './../constructors/MapNodeTree';
 
-import { isOnMapOfObject, isOnTile } from './../main/filters';
+import { isOnMapOfObject, isNotObject, isOnTile } from './../main/filters';
 
 import { displayError } from './../main/general-utility';
 import { distanceTo, convertToMap, convertToCoords } from './../main/world-utility';
@@ -138,6 +138,10 @@ function Pathing(worldObject) {
     return false;
   };
 
+  this.revokePrototype = () => {
+    World.allObjectsPathing = World.allObjectsPathing.filter(isNotObject.bind(this.owner));
+    this.owner.Pathing = null;
+  };
 }
 
 export default function applyPathing(worldObject, arg = {}) {

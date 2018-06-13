@@ -1,3 +1,4 @@
+import { isNotObject } from './../main/filters';
 import { randomDirectionCoords } from './../main/general-utility';
 import { withinMapBounds } from './../main/world-utility';
 
@@ -29,8 +30,13 @@ function Moving(worldObject) {
     }
     return worldMap.getTile([x, y]).checkBlocked(this.owner);
   };
-};
+
+  this.revokePrototype = () => {
+    World.allObjectsMoving = World.allObjectsMoving.filter(isNotObject.bind(this.owner));
+    this.owner.Moving = null;
+  };
+}
 
 export default function applyMoving(worldObject, arg = {}) {
   worldObject.Moving = worldObject.Moving || new Moving(worldObject, arg);
-};
+}

@@ -1,4 +1,5 @@
 import { publishEvent } from './../constructors/WorldEvent';
+import { isNotObject } from './../main/filters';
 
 function Equipper(worldObject) {
   this.owner = worldObject;
@@ -22,7 +23,12 @@ function Equipper(worldObject) {
 
   this.unequip = () => {
     this.currentEquipment = null;
-  }
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsEquipper = World.allObjectsEquipper.filter(isNotObject.bind(this.owner));
+    this.owner.Equipper = null;
+  };
 }
 
 export default function applyEquipper(worldObject, arg = {}) {

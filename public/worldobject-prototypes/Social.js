@@ -1,5 +1,6 @@
+import { isNotObject } from './../main/filters';
 import { publishEvent } from './../constructors/WorldEvent';
-
+import { pickRandom } from './../main/general-utility';
 import { displayDialogue } from './../../src/components/HoveringText';
 
 function Social(worldObject) {
@@ -7,7 +8,7 @@ function Social(worldObject) {
   World.allObjectsSocial.push(this.owner);
   if (!this.owner.Living) { applyLiving(this.owner); }
 
-  this.socialLevel = 40;
+  this.socialLevel = 60;
 
   this.canISpeakTo = (worldObject) => {
     if (!worldObject.Social) { return false; }
@@ -15,11 +16,17 @@ function Social(worldObject) {
     return true;
   };
 
-  this.speak = (objectSpeakTo) => {
-    const dialogue = `Hello ${objectSpeakTo.name}!`;
-    publishEvent(`${this.owner.name} says: ${dialogue}`);
+  this.speak = (objectSpeakTo, forcedDialogue) => {
+    const dialogue = forcedDialogue || pickRandom([`Hello ${objectSpeakTo.name}!`, `Whut up?`]);
+    if (objectSpeakTo === World.player) { World.ReactUI.SelectOption.prompt(this.owner, dialogue, ['Ok']); }
+    publishEvent(`${this.owner.name} says: ${dialogue}`, 'green');
     displayDialogue(this.owner, dialogue);
-    this.socialLevel += 10;
+    this.socialLevel += 20;
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsSocial = World.allObjectsSocial.filter(isNotObject.bind(this.owner));
+    this.owner.Social = null;
   };
 }
 

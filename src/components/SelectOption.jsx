@@ -24,11 +24,13 @@ export default class SelectOption extends React.Component {
     });
   }
 
-  prompt(optionsToPrompt) {
+  prompt(speakingObject, menuText, optionsToPrompt) {
     hideMenusAndResume();
     pauseSim();
     this.setState({
-      optionButtons: optionsToPrompt.map(option => <button key={uniqueNumber()} onClick={alert} className="action-button animate button-blue ui-border strokeme larger-text">{option}</button>),
+      speakingObject,
+      menuText,
+      optionButtons: optionsToPrompt.map(option => <button key={uniqueNumber()} onClick={() => { World.player.Social.speak(this.state.speakingObject, option); hideMenusAndResume(); }} className="action-button animate button-blue ui-border strokeme larger-text">{option}</button>),
       selectOptionVisible: true,
     });
   }
@@ -38,7 +40,7 @@ export default class SelectOption extends React.Component {
       <div id="select-option-id">
         {this.state.selectOptionVisible &&
           <div className="select-menu ui-border">
-            <i><center><p className="strokeme larger-text">The President is also considered the leader of our country. The judicial branch interprets the laws. This branch consists of the courts and the trials held in them. Here a judge and jury determine from evidence presented by lawyers whether someone is guilty of breaking a law</p></center></i>
+            <i><center><p className="strokeme larger-text">{`${this.state.speakingObject.name}: ${this.state.menuText}`}</p></center></i>
             {this.state.optionButtons}
           </div>
         }

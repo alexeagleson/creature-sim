@@ -1,6 +1,6 @@
 import { publishEvent } from './../constructors/WorldEvent';
+import { isNotObject } from './../main/filters';
 import { normalizeToValue, pickRandom } from './../main/general-utility';
-
 import { displayDialogue } from './../../src/components/HoveringText';
 
 function Consumer(worldObject) {
@@ -44,8 +44,10 @@ function Consumer(worldObject) {
     this.thirst = normalizeToValue(this.thirst, 0, 100);
   };
 
-
-
+  this.revokePrototype = () => {
+    World.allObjectsConsumer = World.allObjectsConsumer.filter(isNotObject.bind(this.owner));
+    this.owner.Consumer = null;
+  };
 };
 
 export default function applyConsumer(worldObject, arg = {}) {

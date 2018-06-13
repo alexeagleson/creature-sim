@@ -1,5 +1,5 @@
 import WorldObject from './../constructors/WorldObject';
-import WorldMap from './../constructors/WorldMap';
+import WorldMap, { getAvailableTile } from './../constructors/WorldMap';
 import WorldTile from './../constructors/WorldTile';
 
 import createWorldMap from './../content/content-WorldMap';
@@ -94,6 +94,9 @@ export function convertToCoords(argument) {
   if (argument instanceof WorldTile) {
     return [argument.x, argument.y];
   }
+  if (argument instanceof WorldMap) {
+    return convertToCoords(getAvailableTile({ worldMap: argument }))
+  }
   if (typeof argument === 'object') {
     // If argument passed was already in coords format
     if (argument.length === 2) { return argument; }
@@ -119,6 +122,54 @@ export function convertToMap(argument) {
 
   if (foundMap) { return foundMap; }
   return null;
+}
+
+export function getAllActivePrototypes(worldObject) {
+  const allPrototypes = [];
+  if (worldObject.Combat) allPrototypes.push(worldObject.Combat);
+  if (worldObject.Consumable) allPrototypes.push(worldObject.Consumable);
+  if (worldObject.Consumer) allPrototypes.push(worldObject.Consumer);
+  if (worldObject.DecisionAI) allPrototypes.push(worldObject.DecisionAI);
+  if (worldObject.Destructible) allPrototypes.push(worldObject.Destructible);
+  if (worldObject.Equipment) allPrototypes.push(worldObject.Equipment);
+  if (worldObject.Equipper) allPrototypes.push(worldObject.Equipper);
+  if (worldObject.Inventory) allPrototypes.push(worldObject.Inventory);
+  if (worldObject.Item) allPrototypes.push(worldObject.Item);
+  if (worldObject.Living) allPrototypes.push(worldObject.Living);
+  if (worldObject.Moving) allPrototypes.push(worldObject.Moving);
+  if (worldObject.Pathing) allPrototypes.push(worldObject.Pathing);
+  if (worldObject.PhaserObject) allPrototypes.push(worldObject.PhaserObject);
+  if (worldObject.Portal) allPrototypes.push(worldObject.Portal);
+  if (worldObject.RotJsObject) allPrototypes.push(worldObject.RotJsObject);
+  if (worldObject.Social) allPrototypes.push(worldObject.Social);
+  if (worldObject.Temperature) allPrototypes.push(worldObject.Temperature);
+  if (worldObject.TurnTaking) allPrototypes.push(worldObject.TurnTaking);
+  return allPrototypes;
+}
+
+export function getActivePrototypesByName(worldObject, namesArray) {
+  const allPrototypes = [];
+  namesArray.forEach((protoypeName) => {
+    if (worldObject.Combat && protoypeName.toLowerCase() === 'Combat'.toLowerCase()) allPrototypes.push(worldObject.Combat);
+    if (worldObject.Consumable && protoypeName.toLowerCase() === 'Consumable'.toLowerCase()) allPrototypes.push(worldObject.Consumable);
+    if (worldObject.Consumer && protoypeName.toLowerCase() === 'Consumer'.toLowerCase()) allPrototypes.push(worldObject.Consumer);
+    if (worldObject.DecisionAI && protoypeName.toLowerCase() === 'DecisionAI'.toLowerCase()) allPrototypes.push(worldObject.DecisionAI);
+    if (worldObject.Destructible && protoypeName.toLowerCase() === 'Destructible'.toLowerCase()) allPrototypes.push(worldObject.Destructible);
+    if (worldObject.Equipment && protoypeName.toLowerCase() === 'Equipment'.toLowerCase()) allPrototypes.push(worldObject.Equipment);
+    if (worldObject.Equipper && protoypeName.toLowerCase() === 'Equipper'.toLowerCase()) allPrototypes.push(worldObject.Equipper);
+    if (worldObject.Inventory && protoypeName.toLowerCase() === 'Inventory'.toLowerCase()) allPrototypes.push(worldObject.Inventory);
+    if (worldObject.Item && protoypeName.toLowerCase() === 'Item'.toLowerCase()) allPrototypes.push(worldObject.Item);
+    if (worldObject.Living && protoypeName.toLowerCase() === 'Living'.toLowerCase()) allPrototypes.push(worldObject.Living);
+    if (worldObject.Moving && protoypeName.toLowerCase() === 'Moving'.toLowerCase()) allPrototypes.push(worldObject.Moving);
+    if (worldObject.Pathing && protoypeName.toLowerCase() === 'Pathing'.toLowerCase()) allPrototypes.push(worldObject.Pathing);
+    if (worldObject.PhaserObject && protoypeName.toLowerCase() === 'PhaserObject'.toLowerCase()) allPrototypes.push(worldObject.PhaserObject);
+    if (worldObject.Portal && protoypeName.toLowerCase() === 'Portal'.toLowerCase()) allPrototypes.push(worldObject.Portal);
+    if (worldObject.RotJsObject && protoypeName.toLowerCase() === 'RotJsObject'.toLowerCase()) allPrototypes.push(worldObject.RotJsObject);
+    if (worldObject.Social && protoypeName.toLowerCase() === 'Social'.toLowerCase()) allPrototypes.push(worldObject.Social);
+    if (worldObject.Temperature && protoypeName.toLowerCase() === 'Temperature'.toLowerCase()) allPrototypes.push(worldObject.Temperature);
+    if (worldObject.TurnTaking && protoypeName.toLowerCase() === 'TurnTaking'.toLowerCase()) allPrototypes.push(worldObject.TurnTaking);
+  });
+  return allPrototypes;
 }
 
 export function getValidContextActions(objectActivating, objectBeingActivated) {

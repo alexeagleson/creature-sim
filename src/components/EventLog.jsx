@@ -16,7 +16,7 @@ export default class EventLog extends React.Component {
 
   updateState() {
     this.setState({
-      listOfEvents: World.allEvents.map(event => <div key={uniqueNumber()}>{event.text}</div>).reverse(),
+      listOfEvents: World.allEvents.map(event => <div key={uniqueNumber()} className={`colour-${event.colour}`}>{event.text}</div>).reverse(),
     });
   }
 

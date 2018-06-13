@@ -1,4 +1,7 @@
+import { isNotObject } from './../main/filters';
 import { normalizeToValue } from './../main/general-utility';
+
+const TEMP_ADJUSTMENT_FACTOR = 20;
 
 function Temperature(worldObject) {
   this.owner = worldObject;
@@ -17,14 +20,20 @@ function Temperature(worldObject) {
       }
     }
 
-    this.temp += differenceBetweenWeatherAndCurrent / timePassedMilliseconds * 10;
+    this.temp += (differenceBetweenWeatherAndCurrent / timePassedMilliseconds) * TEMP_ADJUSTMENT_FACTOR;
     this.adjustConditionBasedOnTemperature();
   };
 
   this.adjustConditionBasedOnTemperature = () => {
     let tempAffectsCondition = Math.abs(20 - this.temp);
     tempAffectsCondition = normalizeToValue((tempAffectsCondition - 15), 0, 100);
-    this.owner.Destructible.adjustConditionBy(0 - tempAffectsCondition / 10);
+    const causeOfConditionLoss = this.temp > 35 ? 'heat exposure' : 'cold exposure';
+    this.owner.Destructible.adjustConditionBy((0 - tempAffectsCondition) / TEMP_ADJUSTMENT_FACTOR, causeOfConditionLoss);
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsTemperature = World.allObjectsTemperature.filter(isNotObject.bind(this.owner));
+    this.owner.Temperature = null;
   };
 }
 

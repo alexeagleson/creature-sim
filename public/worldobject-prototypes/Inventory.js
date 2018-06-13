@@ -1,5 +1,5 @@
 import { publishEvent } from './../constructors/WorldEvent';
-
+import { isNotObject } from './../main/filters';
 import { convertToCoords, isInInventoryOf } from './../main/world-utility';
 
 function Inventory(worldObject) {
@@ -28,6 +28,11 @@ function Inventory(worldObject) {
     worldObject.placeOnMap({ worldMap: this.owner.WorldMap, coords: convertToCoords(this.owner) });
     worldObject.Item.inInventoryOf = null;
     publishEvent(`${this.owner.name} drops ${worldObject.name}.`);
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsInventory = World.allObjectsInventory.filter(isNotObject.bind(this.owner));
+    this.owner.Inventory = null;
   };
 }
 

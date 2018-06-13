@@ -1,6 +1,7 @@
 import { publishEvent } from './../constructors/WorldEvent';
 
 import { pickRandom } from './../main/general-utility';
+import { convertToCoords } from './../main/world-utility';
 
 import { isOnAMap, isOnMapOfObject, isNotObject, isConsumable, isSocial, isItem, isNamed, shortestPathToSort } from './../main/filters';
 
@@ -125,6 +126,44 @@ function DecisionAI(worldObject) {
 
     if (this.hasObjective) { return true; }
 
+    if (this.owner.Temperature && this.owner.WorldMap) {
+      if (this.owner.Temperature.temp > 30) {
+        if (this.owner.WorldMap.mapTemp > 30) {
+          World.allMaps.some((worldMap) => {
+            if (worldMap.mapTemp > 30) { return false; }
+
+            this.owner.Pathing.createPath({ pathTo: worldMap });
+            publishEvent(`${this.owner.name} wants to go to ${worldMap.name} because it's cooler there.`);
+            displayDialogue(this.owner, pickRandom(['its too damn hot here']));
+
+            this.currentAction = () => {
+              return this.owner.Pathing.movePath();
+            };
+
+            this.successCondition = () => {
+              return this.owner.worldMap === worldMap;
+            };
+
+            this.onSuccess = () => {
+              displayDialogue(this.owner, pickRandom(['ok this is much better, much cooler here']));
+              return true;
+            };
+
+            this.onFail = () => {
+              publishEvent(`${this.owner.name} fails to reach ${worldMap.name}.`);
+            };
+
+            this.hasObjective = true;
+            return true;
+          });
+        }
+        if (this.owner.Moving) { this.owner.Moving.moveRandom(); }
+        return false;
+      }
+    }
+
+    if (this.hasObjective) { return true; }
+
     if (this.owner.Inventory) {
       const treasureObjects = World.allObjects.filter(isNamed.bind('Treasure')).filter(isOnAMap);
 
@@ -157,6 +196,11 @@ function DecisionAI(worldObject) {
 
     if (this.owner.Moving) { this.owner.Moving.moveRandom(); }
     return false;
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsDecisionAI = World.allObjectsDecisionAI.filter(isNotObject.bind(this.owner));
+    this.owner.DecisionAI = null;
   };
 
   this.resetObjective();

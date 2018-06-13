@@ -23,16 +23,40 @@ logo top
 context menu for object
 select list of objects
 dialogue
-hower names
+hover names
 modal
 
-<strong>2018/05/12 -- Version 0.1.21</strong>
+
+
+
+
+
+
+
+---
+death with item drop
+UI chat menu
+game controller
+playing card trees
+dialogue questions
+stop time while menus open
+---
+
+
+
+
+
+<strong>2018/05/13 -- Version 0.1.23</strong>
+----------------------------
+(*) Created pop up dialogue menus with choice prompts when speaking to player
+
+<strong>2018/05/13 -- Version 0.1.22</strong>
 ----------------------------
 (*) Added current time to HUD
 
 <strong>2018/05/12 -- Version 0.1.21</strong>
 ----------------------------
-(*) IMprovements to pathfinding
+(*) Improvements to pathfinding
 
 <strong>2018/06/08 -- Version 0.1.20</strong>
 ----------------------------

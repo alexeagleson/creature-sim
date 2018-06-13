@@ -1,3 +1,5 @@
+import { isNotObject } from './../main/filters';
+
 function TurnTaking(worldObject, arg = {}) {
   this.owner = worldObject;
   World.allObjectsTurnTaking.push(this.owner);
@@ -32,6 +34,11 @@ function TurnTaking(worldObject, arg = {}) {
       }
     }
     return this.turnOver();
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsTurnTaking = World.allObjectsTurnTaking.filter(isNotObject.bind(this.owner));
+    this.owner.TurnTaking = null;
   };
 }
 

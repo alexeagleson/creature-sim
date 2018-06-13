@@ -9,7 +9,9 @@ export default function WorldEvent(text) {
   };
 }
 
-export function publishEvent(text) {
+export function publishEvent(text, colour) {
   const event = new WorldEvent(text);
-  event.addToTimeline();
+  event.colour = colour || 'white';
+  event.addToTimeline(colour);
+  return true;
 }

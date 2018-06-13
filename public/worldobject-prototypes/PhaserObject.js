@@ -1,3 +1,4 @@
+import { isNotObject } from './../main/filters';
 import { tileToPixel } from './../main/world-utility';
 
 function PhaserObject(worldObject, arg = {}) {
@@ -25,6 +26,11 @@ function PhaserObject(worldObject, arg = {}) {
     this.sprite.y = pixelCoords[1];
     this.sprite.visible = true;
     this.sprite.depth = 1;
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsPhaserObject = World.allObjectsPhaserObject.filter(isNotObject.bind(this.owner));
+    this.owner.PhaserObject = null;
   };
 }
 

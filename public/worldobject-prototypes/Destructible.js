@@ -1,4 +1,9 @@
+import { getInventory } from './../constructors/WorldObject';
+import { publishEvent } from './../constructors/WorldEvent';
+import { endSim } from './../main/app';
+import { isNotObject } from './../main/filters';
 import { normalizeToValue, rollDie } from './../main/general-utility';
+import { convertToCoords } from './../main/world-utility';
 
 function Destructible(worldObject, arg = {}) {
   this.owner = worldObject;
@@ -7,10 +12,10 @@ function Destructible(worldObject, arg = {}) {
   this.condition = 100;
   this.baseArmour = arg.baseArmour || 0;
 
-  this.adjustConditionBy = (value) => {
+  this.adjustConditionBy = (value, causeOfConditionLoss) => {
     this.condition += value;
     this.condition = normalizeToValue(this.condition, 0, 100);
-    this.checkIfDestroyed();
+    this.checkIfDestroyed(causeOfConditionLoss);
   };
 
   this.calculateDamageAttackedBy = (attackerObject) => {
@@ -37,16 +42,35 @@ function Destructible(worldObject, arg = {}) {
     return damage;
   };
 
-  this.checkIfDestroyed = () => {
+  this.checkIfDestroyed = (causeOfConditionLoss) => {
     if (this.condition <= 0) {
-      if (this.owner.Living) { this.owner.Living.death(); }
-      this.destroy();
+      this.destroy(causeOfConditionLoss);
+      if (this.owner === World.player) { endSim(); }
       return true;
     }
     return false;
   };
 
-  this.destroy = () => this.owner.removeFromUniverse();
+  this.destroy = (causeOfConditionLoss) => {
+    if (this.owner.Inventory) {
+      getInventory(this.owner).forEach(object => object.placeOnMap({ worldMap: this.owner.WorldMap, coords: convertToCoords(this.owner), ignoreTriggers: true }));
+    }
+
+    const destroyterm = this.owner.Living ? 'died' : 'been destroyed';
+    publishEvent(`${this.owner.name} has ${destroyterm} from ${causeOfConditionLoss}.`, 'red');
+
+    if (this.owner.Living) {
+      this.condition = 100;
+      this.owner.Living.death();
+    } else {
+      this.owner.removeFromUniverse();
+    }
+  };
+
+  this.revokePrototype = () => {
+    World.allObjectsDestructible = World.allObjectsDestructible.filter(isNotObject.bind(this.owner));
+    this.owner.Destructible = null;
+  };
 }
 
 export default function applyDestructible(worldObject, arg = {}) {

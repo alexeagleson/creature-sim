@@ -1,7 +1,7 @@
 import { getAvailableTile } from './../constructors/WorldMap';
 import { displayEngineIsActive } from './../display-engines/MainDisplay';
 import { uniqueNumber, displayError } from './../main/general-utility';
-import { distanceTo, convertToCoords, convertToMap, onSameMap } from './../main/world-utility';
+import { getAllActivePrototypes, distanceTo, convertToCoords, convertToMap, onSameMap } from './../main/world-utility';
 import { isOnMapOfObject, isInInventoryOf, isOnTile, isNotObject } from './../main/filters';
 
 export default function WorldObject(objectName, arg = {}) {
@@ -25,26 +25,7 @@ export default function WorldObject(objectName, arg = {}) {
 
   this.removeFromUniverse = () => {
     this.removeLocationData();
-
-    World.allObjectsCombat = World.allObjectsCombat.filter(isNotObject.bind(this));
-    World.allObjectsConsumable = World.allObjectsConsumable.filter(isNotObject.bind(this));
-    World.allObjectsConsumer = World.allObjectsConsumer.filter(isNotObject.bind(this));
-    World.allObjectsDecisionAI = World.allObjectsDecisionAI.filter(isNotObject.bind(this));
-    World.allObjectsDestructible = World.allObjectsDestructible.filter(isNotObject.bind(this));
-    World.allObjectsEquipment = World.allObjectsEquipment.filter(isNotObject.bind(this));
-    World.allObjectsEquipper = World.allObjectsEquipper.filter(isNotObject.bind(this));
-    World.allObjectsInventory = World.allObjectsInventory.filter(isNotObject.bind(this));
-    World.allObjectsItem = World.allObjectsItem.filter(isNotObject.bind(this));
-    World.allObjectsLiving = World.allObjectsLiving.filter(isNotObject.bind(this));
-    World.allObjectsMoving = World.allObjectsMoving.filter(isNotObject.bind(this));
-    World.allObjectsPathing = World.allObjectsPathing.filter(isNotObject.bind(this));
-    World.allObjectsPhaserObject = World.allObjectsPhaserObject.filter(isNotObject.bind(this));
-    World.allObjectsPortal = World.allObjectsPortal.filter(isNotObject.bind(this));
-    World.allObjectsRotJsObject = World.allObjectsRotJsObject.filter(isNotObject.bind(this));
-    World.allObjectsSocial = World.allObjectsSocial.filter(isNotObject.bind(this));
-    World.allObjectsTemperature = World.allObjectsTemperature.filter(isNotObject.bind(this));
-    World.allObjectsTurnTaking = World.allObjectsTurnTaking.filter(isNotObject.bind(this));
-
+    getAllActivePrototypes(this).forEach(objectPrototype => objectPrototype.revokePrototype());
     World.allObjects = World.allObjects.filter(isNotObject.bind(this));
     World.allObjectsMap.delete(this.uniqueID);
   };
@@ -100,4 +81,8 @@ export default function WorldObject(objectName, arg = {}) {
     World.ReactUI.HudTarget.targetObject = this;
     World.ReactUI.SelectAction.prompt(this);
   };
+}
+
+export function getInventory(worldObject) {
+  return World.allObjectsItem.filter(isInInventoryOf.bind(worldObject));
 }
