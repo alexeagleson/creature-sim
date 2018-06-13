@@ -26,6 +26,18 @@ dialogue
 hower names
 modal
 
+<strong>2018/05/12 -- Version 0.1.21</strong>
+----------------------------
+(*) Added current time to HUD
+
+<strong>2018/05/12 -- Version 0.1.21</strong>
+----------------------------
+(*) IMprovements to pathfinding
+
+<strong>2018/06/08 -- Version 0.1.20</strong>
+----------------------------
+(*) Complete build of UI system using Rect.
+
 <strong>2018/05/31 -- Version 0.1.10</strong>
 ----------------------------
 (*) BFS is now fully implemented with pathing across multiple maps

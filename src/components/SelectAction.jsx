@@ -42,7 +42,7 @@ export default class SelectAction extends React.Component {
       <div id="select-action-id">
         {this.state.selectActionVisible &&
           <div className="select-menu ui-border">
-            <p className="strokeme">Select action:</p>
+            <center><p className="strokeme">Select action:</p></center>
             {!!this.state.pickUp && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.pickUp}>Pick Up</button>}
             {!!this.state.consume && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.consume}>Consume</button>}
             {!!this.state.examine && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.examine}>Examine</button>}

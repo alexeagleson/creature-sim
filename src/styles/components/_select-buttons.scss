@@ -5,7 +5,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 2rem;
-    background-color: rgba(25, 25, 25, 0.7);
+    background-color: rgba(25, 25, 25, 0.85);
 }
 
 .action-button {
@@ -24,6 +24,11 @@
     border-bottom: 5px solid $border-green;
 }
 
+.button-red {
+    background-color: $light-red;
+    border-bottom: 5px solid $border-red;
+}
+
 .button-blue:hover{
     background-color: lighten($light-blue, 15%);
     border-bottom-color: lighten($border-blue, 5%);
@@ -32,11 +37,6 @@
 .button-green:hover{
     background-color: lighten($light-green, 15%);
     border-bottom-color: lighten($border-green, 5%);
-}
-
-.button-red:hover{
-    background-color: lighten($light-red, 15%);
-    border-bottom-color: lighten($border-red, 5%);
 }
 
 .button-red:hover{

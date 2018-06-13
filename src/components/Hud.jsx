@@ -1,5 +1,7 @@
 import React from 'react';
-import ProgressBar from './subcomponents/Bar.jsx';
+import ProgressBar from './Bar.jsx';
+
+import { millisecondsToHHMMSS } from './../../public/constructors/Time';
 
 export default class Hud extends React.Component {
   constructor(props) {
@@ -32,8 +34,9 @@ export default class Hud extends React.Component {
       thirst: this.targetObject.Consumer ? Math.round(this.targetObject.Consumer.thirst) : null,
       social: this.targetObject.Social ? Math.round(this.targetObject.Social.socialLevel) : null,
       temperature: this.targetObject.Temperature ? Math.round(this.targetObject.Temperature.temp) : null,
-      environmentTemp: this.targetObject.WorldMap ? Math.round(this.targetObject.WorldMap.mapTemp) : null,
+      environmentTemp: this.targetObject.Temperature && this.targetObject.WorldMap ? Math.round(this.targetObject.WorldMap.mapTemp) : null,
       equipped: this.targetObject.Equipper ? this.targetObject.Equipper.currentEquipment : null,
+      time: World.Time.millisecondsSinceDayStart ? millisecondsToHHMMSS(World.Time.millisecondsSinceDayStart()) : null,
     });
   }
 
@@ -63,6 +66,7 @@ export default class Hud extends React.Component {
               : 'green'
           }
         />}
+        {this.targetObject === World.player && <p>Time: {this.state.time}</p>}
       </div>
     );
   }

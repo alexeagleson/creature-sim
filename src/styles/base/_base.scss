@@ -3,10 +3,14 @@ html {
 }
 
 body {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-family: Verdana, Open Sans, Consolas, Helvetica, Arial, sans-serif;
   //font-family: dejavu sans mono, consolas, monospace;
   background: black;
+}
+
+.larger-text {
+  font-size: 1.8rem;
 }
 
 .ui-border {

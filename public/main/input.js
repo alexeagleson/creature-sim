@@ -36,6 +36,7 @@ function keydownHandler(keyboardEvent) {
   if (keyboardEvent.key === 'q') {
     endSim();
   } else if (keyboardEvent.key === 'e') {
+    World.ReactUI.SelectOption.prompt(['hello', 'there', 'Farmers do not like  from living in fear. They are meant to provide safety for citizens. Our government in America consists of a legislative branch']);
     const nearbyObjectToAttack = World.allObjectsDestructible.filter(object => World.player.Combat.canIAttackObject(object)).filter(isNotObject.bind(World.player));
     if (nearbyObjectToAttack.length > 0) {
       World.player.Combat.attackObject(nearbyObjectToAttack[0]);

@@ -37,7 +37,7 @@ export default class SelectObject extends React.Component {
       <div id="select-object-id">
         {this.state.selectObjectVisible &&
           <div className="select-menu ui-border">
-            <p className="strokeme">Select object:</p>
+            <center><p className="strokeme">Select object:</p></center>
             {this.state.objectButtons}
           </div>
         }
