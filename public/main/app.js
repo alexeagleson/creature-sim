@@ -7,15 +7,16 @@ import MainDisplay from './../display-engines/MainDisplay';
 import MainCamera from './../display-engines/MainCamera';
 import AllSounds from './../main/audio';
 
-import initializeInput from './../main/input';
+import initializeInput, { pollGamepad } from './../main/input';
 import { convertToMap, isEngine } from './../main/world-utility';
-import { isOnAMap } from './../main/filters';
+import { isOnAMap, isNotObject } from './../main/filters';
 
 import buildUI from './../../src/app.jsx';
 
 let lastRender = 0;
-let oneSecondInterval = 0;
+
 let oneTenthSecondInterval = 0;
+let oneSecondInterval = 0;
 
 function initializeWorld() {
   World.MapNodeTree = new MapNodeTree();
@@ -31,9 +32,7 @@ export function initializeInputimeAndCamera() {
   document.getElementById('canvas-wrapper-id').append(World.MainDisplay.canvas);
 }
 
-function rotJsLoop(timestamp) {
-  const progress = timestamp - lastRender;
-  lastRender = timestamp;
+function rotJsLoop() {
   if (!World.worldPaused) { mainLoop(); }
   if (!World.worldEnd) {
     window.requestAnimationFrame(rotJsLoop);
@@ -41,7 +40,9 @@ function rotJsLoop(timestamp) {
 }
 
 export function mainLoop() {
-  World.allObjectsTurnTaking.filter(isOnAMap).forEach((object) => {
+  if (World.gamepadAllowed) pollGamepad();
+
+  World.allObjectsTurnTaking.filter(isOnAMap).filter(isNotObject.bind(World.player)).forEach((object) => {
     if (object.TurnTaking.checkForTurnReady()) {
       object.TurnTaking.takeTurn();
       if (object.updateDialoguePosition) { object.updateDialoguePosition(); }
@@ -55,14 +56,16 @@ export function mainLoop() {
     oneTenthSecondInterval = World.Time.millisecondsElapsed;
   }
 
+  console.log(World.Time.millisecondsElapsed, World.Time.testy)
+
   if (World.Time.millisecondsElapsed > oneSecondInterval + 1000) {
     World.allObjectsLiving.forEach(object => object.Living.adjustStamina((World.Time.millisecondsElapsed - oneSecondInterval)));
     World.allObjectsTemperature.forEach(object => object.Temperature.adjustTemperature((World.Time.millisecondsElapsed - oneSecondInterval)));
     World.allObjectsConsumer.forEach((object) => {
       object.Consumer.adjustHunger((World.Time.millisecondsElapsed - oneSecondInterval));
-      object.Consumer.adjustThirst((World.Time.millisecondsElapsed - oneSecondInterval));
+      // Necessary to check for existence in case hunger kills the object
+      if (object.Consumer) object.Consumer.adjustThirst((World.Time.millisecondsElapsed - oneSecondInterval));
     });
-
     oneSecondInterval = World.Time.millisecondsElapsed;
   }
 

@@ -50,10 +50,12 @@ export default function createWorldObject(objectName, arg = {}) {
   if (objectName === 'Player') {
     applyBasePrototypes(createdObject);
     applyLivingPrototypes(createdObject);
+    applyTurnTaking(createdObject);
+    createdObject.TurnTaking.millisecondsBetweenTurns = 200;
     createdObject.char = '@';
     isEngine('RotJs')
       ? createdObject.RotJsObject.fgColour = Colours.HEX_RED
-      : createdObject.PhaserObject.spriteFilename = 'Rabbit';
+      : createdObject.PhaserObject.spriteFilename = 'Ishi';
 
   } else if (objectName === 'Squirrel') {
     applyBasePrototypes(createdObject);
@@ -116,7 +118,7 @@ export default function createWorldObject(objectName, arg = {}) {
     createdObject.char = 'P';
     isEngine('RotJs')
       ? createdObject.RotJsObject.fgColour = Colours.HEX_YELLOW
-      : createdObject.PhaserObject.spriteFilename = 'Hotdog1';
+      : createdObject.PhaserObject.spriteFilename = 'Portal';
     applyPortal(createdObject, arg);
 
   }

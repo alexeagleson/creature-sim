@@ -37,6 +37,9 @@ export default class Hud extends React.Component {
       environmentTemp: this.targetObject.Temperature && this.targetObject.WorldMap ? Math.round(this.targetObject.WorldMap.mapTemp) : null,
       equipped: this.targetObject.Equipper ? this.targetObject.Equipper.currentEquipment : null,
       time: World.Time.millisecondsSinceDayStart ? millisecondsToHHMMSS(World.Time.millisecondsSinceDayStart()) : null,
+      takingHungerDamage: this.targetObject.Consumer ? this.targetObject.Consumer.takingHungerDamage : false,
+      takingThirstDamage: this.targetObject.Consumer ? this.targetObject.Consumer.takingThirstDamage : false,
+      takingTemperatureDamage: this.targetObject.Temperature ? this.targetObject.Temperature.takingTemperatureDamage : false,
     });
   }
 
@@ -67,6 +70,9 @@ export default class Hud extends React.Component {
           }
         />}
         {this.targetObject === World.player && <p>Time: {this.state.time}</p>}
+        {this.state.takingHungerDamage && <p className="colour-red">Taking hunger damage.</p>}
+        {this.state.takingThirstDamage && <p className="colour-red">Taking thirst damage.</p>}
+        {this.state.takingTemperatureDamage && <p className="colour-red">Taking temperature damage.</p>}
       </div>
     );
   }

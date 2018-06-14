@@ -8,13 +8,9 @@ export default function Time() {
   this.dayStartedMilliseconds = 0;
 
   this.startTimer = () => {
-    const countDownDate = new Date().getTime();
-
     World.Time.mainTimer = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = countDownDate - now;
-      World.Time.millisecondsElapsed = (0 - Math.floor(distance));
-    }, 100);
+      if (!World.worldPaused) World.Time.millisecondsElapsed += 90;
+    }, 90);
   };
 
   this.millisecondsSinceDayStart = () => (this.millisecondsElapsed - this.dayStartedMilliseconds) * WORLD_TIME_MULTIPLIER;

@@ -58,8 +58,8 @@ function DecisionAI(worldObject) {
         return false;
       });
     }
-
     if (this.hasObjective) { return true; }
+
 
     if (this.owner.Social && this.owner.Social.socialLevel < ProtoCs.CONCERNED_VALUE) {
       const socialObjectsOnMyMap = objectsOnMyMap.filter(isSocial);
@@ -90,41 +90,8 @@ function DecisionAI(worldObject) {
         return true;
       });
     }
-
     if (this.hasObjective) { return true; }
 
-    if (this.owner.Inventory) {
-      const itemObjectsOnMyMap = objectsOnMyMap.filter(isItem);
-      itemObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
-
-      itemObjectsOnMyMap.some((itemObject) => {
-        this.owner.Pathing.createPath({ pathTo: itemObject });
-        publishEvent(`${this.owner.name} wants to pick up ${itemObject.name}.`);
-        displayDialogue(this.owner, pickRandom(['time to go pick up some garbage', 'look at this mess']));
-
-        this.currentAction = () => {
-          return this.owner.Pathing.movePath();
-        };
-
-        this.successCondition = () => {
-          return this.owner.isAdjacentTo(itemObject, ProtoCs.INTERACT_MAX_DISTANCE);
-        };
-
-        this.onSuccess = () => {
-          displayDialogue(this.owner, pickRandom(['who is leaving all this shit everywhere?', 'all i do is clean']));
-          return this.owner.Inventory.addToInventory(itemObject);
-        };
-
-        this.onFail = () => {
-          publishEvent(`${this.owner.name} fails to pick up ${itemObject.name}.`);
-        };
-
-        this.hasObjective = true;
-        return true;
-      });
-    }
-
-    if (this.hasObjective) { return true; }
 
     if (this.owner.Temperature && this.owner.WorldMap) {
       if (this.owner.Temperature.temp > 30) {
@@ -161,8 +128,40 @@ function DecisionAI(worldObject) {
         return false;
       }
     }
-
     if (this.hasObjective) { return true; }
+
+    if (this.owner.Inventory) {
+      const itemObjectsOnMyMap = objectsOnMyMap.filter(isItem);
+      itemObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
+
+      itemObjectsOnMyMap.some((itemObject) => {
+        this.owner.Pathing.createPath({ pathTo: itemObject });
+        publishEvent(`${this.owner.name} wants to pick up ${itemObject.name}.`);
+        displayDialogue(this.owner, pickRandom(['time to go pick up some garbage', 'look at this mess']));
+
+        this.currentAction = () => {
+          return this.owner.Pathing.movePath();
+        };
+
+        this.successCondition = () => {
+          return this.owner.isAdjacentTo(itemObject, ProtoCs.INTERACT_MAX_DISTANCE);
+        };
+
+        this.onSuccess = () => {
+          displayDialogue(this.owner, pickRandom(['who is leaving all this shit everywhere?', 'all i do is clean']));
+          return this.owner.Inventory.addToInventory(itemObject);
+        };
+
+        this.onFail = () => {
+          publishEvent(`${this.owner.name} fails to pick up ${itemObject.name}.`);
+        };
+
+        this.hasObjective = true;
+        return true;
+      });
+    }
+    if (this.hasObjective) { return true; }
+
 
     if (this.owner.Inventory) {
       const treasureObjects = World.allObjects.filter(isNamed.bind('Treasure')).filter(isOnAMap);
@@ -191,9 +190,9 @@ function DecisionAI(worldObject) {
         return true;
       });
     }
-
     if (this.hasObjective) { return true; }
 
+    
     if (this.owner.Moving) { this.owner.Moving.moveRandom(); }
     return false;
   };

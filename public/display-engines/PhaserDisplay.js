@@ -19,8 +19,11 @@ const playGame = new Phaser.Class({
     this.load.spritesheet('Floor_Ice', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Floor_Ice.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
     this.load.spritesheet('Trash', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Trash.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
     this.load.spritesheet('Hotdog1', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Hotdog1.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Corpse', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Corpse.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
+    this.load.spritesheet('Portal', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x32/Portal.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE});
 
     // 32x64
+    this.load.spritesheet('Ishi', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x64/Ishi.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE * 2});
     this.load.spritesheet('Tree', 'https://kalospace.com/gameassets/active_game_assets/sprites/32x64/Tree.png', {frameWidth: ScreenCs.TILE_SIZE, frameHeight: ScreenCs.TILE_SIZE * 2});
   },
 
@@ -54,13 +57,13 @@ export default function PhaserDisplay(mainDisplay) {
     const worldTile = World.player.WorldMap.getTile(tileCoords);
     const pixelCoords = tileToPixel(convertToCoords(worldTile));
 
-    if (worldTile.char === '#') {
+    if (worldTile.char === '.') {
+      World.allActiveTileSprites.push(this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0));
+    } else {
       World.allActiveTileSprites.push(this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0));
       const tree = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Tree', 0);
       tree.depth = 0.5;
       World.allActiveTileSprites.push(tree);
-    } else {
-      World.allActiveTileSprites.push(this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0));
     }
   };
 

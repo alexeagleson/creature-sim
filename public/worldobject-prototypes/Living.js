@@ -1,7 +1,7 @@
 import { publishEvent } from './../constructors/WorldEvent';
 import { isNotObject } from './../main/filters';
 import { normalizeToValue } from './../main/general-utility';
-import { getActivePrototypesByName } from './../main/world-utility';
+import { isEngine, convertToCoords, getActivePrototypesByName } from './../main/world-utility';
 
 function Living(worldObject) {
   this.owner = worldObject;
@@ -34,7 +34,13 @@ function Living(worldObject) {
   this.examineObject = examineTargetObject => publishEvent(`${this.owner.name} examines ${examineTargetObject.name}.`);
 
   this.death = () => {
-    if (this.owner.RotJsObject) this.owner.RotJsObject.fgColour = Colours.HEX_RED;
+    if (isEngine('RotJs')) {
+      this.owner.RotJsObject.fgColour = Colours.HEX_RED
+    } else {
+      this.owner.PhaserObject.spriteFilename = 'Corpse';
+      this.owner.destroySprite();
+      this.owner.placeSprite(convertToCoords(this.owner));
+    }
     this.owner.char = '%';
     this.owner.name = `Remains of ${this.owner.name}`;
     getActivePrototypesByName(this.owner, ['Consumer', 'DecisionAI', 'Inventory', 'Living', 'Moving', 'Pathing', 'Social', 'Temperature']).forEach(objectProtoype => objectProtoype.revokePrototype());

@@ -18,7 +18,15 @@ export default function RotJsDisplay(mainDisplay) {
 
   this.drawTile = (screenTileCoords) => {
     const worldTile = World.player.WorldMap.getTile(screenToActual(screenTileCoords));
-    this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldTile.char);
+
+    const fgColour = worldTile.char === '♠' 
+      ? Colours.HEX_GREEN
+      : worldTile.char === '♣'
+        ? Colours.HEX_DARK_GREEN
+        : worldTile.char === '.'
+          ? Colours.HEX_DARKER_GREEN
+          : Colours.HEX_BLUE;
+    this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldTile.char, fgColour);
   };
 
   this.drawObject = (worldObject) => {

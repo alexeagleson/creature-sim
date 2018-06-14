@@ -34,17 +34,24 @@ modal
 
 
 ---
-death with item drop
-UI chat menu
-game controller
-playing card trees
+** death with item drop
+** UI chat menu
+** game controller
+** playing card trees
 dialogue questions
-stop time while menus open
+** stop time while menus open
+** have hud show when taking hugner damage
+** sprite depth
+** ishi sprite
 ---
 
 
 
-
+<strong>2018/05/14 -- Version 0.1.24</strong>
+----------------------------
+(*) HUD now shows when taking damage from different sources
+(*) Support for Gamepad controller added
+(*) World pause now stops time properly
 
 <strong>2018/05/13 -- Version 0.1.23</strong>
 ----------------------------

@@ -13,13 +13,10 @@ export default function createWorldMap(mapName, width, height) {
   if (mapName === 'Home') {
     createdMap = new WorldMap(mapName, { mapType: 'Arena' });
 
-    const a = createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 7, outerPadding: 1 }));
+    const a = createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
     createWorldObject('Treasure').placeOnMap({ worldMap: a });
 
-
-    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 6, outerPadding: 1 }));
-    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 5, outerPadding: 1 }));
-    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
 
     createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
@@ -28,18 +25,14 @@ export default function createWorldMap(mapName, width, height) {
     createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
     createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
     createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+
 
     runXTimes(createWorldObject, 3, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
   } else if (mapName === 'Map 2') {
     createdMap = new WorldMap(mapName, { mapType: 'Cellular' });
-    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 6, outerPadding: 1 }));
-    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 6, outerPadding: 1 }));
-    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 6, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 2, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
     createdMap.mapTemp = 15;
   } else if (mapName === 'Map 3') {
     createdMap = new WorldMap(mapName, { mapType: 'Cellular' });

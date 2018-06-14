@@ -1,3 +1,4 @@
+import { pickRandom } from './../main/general-utility';
 import { isOnTile } from './../main/filters';
 
 export default function WorldTile(arg = {
@@ -16,7 +17,7 @@ export default function WorldTile(arg = {
   this.toggleWall = (wall) => {
     this.wall = wall;
     if (wall) {
-      this.char = '#';
+      this.char = (this.WorldMap.name === 'Home' || this.WorldMap.name === 'Building') ? '♦' : pickRandom(['♠', '♣']);
     } else {
       this.char = '.';
     }

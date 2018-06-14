@@ -3,6 +3,9 @@ import { isNotObject } from './../main/filters';
 import { normalizeToValue, pickRandom } from './../main/general-utility';
 import { displayDialogue } from './../../src/components/HoveringText';
 
+const DAMAGE_THRESHOLD = 50;
+const HUNGER_THIRST_ADJUSTMENT_FACTOR = 100;
+
 function Consumer(worldObject) {
   this.owner = worldObject;
   World.allObjectsConsumer.push(this.owner);
@@ -12,9 +15,8 @@ function Consumer(worldObject) {
   this.hunger = 50;
   this.thirst = 100;
 
-  this.hungerImportance = 5;
-  this.thirstImportance = 10;
-
+  this.takingHungerDamage = false;
+  this.takingThirstDamage = false;
 
   this.canIConsumeObject = (worldObject) => {
     if (!worldObject.Consumable) { return false; }
@@ -37,19 +39,33 @@ function Consumer(worldObject) {
   this.adjustHunger = (timePassedMilliseconds) => {
     this.hunger -= ProtoCs.HUNGER_LOSS_PER_MILLISECOND * timePassedMilliseconds;
     this.hunger = normalizeToValue(this.hunger, 0, 100);
+
+    this.takingHungerDamage = false;
+    if (this.hunger < DAMAGE_THRESHOLD) {
+      this.takingHungerDamage = true;
+      const causeOfConditionLoss = 'hunger';
+      this.owner.Destructible.adjustConditionBy((0 - (100 - this.hunger)) / HUNGER_THIRST_ADJUSTMENT_FACTOR, causeOfConditionLoss);
+    }
   };
 
   this.adjustThirst = (timePassedMilliseconds) => {
     this.thirst -= ProtoCs.THIRST_LOSS_PER_MILLISECOND * timePassedMilliseconds;
     this.thirst = normalizeToValue(this.thirst, 0, 100);
+
+    this.takingThirstDamage = false;
+    if (this.thirst < DAMAGE_THRESHOLD) {
+      this.takingThirstDamage = true;
+      const causeOfConditionLoss = 'thirst';
+      this.owner.Destructible.adjustConditionBy((0 - (100 - this.thirst)) / HUNGER_THIRST_ADJUSTMENT_FACTOR, causeOfConditionLoss);
+    }
   };
 
   this.revokePrototype = () => {
     World.allObjectsConsumer = World.allObjectsConsumer.filter(isNotObject.bind(this.owner));
     this.owner.Consumer = null;
   };
-};
+}
 
 export default function applyConsumer(worldObject, arg = {}) {
   worldObject.Consumer = worldObject.Consumer || new Consumer(worldObject, arg);
-};
+}

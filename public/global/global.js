@@ -1,6 +1,8 @@
 const renderEngine = 'RotJs';
 const canvasSize = 0.75;
 
+const gamepadAllowed = true;
+
 // Phaser constants
 const phaserTileSize = 32;
 const phaserGameScale = 1;
@@ -46,6 +48,8 @@ const Colours = {
   HEX_YELLOW: '#FFE272',
   HEX_BLUE: '#56b6c2',
   HEX_GREEN: '#98c379',
+  HEX_DARK_GREEN: '#5c8a3c',
+  HEX_DARKER_GREEN: '#3b631f',
   HEX_ORANGE: '#FF9900',
   HEX_GREY: '#666666',
   FONT_FAMILY: 'dejavu sans mono, consolas, monospace',
@@ -62,6 +66,8 @@ const ScreenCs = {
 };
 
 const ProtoCs = {
+  TURN_SPEED: 300,
+
   STANDING_ON_MAX_DISTANCE: 0,
   INTERACT_MAX_DISTANCE: 1.5,
   SPEAK_MAX_DISTANCE: 3,
@@ -113,4 +119,5 @@ const World = {
   worldPaused: false,
   worldEnd: false,
   playerMapTransition: false,
+  gamepadAllowed,
 };

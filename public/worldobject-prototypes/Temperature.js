@@ -9,6 +9,7 @@ function Temperature(worldObject) {
   if (!this.owner.Living) { applyLiving(this.owner); }
 
   this.temp = 20;
+  this.takingTemperatureDamage = false;
 
   this.adjustTemperature = (timePassedMilliseconds) => {
     let differenceBetweenWeatherAndCurrent = this.owner.WorldMap.mapTemp - this.temp;
@@ -27,8 +28,15 @@ function Temperature(worldObject) {
   this.adjustConditionBasedOnTemperature = () => {
     let tempAffectsCondition = Math.abs(20 - this.temp);
     tempAffectsCondition = normalizeToValue((tempAffectsCondition - 15), 0, 100);
-    const causeOfConditionLoss = this.temp > 35 ? 'heat exposure' : 'cold exposure';
-    this.owner.Destructible.adjustConditionBy((0 - tempAffectsCondition) / TEMP_ADJUSTMENT_FACTOR, causeOfConditionLoss);
+
+    const temperatureDamage = tempAffectsCondition / TEMP_ADJUSTMENT_FACTOR;
+
+    this.takingTemperatureDamage = false;
+    if (temperatureDamage > 0) {
+      this.takingTemperatureDamage = true;
+      const causeOfConditionLoss = this.temp > 35 ? 'heat exposure' : 'cold exposure';
+      this.owner.Destructible.adjustConditionBy((0 - temperatureDamage), causeOfConditionLoss);
+    }
   };
 
   this.revokePrototype = () => {

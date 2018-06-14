@@ -20,7 +20,7 @@ export default function WorldMap(mapName, arg = {
 
   this.mapWidth = arg.mapWidth || 75;
   this.mapHeight = arg.mapHeight || 40;
-  this.mapTemp = arg.mapTemp || 200;
+  this.mapTemp = arg.mapTemp || 500;
   this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};
 
@@ -40,22 +40,9 @@ export default function WorldMap(mapName, arg = {
     for (let i = 0; i < this.mapWidth; i += 1) {
       for (let j = 0; j < this.mapHeight; j += 1) {
         const key = `${i},${j}`;
-        let isWall = null;
-        let tileChar = null;
-        if (map._map[i][j]) {
-          isWall = false;
-          tileChar = '.';
-        } else {
-          isWall = true;
-          tileChar = '#';
-        }
-        this.tileMap[key] = new WorldTile({
-          x: i,
-          y: j,
-          worldMap: this,
-          wall: isWall,
-        });
-        this.tileMap[key].char = tileChar;
+        const isWall = !map._map[i][j];
+        this.tileMap[key] = new WorldTile({ x: i, y: j, worldMap: this, wall: isWall });
+        this.tileMap[key].toggleWall(isWall);
       }
     }
   };
@@ -73,17 +60,8 @@ export default function WorldMap(mapName, arg = {
 
     const createMapCallback = (x, y, isWall) => {
       const key = `${x},${y}`;
-      this.tileMap[key] = new WorldTile({
-        x,
-        y,
-        worldMap: this,
-        wall: isWall,
-      });
-      if (isWall) {
-        this.tileMap[key].char = '#';
-        return;
-      }
-      this.tileMap[key].char = '.';
+      this.tileMap[key] = new WorldTile({ x, y, worldMap: this, wall: isWall });
+      this.tileMap[key].toggleWall(isWall);
     };
     map.create(createMapCallback.bind(this));
   };
@@ -179,7 +157,7 @@ export function createBuilding(buildingName, arg = { worldMap: null, size: null,
 
   for (let x = (centreCoords[0] - size); x <= (centreCoords[0] + size); x += 1) {
     for (let y = (centreCoords[1] - size - 1); y < (centreCoords[1] + size); y += 1) {
-      worldMap.getTile([x, y]).toggleWall(true);
+      worldMap.getTile([x, y]).toggleWall(true).char = '♦';
     }
   }
   const thisBuilding = createWorldMap(buildingName, (size * 2) + 1, (size * 2) + 1);
