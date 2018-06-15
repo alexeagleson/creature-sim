@@ -24,7 +24,7 @@ export default function createWorldMap(mapName, width, height) {
     createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
     createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
     createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Heavy Jacket').placeOnMap({ worldMap: createdMap });
 
 
     runXTimes(createWorldObject, 3, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
@@ -39,6 +39,7 @@ export default function createWorldMap(mapName, width, height) {
     createWorldObject('Treasure').placeOnMap({ worldMap: createdMap });
   } else if (mapName === 'Building') {
     createdMap = new WorldMap(mapName, { mapWidth: width, mapHeight: height, mapType: 'Arena' });
+    createdMap.mapTemp = 100;
   } else {
     return displayError(`No predefined map found with name ${mapName} in createWorldMap function.`);
   }

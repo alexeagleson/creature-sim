@@ -40,11 +40,13 @@ function Consumer(worldObject) {
     this.hunger -= ProtoCs.HUNGER_LOSS_PER_MILLISECOND * timePassedMilliseconds;
     this.hunger = normalizeToValue(this.hunger, 0, 100);
 
+    const hungerDamage = Math.round((100 - this.hunger) / HUNGER_THIRST_ADJUSTMENT_FACTOR);
+
     this.takingHungerDamage = false;
-    if (this.hunger < DAMAGE_THRESHOLD) {
+    if (this.hunger < DAMAGE_THRESHOLD && hungerDamage > 0) {
       this.takingHungerDamage = true;
       const causeOfConditionLoss = 'hunger';
-      this.owner.Destructible.adjustConditionBy((0 - (100 - this.hunger)) / HUNGER_THIRST_ADJUSTMENT_FACTOR, causeOfConditionLoss);
+      this.owner.Destructible.adjustConditionBy(0 - hungerDamage, causeOfConditionLoss);
     }
   };
 
@@ -52,11 +54,13 @@ function Consumer(worldObject) {
     this.thirst -= ProtoCs.THIRST_LOSS_PER_MILLISECOND * timePassedMilliseconds;
     this.thirst = normalizeToValue(this.thirst, 0, 100);
 
+    const thirstDamage = Math.round((100 - this.thirst) / HUNGER_THIRST_ADJUSTMENT_FACTOR);
+
     this.takingThirstDamage = false;
-    if (this.thirst < DAMAGE_THRESHOLD) {
+    if (this.thirst < DAMAGE_THRESHOLD && thirstDamage > 0) {
       this.takingThirstDamage = true;
       const causeOfConditionLoss = 'thirst';
-      this.owner.Destructible.adjustConditionBy((0 - (100 - this.thirst)) / HUNGER_THIRST_ADJUSTMENT_FACTOR, causeOfConditionLoss);
+      this.owner.Destructible.adjustConditionBy(0 - thirstDamage, causeOfConditionLoss);
     }
   };
 

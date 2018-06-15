@@ -24,41 +24,41 @@ function DecisionAI(worldObject) {
   this.determineAction = () => {
     const objectsOnMyMap = World.allObjects.filter(isOnMapOfObject.bind(this.owner)).filter(isNotObject.bind(this.owner));
 
-    // if (this.owner.Consumer && (this.owner.Consumer.hunger < ProtoCs.CONCERNED_VALUE || this.owner.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
-    //   // const consumableObjectsOnMyMap = objectsOnMyMap.filter(isConsumable);
-    //   // consumableObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
+    if (this.owner.Consumer && (this.owner.Consumer.hunger < ProtoCs.CONCERNED_VALUE || this.owner.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
+      // const consumableObjectsOnMyMap = objectsOnMyMap.filter(isConsumable);
+      // consumableObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
 
-    //   const consumableObjects = World.allObjectsConsumable;
+      const consumableObjects = World.allObjectsConsumable;
 
-    //   consumableObjects.some((consumableObject) => {
-    //     if ((consumableObject.Consumable.hungerValue > 0 && this.owner.Consumer.hunger < ProtoCs.CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && this.owner.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
-    //       this.owner.Pathing.createPath({ pathTo: consumableObject });
-    //       publishEvent(`${this.owner.name} wants to consume ${consumableObject.name}.`);
+      consumableObjects.some((consumableObject) => {
+        if ((consumableObject.Consumable.hungerValue > 0 && this.owner.Consumer.hunger < ProtoCs.CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && this.owner.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
+          this.owner.Pathing.createPath({ pathTo: consumableObject });
+          publishEvent(`${this.owner.name} wants to consume ${consumableObject.name}.`);
 
-    //       this.currentAction = () => {
-    //         return this.owner.Pathing.movePath();
-    //       };
+          this.currentAction = () => {
+            return this.owner.Pathing.movePath();
+          };
 
-    //       this.successCondition = () => {
-    //         return this.owner.isAdjacentTo(consumableObject);
-    //       };
+          this.successCondition = () => {
+            return this.owner.isAdjacentTo(consumableObject);
+          };
 
-    //       this.onSuccess = () => {
-    //         return this.owner.Consumer.consume(consumableObject);
-    //       };
+          this.onSuccess = () => {
+            return this.owner.Consumer.consume(consumableObject);
+          };
 
-    //       this.onFail = () => {
-    //         publishEvent(`${this.owner.name} fails to consume ${consumableObject.name}.`);
-    //         displayDialogue(this.owner, `what the fuck where did the ${consumableObject.name} go`);
-    //       };
+          this.onFail = () => {
+            publishEvent(`${this.owner.name} fails to consume ${consumableObject.name}.`);
+            displayDialogue(this.owner, `what the fuck where did the ${consumableObject.name} go`);
+          };
 
-    //       this.hasObjective = true;
-    //       return true;
-    //     }
-    //     return false;
-    //   });
-    // }
-    // if (this.hasObjective) { return true; }
+          this.hasObjective = true;
+          return true;
+        }
+        return false;
+      });
+    }
+    if (this.hasObjective) { return true; }
 
 
     if (this.owner.Social && this.owner.Social.socialLevel < ProtoCs.CONCERNED_VALUE) {
@@ -129,6 +129,45 @@ function DecisionAI(worldObject) {
       }
     }
     if (this.hasObjective) { return true; }
+
+
+    if (this.owner.Temperature && this.owner.WorldMap) {
+      if (this.owner.Temperature.temp < 5) {
+        if (this.owner.WorldMap.mapTemp < 5) {
+          World.allMaps.some((worldMap) => {
+            if (worldMap.mapTemp < 5) { return false; }
+
+            this.owner.Pathing.createPath({ pathTo: worldMap });
+            publishEvent(`${this.owner.name} wants to go to ${worldMap.name} because it's warmer there.`);
+            displayDialogue(this.owner, pickRandom(['its WAY too cold!!']));
+
+            this.currentAction = () => {
+              return this.owner.Pathing.movePath();
+            };
+
+            this.successCondition = () => {
+              return this.owner.worldMap === worldMap;
+            };
+
+            this.onSuccess = () => {
+              displayDialogue(this.owner, pickRandom(['ok this is much better, much warmer here']));
+              return true;
+            };
+
+            this.onFail = () => {
+              publishEvent(`${this.owner.name} fails to reach ${worldMap.name}.`);
+            };
+
+            this.hasObjective = true;
+            return true;
+          });
+        }
+        if (this.owner.Moving) { this.owner.Moving.moveRandom(); }
+        return false;
+      }
+    }
+    if (this.hasObjective) { return true; }
+
 
     if (this.owner.Inventory) {
       const itemObjectsOnMyMap = objectsOnMyMap.filter(isItem);

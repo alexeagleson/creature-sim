@@ -96,10 +96,20 @@ export default function createWorldObject(objectName, arg = {}) {
     applyConsumable(createdObject);
     createdObject.Consumable.hungerValue = 100;
 
+  } else if (objectName === 'Heavy Jacket') {
+    applyBasePrototypes(createdObject);
+    createdObject.char = 'j';
+    isEngine('RotJs')
+      ? createdObject.RotJsObject.fgColour = Colours.HEX_YELLOW
+      : createdObject.PhaserObject.spriteFilename = 'Carrot';
+
+    applyEquipment(createdObject);
+    createdObject.Equipment.temperatureProtection = 99;
+
   } else if (objectName === 'Trash') {
     applyBasePrototypes(createdObject);
     createdObject.char = '%';
-    if(isEngine('RotJs')) {
+    if (isEngine('RotJs')) {
       createdObject.RotJsObject.fgColour = Colours.HEX_ORANGE
     } else {
       createdObject.PhaserObject.spriteFilename = 'Trash';
@@ -122,7 +132,8 @@ export default function createWorldObject(objectName, arg = {}) {
       ? createdObject.RotJsObject.fgColour = Colours.HEX_YELLOW
       : createdObject.PhaserObject.spriteFilename = 'Portal';
     applyPortal(createdObject, arg);
-
+  } else {
+    alert(`No object found in content-WorldObjects with the name ${objectName}`);
   }
   return createdObject;
 }

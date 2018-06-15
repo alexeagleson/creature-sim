@@ -52,7 +52,6 @@ export default class Hud extends React.Component {
         {Number.isInteger(this.state.hunger) && <ProgressBar name="Hunger:" value={this.state.hunger} percentage={this.state.hunger <= 100 ? this.state.hunger : 100} barClass="blue" />}
         {Number.isInteger(this.state.thirst) && <ProgressBar name="Thirst:" value={this.state.thirst} percentage={this.state.thirst <= 100 ? this.state.thirst : 100} barClass="blue" />}
         {Number.isInteger(this.state.social) && <ProgressBar name="Social:" value={this.state.social} percentage={this.state.social <= 100 ? this.state.social : 100} barClass="blue" />}
-        {this.state.equipped && <p>Equipped: {this.state.equipped}</p>}
         {Number.isInteger(this.state.temperature) && <ProgressBar name="My Temp(C):" value={this.state.temperature} percentage="100" barClass={
           this.state.temperature > 35
             ? 'red'
@@ -69,6 +68,7 @@ export default class Hud extends React.Component {
               : 'green'
           }
         />}
+        {this.state.equipped && <p>Equipped: {this.state.equipped.name}</p>}
         {this.targetObject === World.player && <p>Time: {this.state.time}</p>}
         {this.state.takingHungerDamage && <p className="colour-red">Taking hunger damage.</p>}
         {this.state.takingThirstDamage && <p className="colour-red">Taking thirst damage.</p>}

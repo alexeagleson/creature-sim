@@ -1,4 +1,5 @@
 import { isNotObject } from './../main/filters';
+import applyItem from './../worldobject-prototypes/Item';
 
 function Equipment(worldObject, arg = {}) {
   this.owner = worldObject;

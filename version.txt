@@ -38,14 +38,19 @@ modal
 ** UI chat menu
 ** game controller
 ** playing card trees
-dialogue questions
+** dialogue questions
 update resume and linked in
-equipment
+** equipment
 ** stop time while menus open
 ** have hud show when taking hugner damage
 ** sprite depth
 ** ishi sprite
+sometimes NPCs still warp to weird places on the next map, also keep stepping into portals
 ---
+
+<strong>2018/05/15 -- Version 0.1.26</strong>
+----------------------------
+(*) Implemented wearable equipment that has heat/cold protection built in.
 
 <strong>2018/05/15 -- Version 0.1.25</strong>
 ----------------------------

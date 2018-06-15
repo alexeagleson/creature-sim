@@ -27,6 +27,7 @@ function Inventory(worldObject) {
   this.removeFromInventory = (worldObject) => {
     worldObject.placeOnMap({ worldMap: this.owner.WorldMap, coords: convertToCoords(this.owner) });
     worldObject.Item.inInventoryOf = null;
+    if (this.owner.Equipper) this.owner.Equipper.unequip();
     publishEvent(`${this.owner.name} drops ${worldObject.name}.`);
   };
 

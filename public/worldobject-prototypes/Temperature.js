@@ -16,10 +16,12 @@ function Temperature(worldObject) {
 
     if (this.owner.Equipper) {
       if (differenceBetweenWeatherAndCurrent < 0 && this.owner.Equipper.currentEquipment) {
-        const protection = this.owner.Equipper.currentEquipment.temperatureProtection;
-        differenceBetweenWeatherAndCurrent = differenceBetweenWeatherAndCurrent * ((100 - protection) / 100);
+        const protection = this.owner.Equipper.currentEquipment.Equipment.temperatureProtection;
+        differenceBetweenWeatherAndCurrent *= (100 - protection) / 100;
       }
     }
+
+    //console.log(differenceBetweenWeatherAndCurrent);
 
     this.temp += (differenceBetweenWeatherAndCurrent / timePassedMilliseconds) * TEMP_ADJUSTMENT_FACTOR;
     this.adjustConditionBasedOnTemperature();
@@ -29,7 +31,7 @@ function Temperature(worldObject) {
     let tempAffectsCondition = Math.abs(20 - this.temp);
     tempAffectsCondition = normalizeToValue((tempAffectsCondition - 15), 0, 100);
 
-    const temperatureDamage = tempAffectsCondition / TEMP_ADJUSTMENT_FACTOR;
+    const temperatureDamage = Math.round(tempAffectsCondition / TEMP_ADJUSTMENT_FACTOR);
 
     this.takingTemperatureDamage = false;
     if (temperatureDamage > 0) {

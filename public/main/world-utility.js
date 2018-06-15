@@ -232,9 +232,18 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
   }
 
   if (objectActivating.Equipper) {
-    if (objectActivating.Equipper.canIEquipObject(objectBeingActivated)) {
+    if (!objectActivating.Equipper.currentEquipment && objectActivating.Equipper.canIEquipObject(objectBeingActivated)) {
       validActions.equip = () => {
         objectActivating.Equipper.equip(objectBeingActivated);
+        hideMenusAndResume();
+      };
+    }
+  }
+
+  if (objectActivating.Equipper) {
+    if (objectActivating.Equipper.currentEquipment) {
+      validActions.unequip = () => {
+        objectActivating.Equipper.unequip();
         hideMenusAndResume();
       };
     }
