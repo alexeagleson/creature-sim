@@ -61,6 +61,7 @@ export default function createWorldObject(objectName, arg = {}) {
     applyBasePrototypes(createdObject);
     applyLivingPrototypes(createdObject);
     applyAIPrototypes(createdObject);
+    createdObject.Social.myDialogue = ['5ef3a151b344368b2de5355e74b50579', 'b9cb3efae1450b76f9e419403c5b0518'];
     createdObject.char = 'S';
     isEngine('RotJs')
       ? createdObject.RotJsObject.fgColour = Colours.HEX_BLUE
@@ -79,6 +80,7 @@ export default function createWorldObject(objectName, arg = {}) {
     applyBasePrototypes(createdObject);
     applyLivingPrototypes(createdObject);
     applyAIPrototypes(createdObject);
+    createdObject.Social.myDialogue = ['5ef3a151b344368b2de5355e74b50579', 'b9cb3efae1450b76f9e419403c5b0518'];
     createdObject.char = 'R';
     isEngine('RotJs')
       ? createdObject.RotJsObject.fgColour = Colours.HEX_BLUE

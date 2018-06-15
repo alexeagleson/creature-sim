@@ -56,8 +56,6 @@ export function mainLoop() {
     oneTenthSecondInterval = World.Time.millisecondsElapsed;
   }
 
-  console.log(World.Time.millisecondsElapsed, World.Time.testy)
-
   if (World.Time.millisecondsElapsed > oneSecondInterval + 1000) {
     World.allObjectsLiving.forEach(object => object.Living.adjustStamina((World.Time.millisecondsElapsed - oneSecondInterval)));
     World.allObjectsTemperature.forEach(object => object.Temperature.adjustTemperature((World.Time.millisecondsElapsed - oneSecondInterval)));

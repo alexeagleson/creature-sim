@@ -1,5 +1,6 @@
-import { isNotObject } from './../main/filters';
 import { publishEvent } from './../constructors/WorldEvent';
+import { getDialogueByID, getResponsesByID } from './../content/content-Dialogue';
+import { isNotObject } from './../main/filters';
 import { pickRandom } from './../main/general-utility';
 import { displayDialogue } from './../../src/components/HoveringText';
 
@@ -9,6 +10,11 @@ function Social(worldObject) {
   if (!this.owner.Living) { applyLiving(this.owner); }
 
   this.socialLevel = 60;
+  this.myDialogue = ['5cb5d08d36337a277eb5e67a452d2c44'];
+
+  this.assignNewDialogue = (dialogueArray) => {
+    this.myDialogue = this.myDialogue.concat(dialogueArray);
+  };
 
   this.canISpeakTo = (worldObject) => {
     if (!worldObject.Social) { return false; }
@@ -16,11 +22,19 @@ function Social(worldObject) {
     return true;
   };
 
-  this.speak = (objectSpeakTo, forcedDialogue) => {
-    const dialogue = forcedDialogue || pickRandom([`Hello ${objectSpeakTo.name}!`, `Whut up?`]);
-    if (objectSpeakTo === World.player) { World.ReactUI.SelectOption.prompt(this.owner, dialogue, ['Ok']); }
-    publishEvent(`${this.owner.name} says: ${dialogue}`, 'green');
-    displayDialogue(this.owner, dialogue);
+  this.speak = (objectSpeakTo, chosenDialogueID) => {
+    const dialogueID = chosenDialogueID || pickRandom(this.myDialogue);
+    const dialogueText = getDialogueByID(dialogueID, objectSpeakTo);
+    const responseIDs = getResponsesByID(dialogueID);
+
+    publishEvent(`${this.owner.name} says to ${objectSpeakTo.name}: ${dialogueText}`, 'green');
+    displayDialogue(this.owner, dialogueText);
+    if (objectSpeakTo === World.player) { 
+      World.ReactUI.SelectOption.prompt(this.owner, dialogueID, responseIDs);
+    } else if (responseIDs.length > 0) {
+      objectSpeakTo.Social.speak(this.owner, pickRandom(responseIDs));
+    }
+
     this.socialLevel += 20;
   };
 

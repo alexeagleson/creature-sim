@@ -66,7 +66,7 @@ const ScreenCs = {
 };
 
 const ProtoCs = {
-  TURN_SPEED: 300,
+  TURN_SPEED: 200,
 
   STANDING_ON_MAX_DISTANCE: 0,
   INTERACT_MAX_DISTANCE: 1.5,

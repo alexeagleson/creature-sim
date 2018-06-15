@@ -39,13 +39,17 @@ modal
 ** game controller
 ** playing card trees
 dialogue questions
+update resume and linked in
+equipment
 ** stop time while menus open
 ** have hud show when taking hugner damage
 ** sprite depth
 ** ishi sprite
 ---
 
-
+<strong>2018/05/15 -- Version 0.1.25</strong>
+----------------------------
+(*) Implemented default and response dialogue.
 
 <strong>2018/05/14 -- Version 0.1.24</strong>
 ----------------------------
