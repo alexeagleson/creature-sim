@@ -1,20 +1,26 @@
 import { displayError } from './../main/general-utility';
 
 // Time
-const WORLD_TIME_MULTIPLIER = 3000;
+const WORLD_TIME_MULTIPLIER = 2000;
 
 export default function Time() {
   this.millisecondsElapsed = 0;
   this.dayStartedMilliseconds = 0;
+  this.daysElapsed = 0;
 
   this.startTimer = () => {
     World.Time.mainTimer = setInterval(() => {
-      if (!World.worldPaused) World.Time.millisecondsElapsed += 90;
+      if (!World.worldPaused) {
+        World.Time.millisecondsElapsed += 90;
+        if (World.Time.millisecondsSinceDayStart() > 86400000) {
+          World.Time.dayStartedMilliseconds = World.Time.millisecondsElapsed;
+          World.Time.daysElapsed += 1;
+        }
+      }
     }, 90);
   };
 
   this.millisecondsSinceDayStart = () => (this.millisecondsElapsed - this.dayStartedMilliseconds) * WORLD_TIME_MULTIPLIER;
-
   this.startTimer();
 }
 

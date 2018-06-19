@@ -1,7 +1,7 @@
 import React from 'react';
 import ProgressBar from './Bar.jsx';
 
-import { millisecondsToHHMMSS } from './../../public/constructors/Time';
+import { millisecondsToHHMMSS } from './../../constructors/Time';
 
 export default class Hud extends React.Component {
   constructor(props) {
@@ -37,6 +37,7 @@ export default class Hud extends React.Component {
       environmentTemp: this.targetObject.Temperature && this.targetObject.WorldMap ? Math.round(this.targetObject.WorldMap.mapTemp) : null,
       equipped: this.targetObject.Equipper ? this.targetObject.Equipper.currentEquipment : null,
       time: World.Time.millisecondsSinceDayStart ? millisecondsToHHMMSS(World.Time.millisecondsSinceDayStart()) : null,
+      daysElapsed: World.Time.daysElapsed,
       takingHungerDamage: this.targetObject.Consumer ? this.targetObject.Consumer.takingHungerDamage : false,
       takingThirstDamage: this.targetObject.Consumer ? this.targetObject.Consumer.takingThirstDamage : false,
       takingTemperatureDamage: this.targetObject.Temperature ? this.targetObject.Temperature.takingTemperatureDamage : false,
@@ -49,9 +50,9 @@ export default class Hud extends React.Component {
         <p>{this.state.name}</p>
         {Number.isInteger(this.state.condition) && <ProgressBar name="Condition:" value={this.state.condition} percentage={this.state.condition <= 100 ? this.state.condition : 100} barClass="red" />}
         {Number.isInteger(this.state.stamina) && <ProgressBar name="Stamina:" value={this.state.stamina} percentage={this.state.stamina <= 100 ? this.state.stamina : 100} barClass="green" />}
-        {Number.isInteger(this.state.hunger) && <ProgressBar name="Hunger:" value={this.state.hunger} percentage={this.state.hunger <= 100 ? this.state.hunger : 100} barClass="blue" />}
-        {Number.isInteger(this.state.thirst) && <ProgressBar name="Thirst:" value={this.state.thirst} percentage={this.state.thirst <= 100 ? this.state.thirst : 100} barClass="blue" />}
-        {Number.isInteger(this.state.social) && <ProgressBar name="Social:" value={this.state.social} percentage={this.state.social <= 100 ? this.state.social : 100} barClass="blue" />}
+        {Number.isInteger(this.state.hunger) && <ProgressBar name="Hunger:" value={this.state.hunger} percentage={this.state.hunger <= 100 ? this.state.hunger : 100} barClass="green" />}
+        {Number.isInteger(this.state.thirst) && <ProgressBar name="Thirst:" value={this.state.thirst} percentage={this.state.thirst <= 100 ? this.state.thirst : 100} barClass="green" />}
+        {Number.isInteger(this.state.social) && <ProgressBar name="Social:" value={this.state.social} percentage={this.state.social <= 100 ? this.state.social : 100} barClass="green" />}
         {Number.isInteger(this.state.temperature) && <ProgressBar name="My Temp(C):" value={this.state.temperature} percentage="100" barClass={
           this.state.temperature > 35
             ? 'red'
@@ -69,10 +70,11 @@ export default class Hud extends React.Component {
           }
         />}
         {this.state.equipped && <p>Equipped: {this.state.equipped.name}</p>}
-        {this.targetObject === World.player && <p>Time: {this.state.time}</p>}
         {this.state.takingHungerDamage && <p className="colour-red">Taking hunger damage.</p>}
         {this.state.takingThirstDamage && <p className="colour-red">Taking thirst damage.</p>}
         {this.state.takingTemperatureDamage && <p className="colour-red">Taking temperature damage.</p>}
+        {this.targetObject === World.player && <p>Time: {this.state.time}</p>}
+        {this.targetObject === World.player && <p>Days Elapsed: {this.state.daysElapsed}</p>}
       </div>
     );
   }

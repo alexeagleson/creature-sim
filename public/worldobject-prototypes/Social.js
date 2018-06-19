@@ -2,7 +2,7 @@ import { publishEvent } from './../constructors/WorldEvent';
 import { getDialogueByID, getResponsesByID } from './../content/content-Dialogue';
 import { isNotObject } from './../main/filters';
 import { pickRandom } from './../main/general-utility';
-import { displayDialogue } from './../../src/components/HoveringText';
+import { displayDialogue } from './../ui/components/HoveringText';
 
 function Social(worldObject) {
   this.owner = worldObject;
@@ -29,7 +29,7 @@ function Social(worldObject) {
 
     publishEvent(`${this.owner.name} says to ${objectSpeakTo.name}: ${dialogueText}`, 'green');
     displayDialogue(this.owner, dialogueText);
-    if (objectSpeakTo === World.player) { 
+    if (objectSpeakTo === World.player) {
       World.ReactUI.SelectOption.prompt(this.owner, dialogueID, responseIDs);
     } else if (responseIDs.length > 0) {
       objectSpeakTo.Social.speak(this.owner, pickRandom(responseIDs));

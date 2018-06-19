@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { pauseSim } from './../../public/main/world-utility';
+import { pauseSim } from './../../main/world-utility';
 
 import { hideMenusAndResume } from './../components/WorldUI.jsx';
 

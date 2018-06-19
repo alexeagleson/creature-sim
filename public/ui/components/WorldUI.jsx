@@ -6,7 +6,7 @@ import SelectObject from './SelectObject.jsx';
 import SelectOption from './SelectOption.jsx';
 import EventLog from './EventLog.jsx';
 
-import { resumeSim } from './../../public/main/world-utility';
+import { resumeSim } from './../../main/world-utility';
 
 export default class WorldUI extends React.Component {
   constructor(props) {

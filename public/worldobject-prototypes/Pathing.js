@@ -1,6 +1,6 @@
-import { shortestPath } from './../constructors/MapNodeTree';
+import { shortestMapPath } from './../constructors/MapNodeTree';
 
-import { isOnMapOfObject, isNotObject, isOnTile } from './../main/filters';
+import { isOnMapOfObject, isNotObject } from './../main/filters';
 
 import { displayError } from './../main/general-utility';
 import { distanceTo, convertToMap, convertToCoords } from './../main/world-utility';
@@ -27,19 +27,19 @@ function Pathing(worldObject) {
     pathTo = convertToCoords(pathTo);
     pathFrom = convertToCoords(pathFrom);
 
-    const mapPathIDs = shortestPath(worldMapFrom, worldMapTo);
+    const mapPathIDs = shortestMapPath(worldMapFrom, worldMapTo);
 
     // This occurs when the path destination is not on the same map as the pathing object
     if (mapPathIDs.length > 1) {
       const nextMapID = mapPathIDs[1];
       const portal = World.allObjectsPortal.filter(isOnMapOfObject.bind(this.owner)).filter(portalObject => portalObject.Portal.warpToMap.uniqueID === nextMapID)[0];
-      return this.calculateSinglePath({ pathToCoords: convertToCoords(portal), pathFromCoords: pathFrom, worldMap: worldMapFrom });
+      return this.calculateTilePath({ pathToCoords: convertToCoords(portal), pathFromCoords: pathFrom, worldMap: worldMapFrom });
     }
 
-    return this.calculateSinglePath({ pathToCoords: pathTo, pathFromCoords: pathFrom, worldMap: worldMapFrom });
+    return this.calculateTilePath({ pathToCoords: pathTo, pathFromCoords: pathFrom, worldMap: worldMapFrom });
   };
 
-  this.calculateSinglePath = (arg = { pathToCoords: null, pathFromCoords: null, worldMap: null }) => {
+  this.calculateTilePath = (arg = { pathToCoords: null, pathFromCoords: null, worldMap: null }) => {
     this.todo = [];
     this.done = {};
 

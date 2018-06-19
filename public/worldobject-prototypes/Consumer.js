@@ -1,7 +1,7 @@
 import { publishEvent } from './../constructors/WorldEvent';
 import { isNotObject } from './../main/filters';
 import { normalizeToValue, pickRandom } from './../main/general-utility';
-import { displayDialogue } from './../../src/components/HoveringText';
+import { displayDialogue } from './../ui/components/HoveringText';
 
 const DAMAGE_THRESHOLD = 50;
 const HUNGER_THIRST_ADJUSTMENT_FACTOR = 100;

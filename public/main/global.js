@@ -11,14 +11,6 @@ const phaserTileSizeScaled = phaserTileSize * phaserGameScale;
 // RotJs constants
 const rotFontSize = 20;
 
-// const screenWidth = renderEngine === 'RotJs'
-//   ? Math.floor((window.innerWidth * canvasSize) / rotFontSize) * rotFontSize
-//   : Math.floor((window.innerWidth * canvasSize) / phaserTileSizeScaled) * phaserTileSizeScaled;
-
-// const screenHeight = renderEngine === 'RotJs'
-//   ? Math.floor((window.innerHeight * canvasSize) / rotFontSize) * rotFontSize
-//   : Math.floor((window.innerHeight * canvasSize) / phaserTileSizeScaled) * phaserTileSizeScaled;
-
 const screenWidth = renderEngine === 'RotJs'
   ? Math.floor(window.innerWidth * canvasSize)
   : Math.floor(window.innerWidth * canvasSize);
@@ -66,7 +58,7 @@ const ScreenCs = {
 };
 
 const ProtoCs = {
-  TURN_SPEED: 200,
+  TURN_SPEED: 400,
 
   STANDING_ON_MAX_DISTANCE: 0,
   INTERACT_MAX_DISTANCE: 1.5,

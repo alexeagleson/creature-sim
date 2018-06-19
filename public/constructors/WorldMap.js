@@ -20,7 +20,7 @@ export default function WorldMap(mapName, arg = {
 
   this.mapWidth = arg.mapWidth || 75;
   this.mapHeight = arg.mapHeight || 40;
-  this.mapTemp = arg.mapTemp || -100;
+  this.mapTemp = arg.mapTemp || -50;
   this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};
 
@@ -128,8 +128,14 @@ export function connectMaps(arg = {
   mapTo.getTile(coordsTo).toggleWall(false);
   mapFrom.getTile(coordsFrom).toggleWall(false);
 
-  createWorldObject('Portal', { warpToMap: mapTo, warpCoords: coordsTo }).placeOnMap({ worldMap: mapFrom, coords: coordsFrom });
-  createWorldObject('Portal', { warpToMap: mapFrom, warpCoords: coordsFrom }).placeOnMap({ worldMap: mapTo, coords: coordsTo });
+  const portalA = createWorldObject('Portal', { warpToMap: mapTo, warpCoords: coordsTo }).placeOnMap({ worldMap: mapFrom, coords: coordsFrom });
+  const portalB = createWorldObject('Portal', { warpToMap: mapFrom, warpCoords: coordsFrom }).placeOnMap({ worldMap: mapTo, coords: coordsTo });
+
+  portalA.Portal.warpFromMap = portalB.WorldMap;
+  portalB.Portal.warpFromMap = portalA.WorldMap;
+
+  portalA.Portal.connectedPortal = portalB;
+  portalB.Portal.connectedPortal = portalA;
 }
 
 

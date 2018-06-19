@@ -4,7 +4,7 @@ import WorldTile from './../constructors/WorldTile';
 
 import createWorldObject from './../content/content-WorldObject';
 
-import { convertToMap  } from './../main/world-utility';
+import { convertToMap } from './../main/world-utility';
 import { displayError, runXTimes, directionTextToCoords } from './../main/general-utility';
 
 export default function createWorldMap(mapName, width, height) {
@@ -20,10 +20,8 @@ export default function createWorldMap(mapName, width, height) {
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
 
     createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
     createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+
     createWorldObject('Heavy Jacket').placeOnMap({ worldMap: createdMap });
 
 
@@ -33,13 +31,23 @@ export default function createWorldMap(mapName, width, height) {
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 2, outerPadding: 1 }));
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
+
+
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+
+
+
+
+
     createdMap.mapTemp = 15;
   } else if (mapName === 'Map 3') {
     createdMap = new WorldMap(mapName, { mapType: 'Cellular' });
     createWorldObject('Treasure').placeOnMap({ worldMap: createdMap });
+
   } else if (mapName === 'Building') {
     createdMap = new WorldMap(mapName, { mapWidth: width, mapHeight: height, mapType: 'Arena' });
-    createdMap.mapTemp = 100;
+    createdMap.mapTemp = 50;
   } else {
     return displayError(`No predefined map found with name ${mapName} in createWorldMap function.`);
   }

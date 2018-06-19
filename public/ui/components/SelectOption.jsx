@@ -1,8 +1,8 @@
 import React from 'react';
-import { getDialogueByID } from './../../public/content/content-Dialogue';
-import { uniqueNumber } from './../../public/main/general-utility';
-import { pauseSim } from './../../public/main/world-utility';
-import { hideMenusAndResume } from './../components/WorldUI.jsx';
+import { getDialogueByID } from './../../content/content-Dialogue';
+import { uniqueNumber } from './../../main/general-utility';
+import { pauseSim } from './../../main/world-utility';
+import { hideMenusAndResume } from './WorldUI.jsx';
 
 export default class SelectOption extends React.Component {
   constructor(props) {
@@ -24,15 +24,14 @@ export default class SelectOption extends React.Component {
   }
 
   prompt(speakingObject, dialogueID, responseIDs) {
-    hideMenusAndResume();
     pauseSim();
     if (responseIDs.length === 0) responseIDs = ['286e0c082433963be53c54e50101eb41'];
     this.setState({
       speakingObject,
       dialogueID,
       optionButtons: responseIDs.map(responseID => <button key={uniqueNumber()} onClick={() => { 
-        World.player.Social.speak(this.state.speakingObject, responseID); 
         hideMenusAndResume();
+        World.player.Social.speak(this.state.speakingObject, responseID); 
       }} className="action-button animate button-blue ui-border strokeme larger-text">{getDialogueByID(responseID, speakingObject)}</button>),
       selectOptionVisible: true,
     });

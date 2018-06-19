@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { getValidContextActions, pauseSim } from './../../public/main/world-utility';
+import { getValidContextActions, pauseSim } from './../../main/world-utility';
 
 export default class SelectAction extends React.Component {
   constructor(props) {

@@ -3,8 +3,8 @@ import { endSim } from './../main/app';
 import { directionTextToCoords } from './../main/general-utility';
 import { screenToActual, pixelToTile, withinMapBounds } from './../main/world-utility';
 import { isNotObject } from './../main/filters';
-import { displayNamesOfObjects } from './../../src/components/HoveringText';
-import { hideMenusAndResume } from './../../src/components/WorldUI.jsx';
+import { displayNamesOfObjects } from './../ui/components/HoveringText';
+import { hideMenusAndResume } from './../ui/components/WorldUI.jsx';
 
 function mousemoveHandler(mousemoveEvent) {
   const hoverTileCoords = screenToActual(pixelToTile([mousemoveEvent.offsetX, mousemoveEvent.offsetY]));

@@ -46,6 +46,7 @@ update resume and linked in
 ** sprite depth
 ** ishi sprite
 sometimes NPCs still warp to weird places on the next map, also keep stepping into portals
+the event log is still constantly changing elements inefficiently
 ---
 
 <strong>2018/05/15 -- Version 0.1.26</strong>

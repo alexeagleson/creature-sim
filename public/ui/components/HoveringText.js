@@ -1,4 +1,4 @@
-import { tileToPixel, canvasPixelOffset, actualToScreen, convertToCoords, onSameMap } from './../../public/main/world-utility';
+import { tileToPixel, canvasPixelOffset, actualToScreen, convertToCoords, onSameMap } from './../../main/world-utility';
 
 export function displayNamesOfObjects(objectsAtCoords) {
   let objectNamesElement = document.getElementById('objectNames');

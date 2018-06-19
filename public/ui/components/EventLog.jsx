@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { uniqueNumber } from './../../public/main/general-utility';
+import { uniqueNumber } from './../../main/general-utility';
 
 export default class EventLog extends React.Component {
   constructor(props) {

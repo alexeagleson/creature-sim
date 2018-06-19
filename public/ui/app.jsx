@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import startApp from './../public/main/app';
+import startApp from './../main/app';
 
 import WorldUI from './components/WorldUI.jsx';
 

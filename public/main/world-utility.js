@@ -1,12 +1,13 @@
 import WorldObject from './../constructors/WorldObject';
 import WorldMap, { getAvailableTile } from './../constructors/WorldMap';
 import WorldTile from './../constructors/WorldTile';
+import { shortestMapPath } from './../constructors/MapNodeTree';
 
 import createWorldMap from './../content/content-WorldMap';
 
 import { randBetween, displayError } from './../main/general-utility';
 
-import { hideMenusAndResume } from './../../src/components/WorldUI.jsx';
+import { hideMenusAndResume } from './../ui/components/WorldUI.jsx';
 
 export function pixelToTile(pixelCoordsArray) {
   const tileX = Math.floor(pixelCoordsArray[0] / ScreenCs.TILE_SIZE);
@@ -261,4 +262,17 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
   validActions.activate = null;
 
   return validActions;
+}
+
+export function estimateTotalDistance(componentA, componentB) {
+  const mapFrom = convertToMap(componentA);
+  const mapTo = convertToMap(componentB);
+
+  const mapPath = shortestMapPath(mapFrom, mapTo);
+  let totalDistance = 0;
+  mapPath.forEach((mapID) => {
+    const mapObject = convertToMap(mapID);
+    totalDistance += Math.sqrt((mapObject.mapWidth * mapObject.mapWidth) + (mapObject.mapHeight * mapObject.mapHeight)) / 2;
+  });
+  console.log(totalDistance);
 }

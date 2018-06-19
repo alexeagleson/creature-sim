@@ -28,8 +28,6 @@ export function isNamed(worldObject) {
   return worldObject.name.toLowerCase() === this.toLowerCase();
 }
 
-
-
 // Filters no bind
 function isTurnTaking(worldObject) {
   return worldObject.TurnTaking !== undefined;
@@ -56,8 +54,6 @@ export function isOnAMap(worldObject) {
   return worldObject.WorldTile != null;
 }
 
-
-
 // Sorts
 function distanceToSort(objectA, objectB) {
   // Bind 'this' to desired lookup object
@@ -70,9 +66,9 @@ function distanceToSort(objectA, objectB) {
   return distanceTo(objectACoords, targetCoords) - distanceTo(objectBCoords, targetCoords);
 }
 
-export function shortestPathToSort(objectA, objectB) {
+export function shortestMapPathToSort(objectA, objectB) {
   // Bind 'this' to desired lookup object
-  if (!this.Pathing) { return displayError(`shortestPathToSort used on non-Pathing object $this.name}`); }
+  if (!this.Pathing) { return displayError(`shortestMapPathToSort used on non-Pathing object $this.name}`); }
   if (!objectA.WorldTile || !objectB.WorldTile || !this.WorldTile) { return null; }
 
   const objectACoords = [objectA.WorldTile.x, objectA.WorldTile.y];
@@ -83,3 +79,4 @@ export function shortestPathToSort(objectA, objectB) {
 
   return objectAPathLength - objectBPathLength;
 }
+

@@ -7,6 +7,7 @@ function Portal(worldObject, arg = { warpToMap: null, warpCoords: null }) {
   World.allObjectsPortal.push(this.owner);
 
   this.warpToMap = convertToMap(arg.warpToMap) || null;
+  this.warpFromMap = null;
   this.warpCoords = (arg.warpCoords) ? arg.warpCoords : convertToCoords(getAvailableTile({ worldMap: this.warpToMap }));
 
   this.owner.onStep = (objectThatTriggered) => {

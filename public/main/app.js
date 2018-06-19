@@ -11,7 +11,7 @@ import initializeInput, { pollGamepad } from './../main/input';
 import { convertToMap, isEngine } from './../main/world-utility';
 import { isOnAMap, isNotObject } from './../main/filters';
 
-import buildUI from './../../src/app.jsx';
+import buildUI from './../ui/app.jsx';
 
 let lastRender = 0;
 

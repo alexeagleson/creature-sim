@@ -62,6 +62,7 @@ export default function WorldObject(objectName, arg = {}) {
       const onStepTriggers = World.allObjects.filter(worldObject => worldObject.onStep).filter(isOnMapOfObject.bind(this)).filter(isOnTile.bind(this.WorldTile)).filter(isNotObject.bind(this));
       onStepTriggers.forEach(triggerObject => triggerObject.onStep(this));
     }
+    return this;
   };
 
   this.isAdjacentTo = (worldObject, maxDistance = ProtoCs.INTERACT_MAX_DISTANCE) => {

@@ -1,11 +1,12 @@
+import evaluateHunger from './../ai/hunger';
 import { publishEvent } from './../constructors/WorldEvent';
 
 import { pickRandom } from './../main/general-utility';
-import { convertToCoords } from './../main/world-utility';
+import { estimateTotalDistance } from './../main/world-utility';
 
-import { isOnAMap, isOnMapOfObject, isNotObject, isConsumable, isSocial, isItem, isNamed, shortestPathToSort } from './../main/filters';
+import { isOnAMap, isOnMapOfObject, isNotObject, isConsumable, isSocial, isItem, isNamed, shortestMapPathToSort } from './../main/filters';
 
-import { displayDialogue } from './../../src/components/HoveringText';
+import { displayDialogue } from './../ui/components/HoveringText';
 
 function DecisionAI(worldObject) {
   this.owner = worldObject;
@@ -24,46 +25,15 @@ function DecisionAI(worldObject) {
   this.determineAction = () => {
     const objectsOnMyMap = World.allObjects.filter(isOnMapOfObject.bind(this.owner)).filter(isNotObject.bind(this.owner));
 
-    if (this.owner.Consumer && (this.owner.Consumer.hunger < ProtoCs.CONCERNED_VALUE || this.owner.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
-      // const consumableObjectsOnMyMap = objectsOnMyMap.filter(isConsumable);
-      // consumableObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
-
-      const consumableObjects = World.allObjectsConsumable;
-
-      consumableObjects.some((consumableObject) => {
-        if ((consumableObject.Consumable.hungerValue > 0 && this.owner.Consumer.hunger < ProtoCs.CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && this.owner.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
-          this.owner.Pathing.createPath({ pathTo: consumableObject });
-          publishEvent(`${this.owner.name} wants to consume ${consumableObject.name}.`);
-
-          this.currentAction = () => {
-            return this.owner.Pathing.movePath();
-          };
-
-          this.successCondition = () => {
-            return this.owner.isAdjacentTo(consumableObject);
-          };
-
-          this.onSuccess = () => {
-            return this.owner.Consumer.consume(consumableObject);
-          };
-
-          this.onFail = () => {
-            publishEvent(`${this.owner.name} fails to consume ${consumableObject.name}.`);
-            displayDialogue(this.owner, `what the fuck where did the ${consumableObject.name} go`);
-          };
-
-          this.hasObjective = true;
-          return true;
-        }
-        return false;
-      });
-    }
+    evaluateHunger(this.owner);
     if (this.hasObjective) { return true; }
+
+    //estimateTotalDistance(World.player, pickRandom(World.allObjects));
 
 
     if (this.owner.Social && this.owner.Social.socialLevel < ProtoCs.CONCERNED_VALUE) {
       const socialObjectsOnMyMap = objectsOnMyMap.filter(isSocial);
-      socialObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
+      socialObjectsOnMyMap.sort(shortestMapPathToSort.bind(this.owner));
 
       socialObjectsOnMyMap.some((socialObject) => {
         this.owner.Pathing.createPath({ pathTo: socialObject });
@@ -171,7 +141,7 @@ function DecisionAI(worldObject) {
 
     if (this.owner.Inventory) {
       const itemObjectsOnMyMap = objectsOnMyMap.filter(isItem);
-      itemObjectsOnMyMap.sort(shortestPathToSort.bind(this.owner));
+      itemObjectsOnMyMap.sort(shortestMapPathToSort.bind(this.owner));
 
       itemObjectsOnMyMap.some((itemObject) => {
         this.owner.Pathing.createPath({ pathTo: itemObject });
