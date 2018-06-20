@@ -1,49 +1,25 @@
 import { displayDialogue } from './../ui/components/HoveringText';
 import { publishEvent } from './../constructors/WorldEvent';
-import { getObjectsByWorldDistanceFromMe } from './../main/world-utility';
-import { localPathSizeSort } from './../main/filters';
+import { isFood } from './../main/filters';
+import { getClosestObjects } from './../main/world-utility';
 
-export default function evaluateHunger(worldObject) {
-  if (worldObject.Consumer && (worldObject.Consumer.hunger < ProtoCs.CONCERNED_VALUE || worldObject.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
-    const objectsByWorldDistanceFromMe = getObjectsByWorldDistanceFromMe(worldObject, World.allObjectsConsumable);
-    let consumableObjects = [];
-    Object.keys(objectsByWorldDistanceFromMe).some((key) => {
-      if (Number(key) === 0) return false; // These are objects that have no possible path to them
-      if (Number(key) === 1) {
-        consumableObjects = objectsByWorldDistanceFromMe[key].sort(localPathSizeSort.bind(worldObject));
-      } else {
-        consumableObjects = objectsByWorldDistanceFromMe[key];
-      }
-      return true;
-    });
-    
+export default function takeActionOnHunger(worldObject) {
+  const closestFoodObjects = getClosestObjects(worldObject, World.allObjectsConsumable.filter(isFood));
+  if (closestFoodObjects.length > 0) {
+    worldObject.Pathing.createPath({ pathTo: closestFoodObjects[0] });
+    publishEvent(`${worldObject.name} wants to consume ${closestFoodObjects[0].name}.`);
 
-    consumableObjects.some((consumableObject) => {
-      if ((consumableObject.Consumable.hungerValue > 0 && worldObject.Consumer.hunger < ProtoCs.CONCERNED_VALUE) || (consumableObject.Consumable.thirstValue > 0 && worldObject.Consumer.thirst < ProtoCs.CONCERNED_VALUE)) {
-        worldObject.Pathing.createPath({ pathTo: consumableObject });
-        publishEvent(`${worldObject.name} wants to consume ${consumableObject.name}.`);
+    worldObject.DecisionAI.currentAction = () => worldObject.Pathing.movePath();
 
-        worldObject.DecisionAI.currentAction = () => {
-          return worldObject.Pathing.movePath();
-        };
+    worldObject.DecisionAI.successCondition = () => worldObject.isAdjacentTo(closestFoodObjects[0]);
 
-        worldObject.DecisionAI.successCondition = () => {
-          return worldObject.isAdjacentTo(consumableObject);
-        };
+    worldObject.DecisionAI.onSuccess = () => worldObject.Consumer.consume(closestFoodObjects[0]);
 
-        worldObject.DecisionAI.onSuccess = () => {
-          return worldObject.Consumer.consume(consumableObject);
-        };
-
-        worldObject.DecisionAI.onFail = () => {
-          publishEvent(`${worldObject.name} fails to consume ${consumableObject.name}.`);
-          displayDialogue(worldObject, `what the fuck where did the ${consumableObject.name} go`);
-        };
-
-        worldObject.DecisionAI.hasObjective = true;
-        return true;
-      }
-      return false;
-    });
+    worldObject.DecisionAI.onFail = () => {
+      publishEvent(`${worldObject.name} fails to consume ${closestFoodObjects[0].name}.`);
+      displayDialogue(worldObject, `what the fuck where did the ${closestFoodObjects[0].name} go`);
+    };
+    return true;
   }
+  return false;
 }

@@ -2,11 +2,9 @@ import WorldObject from './../constructors/WorldObject';
 import WorldMap, { getAvailableTile } from './../constructors/WorldMap';
 import WorldTile from './../constructors/WorldTile';
 import { shortestMapPath } from './../constructors/MapNodeTree';
-
 import createWorldMap from './../content/content-WorldMap';
-
-import { randBetween, displayError } from './../main/general-utility';
-
+import { localPathSizeSort } from './../main/filters';
+import { displayError } from './../main/general-utility';
 import { hideMenusAndResume } from './../ui/components/WorldUI.jsx';
 
 export function pixelToTile(pixelCoordsArray) {
@@ -288,3 +286,19 @@ export function getObjectsByWorldDistanceFromMe(fromObject, worldObjectArray) {
   });
   return objectsByWorldDistance;
 }
+
+export function getClosestObjects(fromObject, objectArray) {
+  const objectsByWorldDistanceFromMe = getObjectsByWorldDistanceFromMe(fromObject, objectArray);
+  let closestObjects = [];
+  Object.keys(objectsByWorldDistanceFromMe).some((key) => {
+    if (Number(key) === 0) return false; // These are objects that have no possible path to them
+    if (Number(key) === 1) {
+      closestObjects = objectsByWorldDistanceFromMe[key].sort(localPathSizeSort.bind(fromObject));
+    } else {
+      closestObjects = objectsByWorldDistanceFromMe[key];
+    }
+    return true;
+  });
+  return closestObjects;
+}
+

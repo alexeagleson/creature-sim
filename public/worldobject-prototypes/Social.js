@@ -12,6 +12,8 @@ function Social(worldObject) {
   this.socialLevel = 60;
   this.myDialogue = ['5cb5d08d36337a277eb5e67a452d2c44'];
 
+  this.needsToTalk = () => this.socialLevel < ProtoCs.CONCERNED_VALUE;
+
   this.assignNewDialogue = (dialogueArray) => {
     this.myDialogue = this.myDialogue.concat(dialogueArray);
   };

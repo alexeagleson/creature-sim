@@ -47,7 +47,10 @@ update resume and linked in
 ** ishi sprite
 sometimes NPCs still warp to weird places on the next map, also keep stepping into portals
 the event log is still constantly changing elements inefficiently
+NPCs should seek out portals instead of maps specifically
 ---
+
+
 
 <strong>2018/06/20 -- Version 0.1.27</strong>
 ----------------------------

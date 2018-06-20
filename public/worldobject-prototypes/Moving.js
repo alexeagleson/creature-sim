@@ -19,9 +19,9 @@ function Moving(worldObject) {
     return false;
   };
 
-  this.moveRelative = relativeMovementCoords => this.move([this.owner.WorldTile.x + relativeMovementCoords[0], this.owner.WorldTile.y + relativeMovementCoords[1]]);
+  this.moveRelative = (relativeMovementCoords, ignoreTriggers) => this.move([this.owner.WorldTile.x + relativeMovementCoords[0], this.owner.WorldTile.y + relativeMovementCoords[1]], ignoreTriggers);
 
-  this.moveRandom = () => this.moveRelative(randomDirectionCoords());
+  this.moveRandom = () => this.moveRelative(randomDirectionCoords(), true);
 
   this.checkBlockedAgainstObject = (x, y, worldMap = null) => {
     if (!worldMap) worldMap = this.owner.WorldMap;

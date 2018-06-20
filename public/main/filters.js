@@ -1,4 +1,5 @@
-import { onSameMap } from './../main/world-utility';
+import { shortestMapPath } from './../constructors/MapNodeTree';
+import { onSameMap, convertToMap } from './../main/world-utility';
 import { displayError } from './../main/general-utility';
 
 // Filters
@@ -15,7 +16,7 @@ export function isOnMapOfObject(worldObject) {
 
 export function isNotObject(worldObject) {
   // Bind 'this' to desired lookup object
-  return worldObject != this;
+  return worldObject !== this;
 }
 
 export function isInInventoryOf(worldObject) {
@@ -36,6 +37,11 @@ function isTurnTaking(worldObject) {
 
 export function isConsumable(worldObject) {
   return worldObject.Consumable !== undefined;
+}
+
+export function isFood(worldObject) {
+  if (!worldObject.Consumable) return false;
+  return worldObject.Consumable.hungerValue > 0;
 }
 
 export function isSocial(worldObject) {
@@ -65,6 +71,14 @@ function distanceToSort(objectA, objectB) {
   const targetCoords = [this.WorldTile.x, this.WorldTile.y];
 
   return distanceTo(objectACoords, targetCoords) - distanceTo(objectBCoords, targetCoords);
+}
+
+export function worldPathSizeSort(mapA, mapB) {
+  // Bind 'this' to desired lookup map or object
+  const startingMap = convertToMap(this);
+  const mapADistance = shortestMapPath(startingMap, mapA) || 9999;
+  const mapBDistance = shortestMapPath(startingMap, mapB) || 9999;
+  return mapADistance.length - mapBDistance.length;
 }
 
 export function localPathSizeSort(objectA, objectB) {

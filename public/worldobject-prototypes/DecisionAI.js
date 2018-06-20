@@ -1,8 +1,8 @@
-import evaluateHunger from './../ai/hunger';
+import takeActionOnHunger from './../ai/hunger';
+import takeActionOnSocial from './../ai/Social';
 import { publishEvent } from './../constructors/WorldEvent';
-
 import { pickRandom } from './../main/general-utility';
-import { isOnAMap, isOnMapOfObject, isNotObject, isSocial, isItem, isNamed, localPathSizeSort } from './../main/filters';
+import { isOnMapOfObject, isNotObject, isItem, localPathSizeSort, worldPathSizeSort } from './../main/filters';
 
 import { displayDialogue } from './../ui/components/HoveringText';
 
@@ -23,45 +23,58 @@ function DecisionAI(worldObject) {
   this.determineAction = () => {
     const objectsOnMyMap = World.allObjects.filter(isOnMapOfObject.bind(this.owner)).filter(isNotObject.bind(this.owner));
 
-    evaluateHunger(this.owner);
-    if (this.hasObjective) { return true; }
-
-    if (this.owner.Social && this.owner.Social.socialLevel < ProtoCs.CONCERNED_VALUE) {
-      const socialObjectsOnMyMap = objectsOnMyMap.filter(isSocial);
-      socialObjectsOnMyMap.sort(localPathSizeSort.bind(this.owner));
-
-      socialObjectsOnMyMap.some((socialObject) => {
-        this.owner.Pathing.createPath({ pathTo: socialObject });
-        publishEvent(`${this.owner.name} wants to talk to ${socialObject.name}.`);
-
-        this.currentAction = () => {
-          return this.owner.Pathing.movePath();
-        };
-
-        this.successCondition = () => {
-          return this.owner.isAdjacentTo(socialObject, ProtoCs.SPEAK_MAX_DISTANCE);
-        };
-
-        this.onSuccess = () => {
-          return this.owner.Social.speak(socialObject);
-        };
-
-        this.onFail = () => {
-          publishEvent(`${this.owner.name} fails to speak to ${socialObject.name}.`);
-          displayDialogue(this.owner, `dammit ${socialObject.name} stop moving im trying to talk to you`);
-        };
-
-        this.hasObjective = true;
-        return true;
-      });
+    if (this.owner.Consumer) {
+      if (this.owner.Consumer.isHungry()) {
+        this.hasObjective = takeActionOnHunger(this.owner);
+        if (this.hasObjective) return true;
+      }
     }
-    if (this.hasObjective) { return true; }
+
+    if (this.owner.Social) {
+      if (this.owner.Social.needsToTalk()) {
+        this.hasObjective = takeActionOnSocial(this.owner);
+        if (this.hasObjective) return true;
+      }
+    }
+
+    
+
+    // if (this.owner.Social && this.owner.Social.socialLevel < ProtoCs.CONCERNED_VALUE) {
+    //   const socialObjectsOnMyMap = objectsOnMyMap.filter(isSocial);
+    //   socialObjectsOnMyMap.sort(localPathSizeSort.bind(this.owner));
+
+    //   socialObjectsOnMyMap.some((socialObject) => {
+    //     this.owner.Pathing.createPath({ pathTo: socialObject });
+    //     publishEvent(`${this.owner.name} wants to talk to ${socialObject.name}.`);
+
+    //     this.currentAction = () => {
+    //       return this.owner.Pathing.movePath();
+    //     };
+
+    //     this.successCondition = () => {
+    //       return this.owner.isAdjacentTo(socialObject, ProtoCs.SPEAK_MAX_DISTANCE);
+    //     };
+
+    //     this.onSuccess = () => {
+    //       return this.owner.Social.speak(socialObject);
+    //     };
+
+    //     this.onFail = () => {
+    //       publishEvent(`${this.owner.name} fails to speak to ${socialObject.name}.`);
+    //       displayDialogue(this.owner, `dammit ${socialObject.name} stop moving im trying to talk to you`);
+    //     };
+
+    //     this.hasObjective = true;
+    //     return true;
+    //   });
+    // }
+    // if (this.hasObjective) { return true; }
 
 
     if (this.owner.Temperature && this.owner.WorldMap) {
       if (this.owner.Temperature.temp > 30) {
         if (this.owner.WorldMap.mapTemp > 30) {
-          World.allMaps.some((worldMap) => {
+          World.allMaps.sort(worldPathSizeSort.bind(this.owner)).some((worldMap) => {
             if (worldMap.mapTemp > 30) { return false; }
 
             this.owner.Pathing.createPath({ pathTo: worldMap });
@@ -73,7 +86,7 @@ function DecisionAI(worldObject) {
             };
 
             this.successCondition = () => {
-              return this.owner.worldMap === worldMap;
+              return this.owner.WorldMap === worldMap;
             };
 
             this.onSuccess = () => {
@@ -99,7 +112,7 @@ function DecisionAI(worldObject) {
     if (this.owner.Temperature && this.owner.WorldMap) {
       if (this.owner.Temperature.temp < 5) {
         if (this.owner.WorldMap.mapTemp < 5) {
-          World.allMaps.some((worldMap) => {
+          World.allMaps.sort(worldPathSizeSort.bind(this.owner)).some((worldMap) => {
             if (worldMap.mapTemp < 5) { return false; }
 
             this.owner.Pathing.createPath({ pathTo: worldMap });
@@ -111,7 +124,7 @@ function DecisionAI(worldObject) {
             };
 
             this.successCondition = () => {
-              return this.owner.worldMap === worldMap;
+              return this.owner.WorldMap === worldMap;
             };
 
             this.onSuccess = () => {
@@ -165,37 +178,6 @@ function DecisionAI(worldObject) {
       });
     }
     if (this.hasObjective) { return true; }
-
-
-    if (this.owner.Inventory) {
-      const treasureObjects = World.allObjects.filter(isNamed.bind('Treasure')).filter(isOnAMap);
-
-      treasureObjects.some((treasureObject) => {
-        this.owner.Pathing.createPath({ pathTo: treasureObject });
-        publishEvent(`${this.owner.name} wants to go search for ${treasureObject.name}.`);
-
-        this.currentAction = () => {
-          return this.owner.Pathing.movePath();
-        };
-
-        this.successCondition = () => {
-          return this.owner.isAdjacentTo(treasureObject, ProtoCs.INTERACT_MAX_DISTANCE);
-        };
-
-        this.onSuccess = () => {
-          return this.owner.Inventory.addToInventory(treasureObject);
-        };
-
-        this.onFail = () => {
-          publishEvent(`${this.owner.name} fails to pick up ${treasureObject.name}.`);
-        };
-
-        this.hasObjective = true;
-        return true;
-      });
-    }
-    if (this.hasObjective) { return true; }
-
     
     if (this.owner.Moving) { this.owner.Moving.moveRandom(); }
     return false;
