@@ -49,29 +49,33 @@ sometimes NPCs still warp to weird places on the next map, also keep stepping in
 the event log is still constantly changing elements inefficiently
 ---
 
-<strong>2018/05/15 -- Version 0.1.26</strong>
+<strong>2018/06/20 -- Version 0.1.27</strong>
+----------------------------
+(*) Improved pathfinding
+
+<strong>2018/06/15 -- Version 0.1.26</strong>
 ----------------------------
 (*) Implemented wearable equipment that has heat/cold protection built in.
 
-<strong>2018/05/15 -- Version 0.1.25</strong>
+<strong>2018/06/15 -- Version 0.1.25</strong>
 ----------------------------
 (*) Implemented default and response dialogue.
 
-<strong>2018/05/14 -- Version 0.1.24</strong>
+<strong>2018/06/14 -- Version 0.1.24</strong>
 ----------------------------
 (*) HUD now shows when taking damage from different sources
 (*) Support for Gamepad controller added
 (*) World pause now stops time properly
 
-<strong>2018/05/13 -- Version 0.1.23</strong>
+<strong>2018/06/13 -- Version 0.1.23</strong>
 ----------------------------
 (*) Created pop up dialogue menus with choice prompts when speaking to player
 
-<strong>2018/05/13 -- Version 0.1.22</strong>
+<strong>2018/06/13 -- Version 0.1.22</strong>
 ----------------------------
 (*) Added current time to HUD
 
-<strong>2018/05/12 -- Version 0.1.21</strong>
+<strong>2018/06/12 -- Version 0.1.21</strong>
 ----------------------------
 (*) Improvements to pathfinding
 

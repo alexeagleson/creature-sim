@@ -133,9 +133,6 @@ export function connectMaps(arg = {
 
   portalA.Portal.warpFromMap = portalB.WorldMap;
   portalB.Portal.warpFromMap = portalA.WorldMap;
-
-  portalA.Portal.connectedPortal = portalB;
-  portalB.Portal.connectedPortal = portalA;
 }
 
 

@@ -24,6 +24,10 @@ export default function createWorldMap(mapName, width, height) {
 
     createWorldObject('Heavy Jacket').placeOnMap({ worldMap: createdMap });
 
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+
+
 
     runXTimes(createWorldObject, 3, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
   } else if (mapName === 'Map 2') {
@@ -33,17 +37,16 @@ export default function createWorldMap(mapName, width, height) {
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
 
 
-    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
-    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-
-
-
-
 
     createdMap.mapTemp = 15;
   } else if (mapName === 'Map 3') {
     createdMap = new WorldMap(mapName, { mapType: 'Cellular' });
     createWorldObject('Treasure').placeOnMap({ worldMap: createdMap });
+
+
+
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    
 
   } else if (mapName === 'Building') {
     createdMap = new WorldMap(mapName, { mapWidth: width, mapHeight: height, mapType: 'Arena' });

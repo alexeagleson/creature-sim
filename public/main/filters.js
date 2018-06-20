@@ -1,4 +1,5 @@
 import { onSameMap } from './../main/world-utility';
+import { displayError } from './../main/general-utility';
 
 // Filters
 export function isOnTile(worldObject) {
@@ -66,17 +67,16 @@ function distanceToSort(objectA, objectB) {
   return distanceTo(objectACoords, targetCoords) - distanceTo(objectBCoords, targetCoords);
 }
 
-export function shortestMapPathToSort(objectA, objectB) {
+export function localPathSizeSort(objectA, objectB) {
   // Bind 'this' to desired lookup object
-  if (!this.Pathing) { return displayError(`shortestMapPathToSort used on non-Pathing object $this.name}`); }
+  if (!this.Pathing) { return displayError(`localPathSizeSort used on non-Pathing object $this.name}`); }
   if (!objectA.WorldTile || !objectB.WorldTile || !this.WorldTile) { return null; }
 
   const objectACoords = [objectA.WorldTile.x, objectA.WorldTile.y];
   const objectBCoords = [objectB.WorldTile.x, objectB.WorldTile.y];
 
-  const objectAPathLength = this.Pathing.calculatePath({pathTo: objectACoords}).length || 9999;
-  const objectBPathLength = this.Pathing.calculatePath({pathTo: objectBCoords}).length || 9999;
+  const objectAPathLength = this.Pathing.calculatePath({ pathTo: objectACoords }).length || 9999;
+  const objectBPathLength = this.Pathing.calculatePath({ pathTo: objectBCoords }).length || 9999;
 
   return objectAPathLength - objectBPathLength;
 }
-

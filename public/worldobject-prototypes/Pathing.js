@@ -1,9 +1,8 @@
 import { shortestMapPath } from './../constructors/MapNodeTree';
-
-import { isOnMapOfObject, isNotObject } from './../main/filters';
-
+import { isNotObject } from './../main/filters';
 import { displayError } from './../main/general-utility';
 import { distanceTo, convertToMap, convertToCoords } from './../main/world-utility';
+import { getPortalToMap, getPortalFromMap } from './../worldobject-prototypes/Portal';
 
 function Pathing(worldObject) {
   this.owner = worldObject;
@@ -27,15 +26,25 @@ function Pathing(worldObject) {
     pathTo = convertToCoords(pathTo);
     pathFrom = convertToCoords(pathFrom);
 
-    const mapPathIDs = shortestMapPath(worldMapFrom, worldMapTo);
+    if (worldMapTo !== worldMapFrom) {
+      const mapPathIDs = shortestMapPath(worldMapFrom, worldMapTo);
+      let totalPath = [];
 
-    // This occurs when the path destination is not on the same map as the pathing object
-    if (mapPathIDs.length > 1) {
-      const nextMapID = mapPathIDs[1];
-      const portal = World.allObjectsPortal.filter(isOnMapOfObject.bind(this.owner)).filter(portalObject => portalObject.Portal.warpToMap.uniqueID === nextMapID)[0];
-      return this.calculateTilePath({ pathToCoords: convertToCoords(portal), pathFromCoords: pathFrom, worldMap: worldMapFrom });
+      for (let i = 0; i < mapPathIDs.length; i += 1) {
+        if (i === 0) {
+          const portalTo = getPortalToMap(convertToMap(mapPathIDs[i]), convertToMap(mapPathIDs[i + 1]));
+          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: convertToCoords(this.owner), worldMap: this.owner.WorldMap }));
+        } else if (i === (mapPathIDs.length - 1)) {
+          const portalFrom = getPortalFromMap(convertToMap(mapPathIDs[i - 1]), convertToMap(mapPathIDs[i]));
+          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: pathTo, pathFromCoords: convertToCoords(portalFrom), worldMap: portalFrom.WorldMap }));
+        } else {
+          const portalTo = getPortalToMap(convertToMap(mapPathIDs[i]), convertToMap(mapPathIDs[i + 1]));
+          const portalFrom = getPortalFromMap(convertToMap(mapPathIDs[i - 1]), convertToMap(mapPathIDs[i]));
+          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: convertToCoords(portalFrom), worldMap: portalFrom.WorldMap }));
+        }
+      }
+      return totalPath;
     }
-
     return this.calculateTilePath({ pathToCoords: pathTo, pathFromCoords: pathFrom, worldMap: worldMapFrom });
   };
 
@@ -47,7 +56,7 @@ function Pathing(worldObject) {
     const fromY = arg.pathFromCoords[1];
     const toX = arg.pathToCoords[0];
     const toY = arg.pathToCoords[1];
-    const worldMap = arg.worldMap;
+    const { worldMap } = arg;
     const finalPath = [];
 
     let thisNode = null;
@@ -77,7 +86,9 @@ function Pathing(worldObject) {
     if (!thisNode) { return finalPath; }
 
     while (thisNode) {
-      finalPath.push([thisNode.x, thisNode.y]);
+      const { x, y } = thisNode;
+      const ignoreTriggers = thisNode.prev || false;
+      finalPath.push(() => this.owner.Moving.move([x, y], ignoreTriggers));
       thisNode = thisNode.prev;
     }
     return finalPath;
@@ -124,17 +135,8 @@ function Pathing(worldObject) {
   };
 
   this.movePath = () => {
-    // If standing on a portal that the object wants to use
-    if (this.currentPath.length === 1 && this.currentPath[0][0] === this.owner.WorldTile.x && this.currentPath[0][1] === this.owner.WorldTile.y) {
-      this.owner.Moving.move(this.currentPath[0]);
-      this.currentPath.shift();
-      return false;
-    }
-
     this.currentPath.shift();
-    if (this.currentPath.length > 0) {
-      return this.owner.Moving.move(this.currentPath[0]);
-    }
+    if (this.currentPath[0]) return this.currentPath[0]();
     return false;
   };
 

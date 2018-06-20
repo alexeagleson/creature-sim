@@ -176,7 +176,7 @@ export function getActivePrototypesByName(worldObject, namesArray) {
 export function getValidContextActions(objectActivating, objectBeingActivated) {
   if (!objectActivating || !objectBeingActivated) { return displayError(`${objectActivating.name} or ${objectBeingActivated.name} not defined in getValidContextActions.`); }
 
-  let validActions = {
+  const validActions = {
     consume: null,
     pickUp: null,
     speak: null,
@@ -260,7 +260,6 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
   }
 
   validActions.activate = null;
-
   return validActions;
 }
 
@@ -274,5 +273,18 @@ export function estimateTotalDistance(componentA, componentB) {
     const mapObject = convertToMap(mapID);
     totalDistance += Math.sqrt((mapObject.mapWidth * mapObject.mapWidth) + (mapObject.mapHeight * mapObject.mapHeight)) / 2;
   });
-  console.log(totalDistance);
+  return totalDistance;
+}
+
+export function getObjectsByWorldDistanceFromMe(fromObject, worldObjectArray) {
+  if (!fromObject.WorldMap) return displayError(`Cannot run getMapOfObjectWorldDistances on ${fromObject.name} because object is not on a map.`);
+  const objectsByWorldDistance = {};
+  worldObjectArray.forEach((worldObject) => {
+    if (!worldObject.WorldMap) return;
+    const mapPathTo = shortestMapPath(fromObject.WorldMap, worldObject.WorldMap);
+    const worldDistance = mapPathTo ? mapPathTo.length : 0;
+    objectsByWorldDistance[worldDistance] = objectsByWorldDistance[worldDistance] || [];
+    objectsByWorldDistance[worldDistance].push(worldObject);
+  });
+  return objectsByWorldDistance;
 }

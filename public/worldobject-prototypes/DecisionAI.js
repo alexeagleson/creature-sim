@@ -2,9 +2,7 @@ import evaluateHunger from './../ai/hunger';
 import { publishEvent } from './../constructors/WorldEvent';
 
 import { pickRandom } from './../main/general-utility';
-import { estimateTotalDistance } from './../main/world-utility';
-
-import { isOnAMap, isOnMapOfObject, isNotObject, isConsumable, isSocial, isItem, isNamed, shortestMapPathToSort } from './../main/filters';
+import { isOnAMap, isOnMapOfObject, isNotObject, isSocial, isItem, isNamed, localPathSizeSort } from './../main/filters';
 
 import { displayDialogue } from './../ui/components/HoveringText';
 
@@ -28,12 +26,9 @@ function DecisionAI(worldObject) {
     evaluateHunger(this.owner);
     if (this.hasObjective) { return true; }
 
-    //estimateTotalDistance(World.player, pickRandom(World.allObjects));
-
-
     if (this.owner.Social && this.owner.Social.socialLevel < ProtoCs.CONCERNED_VALUE) {
       const socialObjectsOnMyMap = objectsOnMyMap.filter(isSocial);
-      socialObjectsOnMyMap.sort(shortestMapPathToSort.bind(this.owner));
+      socialObjectsOnMyMap.sort(localPathSizeSort.bind(this.owner));
 
       socialObjectsOnMyMap.some((socialObject) => {
         this.owner.Pathing.createPath({ pathTo: socialObject });
@@ -141,7 +136,7 @@ function DecisionAI(worldObject) {
 
     if (this.owner.Inventory) {
       const itemObjectsOnMyMap = objectsOnMyMap.filter(isItem);
-      itemObjectsOnMyMap.sort(shortestMapPathToSort.bind(this.owner));
+      itemObjectsOnMyMap.sort(localPathSizeSort.bind(this.owner));
 
       itemObjectsOnMyMap.some((itemObject) => {
         this.owner.Pathing.createPath({ pathTo: itemObject });

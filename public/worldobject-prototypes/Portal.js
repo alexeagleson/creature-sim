@@ -23,3 +23,13 @@ function Portal(worldObject, arg = { warpToMap: null, warpCoords: null }) {
 export default function applyPortal(worldObject, arg = {}) {
   worldObject.Portal = worldObject.Portal || new Portal(worldObject, arg);
 }
+
+export function getPortalToMap(fromMap, toMap) {
+  const portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === fromMap && portalObject.Portal.warpToMap === toMap);
+  return portalArray.length > 0 ? portalArray[0] : null;
+}
+
+export function getPortalFromMap(fromMap, toMap) {
+  const portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === toMap && portalObject.Portal.warpFromMap === fromMap);
+  return portalArray.length > 0 ? portalArray[0] : null;
+}
