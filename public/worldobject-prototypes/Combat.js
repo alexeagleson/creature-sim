@@ -24,7 +24,7 @@ function Combat(worldObject, arg = {}) {
     publishEvent(`${this.owner.name} attacks ${attackTarget.name} for ${damageNumber} damage.`);
 
     World.ReactUI.HudTarget.targetObject = attackTarget;
-    World.AllSounds.hotDog.play();
+    //World.AllSounds.hotDog.play();
     return true;
   };
 

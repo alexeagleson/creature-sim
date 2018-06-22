@@ -44,6 +44,11 @@ export function isFood(worldObject) {
   return worldObject.Consumable.hungerValue > 0;
 }
 
+export function isDrink(worldObject) {
+  if (!worldObject.Consumable) return false;
+  return worldObject.Consumable.thirstValue > 0;
+}
+
 export function isSocial(worldObject) {
   return worldObject.Social !== undefined;
 }

@@ -51,6 +51,13 @@ NPCs should seek out portals instead of maps specifically
 ---
 
 
+<strong>2018/06/22 -- Version 0.1.29</strong>
+----------------------------
+(*) Added task queue allowing objects to queue up multiple tasks
+
+<strong>2018/06/21 -- Version 0.1.28</strong>
+----------------------------
+(*) Refactoring decision making functions
 
 <strong>2018/06/20 -- Version 0.1.27</strong>
 ----------------------------

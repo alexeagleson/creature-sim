@@ -24,6 +24,10 @@ export default function WorldMap(mapName, arg = {
   this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};
 
+  this.isCold = () => this.mapTemp < ProtoCs.COMFORTABLE_TEMP - ProtoCs.COMFORTABLE_TEMP_VARIANCE;
+  this.isHot = () => this.mapTemp > ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE;
+  this.isComfortable = () => this.mapTemp > ProtoCs.COMFORTABLE_TEMP - ProtoCs.COMFORTABLE_TEMP_VARIANCE && this.mapTemp < ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE;
+
   this.getTile = coords => this.tileMap[`${coords[0]},${coords[1]}`];
 
   this.generateCellularMap = () => {

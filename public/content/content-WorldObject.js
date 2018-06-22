@@ -51,6 +51,9 @@ export default function createWorldObject(objectName, arg = {}) {
     applyBasePrototypes(createdObject);
     applyLivingPrototypes(createdObject);
     applyTurnTaking(createdObject);
+    createdObject.Temperature.revokePrototype();
+    createdObject.Consumer.revokePrototype();
+
     createdObject.TurnTaking.millisecondsBetweenTurns = 200;
     createdObject.char = '@';
     isEngine('RotJs')

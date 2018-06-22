@@ -41,6 +41,7 @@ export default class Hud extends React.Component {
       takingHungerDamage: this.targetObject.Consumer ? this.targetObject.Consumer.takingHungerDamage : false,
       takingThirstDamage: this.targetObject.Consumer ? this.targetObject.Consumer.takingThirstDamage : false,
       takingTemperatureDamage: this.targetObject.Temperature ? this.targetObject.Temperature.takingTemperatureDamage : false,
+      takingStaminaDamage: this.targetObject.Living ? this.targetObject.Living.takingStaminaDamage : false,
     });
   }
 
@@ -73,6 +74,7 @@ export default class Hud extends React.Component {
         {this.state.takingHungerDamage && <p className="colour-red">Taking hunger damage.</p>}
         {this.state.takingThirstDamage && <p className="colour-red">Taking thirst damage.</p>}
         {this.state.takingTemperatureDamage && <p className="colour-red">Taking temperature damage.</p>}
+        {this.state.takingStaminaDamage && <p className="colour-red">Taking exhaustion damage.</p>}
         {this.targetObject === World.player && <p>Time: {this.state.time}</p>}
         {this.targetObject === World.player && <p>Days Elapsed: {this.state.daysElapsed}</p>}
       </div>

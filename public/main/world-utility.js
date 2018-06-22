@@ -4,7 +4,7 @@ import WorldTile from './../constructors/WorldTile';
 import { shortestMapPath } from './../constructors/MapNodeTree';
 import createWorldMap from './../content/content-WorldMap';
 import { localPathSizeSort } from './../main/filters';
-import { displayError } from './../main/general-utility';
+import { displayError, randBetween } from './../main/general-utility';
 import { hideMenusAndResume } from './../ui/components/WorldUI.jsx';
 
 export function pixelToTile(pixelCoordsArray) {
@@ -49,7 +49,7 @@ export function onSameMap(worldObject1, worldObject2) {
   return worldObject1.WorldMap === worldObject2.WorldMap;
 }
 
-function onSameTile(worldObject1, worldObject2) {
+export function onSameTile(worldObject1, worldObject2) {
   if (!onSameMap(worldObject1, worldObject2)) { return false; }
   if (!worldObject1.WorldTile || !worldObject2.WorldTile) { return false; }
   return worldObject1.WorldTile === worldObject2.WorldTile;
@@ -86,7 +86,15 @@ export function resumeSim() {
   World.worldPaused = false;
 }
 
+export function isEngine(engineName) {
+  if (engineName.toLowerCase() === ScreenCs.RENDER_ENGINE.toLowerCase()) { return true; }
+  return false;
+}
+
 export function convertToCoords(argument) {
+  if (Array.isArray(argument)) {
+    if (argument.length === 2) { return argument; }
+  }
   if (argument instanceof WorldObject) {
     if (argument.WorldMap && argument.WorldTile) { return [argument.WorldTile.x, argument.WorldTile.y]; }
   }
@@ -96,29 +104,28 @@ export function convertToCoords(argument) {
   if (argument instanceof WorldMap) {
     return convertToCoords(getAvailableTile({ worldMap: argument }))
   }
-  if (typeof argument === 'object') {
-    // If argument passed was already in coords format
-    if (argument.length === 2) { return argument; }
-  }
-  return displayError(`Could not convert to coords: ${argument}.`);
+
+  return null;
 }
 
-export function isEngine(engineName) {
-  if (engineName.toLowerCase() === ScreenCs.RENDER_ENGINE.toLowerCase()) { return true; }
-  return false;
+export function convertToTile(argument) {
+  if (argument instanceof WorldTile) return argument;
+  if (argument instanceof WorldObject) if (argument.WorldTile) return argument.WorldTile;
+  if (argument instanceof WorldMap) return getAvailableTile({ worldMap: argument });
+  return null;
 }
 
 export function convertToMap(argument) {
+  if (argument instanceof WorldMap) return argument;
+  if (argument instanceof WorldObject) if (argument.WorldMap) return argument.WorldMap;
+  if (argument instanceof WorldTile) if (argument.WorldMap) return argument.WorldMap;
+  if (typeof argument === 'number') return World.allMapsMap.get(argument);
+  
   let foundMap = null;
-  if (argument instanceof WorldMap) { foundMap = argument; }
-  if (argument instanceof WorldObject) { foundMap = argument.WorldMap; }
-  if (argument instanceof WorldTile) { foundMap = argument.WorldMap; }
-  if (typeof argument === 'number') { foundMap = World.allMapsMap.get(argument); }
   if (typeof argument === 'string') { 
     foundMap = World.allMaps.find(worldMap => worldMap.name === argument);
     if (!foundMap) { foundMap = createWorldMap(argument); }
   }
-
   if (foundMap) { return foundMap; }
   return null;
 }
@@ -296,6 +303,15 @@ export function getClosestObjects(fromObject, objectArray) {
       closestObjects = objectsByWorldDistanceFromMe[key].sort(localPathSizeSort.bind(fromObject));
     } else {
       closestObjects = objectsByWorldDistanceFromMe[key];
+
+      const swapArrayElements = (a, x, y) => {
+        if (a.length === 1) return a;
+        a.splice(y, 1, a.splice(x, 1, a[y])[0]);
+        return a;
+      };
+
+      swapArrayElements(closestObjects, 0, randBetween(0, 4));
+
     }
     return true;
   });

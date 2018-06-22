@@ -1,7 +1,8 @@
+import WorldObject from './../constructors/WorldObject';
 import { shortestMapPath } from './../constructors/MapNodeTree';
 import { isNotObject } from './../main/filters';
 import { displayError } from './../main/general-utility';
-import { distanceTo, convertToMap, convertToCoords } from './../main/world-utility';
+import { distanceTo, convertToMap, convertToTile, convertToCoords } from './../main/world-utility';
 import { getPortalToMap, getPortalFromMap } from './../worldobject-prototypes/Portal';
 
 function Pathing(worldObject) {
@@ -10,53 +11,49 @@ function Pathing(worldObject) {
 
   if (!this.owner.Moving) { applyMoving(this.owner); }
 
-  this.createPath = (arg = { pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null }) => {
-    this.currentPath = this.calculatePath(arg);
+  this.createPath = (pathArg = { pathTo: null, pathFrom: null }) => {
+    this.currentPath = this.calculatePath(pathArg);
   };
 
-  this.calculatePath = (arg = { pathTo: null, pathFrom: null, worldMapTo: null, worldMapFrom: null }) => {
-    if (!arg.pathTo) { return displayError(`Invalid argument given for pathTo: ${arg.pathTo}.`); }
+  this.calculatePath = (pathArg = { pathTo: null, pathFrom: null }) => {
+    if (!pathArg.pathTo) return displayError(`Invalid argument given for pathTo: ${pathArg.pathTo}.`);
+    if (!pathArg.pathFrom) pathArg.pathFrom = this.owner;
+    const detailedPathInfo = pathArg.detailedPathInfo ? pathArg : convertToDetailedPathInfo(pathArg);
 
-    let { pathTo, pathFrom, worldMapTo, worldMapFrom } = arg;
-    pathFrom = pathFrom || this.owner;
-
-    // Very important that these stay in this order
-    worldMapTo = worldMapTo || convertToMap(pathTo) || this.owner.WorldMap;
-    worldMapFrom = worldMapFrom || convertToMap(pathFrom) || this.owner.WorldMap;
-    pathTo = convertToCoords(pathTo);
-    pathFrom = convertToCoords(pathFrom);
-
-    if (worldMapTo !== worldMapFrom) {
-      const mapPathIDs = shortestMapPath(worldMapFrom, worldMapTo);
+    if (detailedPathInfo.pathFromMap !== detailedPathInfo.pathToMap) {
+      const mapPathIDs = shortestMapPath(detailedPathInfo.pathFromMap, detailedPathInfo.pathToMap);
       let totalPath = [];
 
       for (let i = 0; i < mapPathIDs.length; i += 1) {
         if (i === 0) {
+          // This branch is the first path toward the first portal
           const portalTo = getPortalToMap(convertToMap(mapPathIDs[i]), convertToMap(mapPathIDs[i + 1]));
-          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: convertToCoords(this.owner), worldMap: this.owner.WorldMap }));
+          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: detailedPathInfo.pathFromCoords, pathToMap: portalTo.WorldMap }));
         } else if (i === (mapPathIDs.length - 1)) {
+          // This branch is on the final map where the goal is
           const portalFrom = getPortalFromMap(convertToMap(mapPathIDs[i - 1]), convertToMap(mapPathIDs[i]));
-          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: pathTo, pathFromCoords: convertToCoords(portalFrom), worldMap: portalFrom.WorldMap }));
+          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: detailedPathInfo.pathToCoords, pathFromCoords: convertToCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
         } else {
+          // This branch is a middle map between two portals on the way to the goal
           const portalTo = getPortalToMap(convertToMap(mapPathIDs[i]), convertToMap(mapPathIDs[i + 1]));
           const portalFrom = getPortalFromMap(convertToMap(mapPathIDs[i - 1]), convertToMap(mapPathIDs[i]));
-          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: convertToCoords(portalFrom), worldMap: portalFrom.WorldMap }));
+          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: convertToCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
         }
       }
       return totalPath;
     }
-    return this.calculateTilePath({ pathToCoords: pathTo, pathFromCoords: pathFrom, worldMap: worldMapFrom });
+    return this.calculateTilePath(detailedPathInfo);
   };
 
-  this.calculateTilePath = (arg = { pathToCoords: null, pathFromCoords: null, worldMap: null }) => {
+  this.calculateTilePath = (pathArg = { pathFromCoords: null, pathToCoords: null, pathToMap: null  }) => {
     this.todo = [];
     this.done = {};
 
-    const fromX = arg.pathFromCoords[0];
-    const fromY = arg.pathFromCoords[1];
-    const toX = arg.pathToCoords[0];
-    const toY = arg.pathToCoords[1];
-    const { worldMap } = arg;
+    const fromX = pathArg.pathFromCoords[0];
+    const fromY = pathArg.pathFromCoords[1];
+    const toX = pathArg.pathToCoords[0];
+    const toY = pathArg.pathToCoords[1];
+    const worldMap = pathArg.pathToMap;
     const finalPath = [];
 
     let thisNode = null;
@@ -135,9 +132,9 @@ function Pathing(worldObject) {
   };
 
   this.movePath = () => {
+    const pathSuccess = this.currentPath[0] ? this.currentPath[0]() : false;
     this.currentPath.shift();
-    if (this.currentPath[0]) return this.currentPath[0]();
-    return false;
+    return pathSuccess;
   };
 
   this.revokePrototype = () => {
@@ -148,4 +145,19 @@ function Pathing(worldObject) {
 
 export default function applyPathing(worldObject, arg = {}) {
   worldObject.Pathing = worldObject.Pathing || new Pathing(worldObject, arg);
+}
+
+export function convertToDetailedPathInfo(pathArg) {
+  const detailedPathInfo = {
+    pathToObject: pathArg.pathTo instanceof WorldObject ? pathArg.pathTo : null,
+    pathToCoords: convertToCoords(pathArg.pathTo),
+    pathToMap: convertToMap(pathArg.pathTo),
+    pathToTile: convertToTile(pathArg.pathTo),
+    pathFromObject: pathArg.pathFrom instanceof WorldObject ? pathArg.pathFrom : null,
+    pathFromCoords: convertToCoords(pathArg.pathFrom),
+    pathFromMap: convertToMap(pathArg.pathFrom),
+    pathFromTile: convertToTile(pathArg.pathFrom),
+    detailedPathInfo: true
+  }
+  return detailedPathInfo;
 }

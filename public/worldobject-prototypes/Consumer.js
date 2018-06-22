@@ -18,8 +18,8 @@ function Consumer(worldObject) {
   this.takingHungerDamage = false;
   this.takingThirstDamage = false;
 
-  this.isHungry = () => worldObject.Consumer.hunger < ProtoCs.CONCERNED_VALUE;
-  this.isThirsty = () => worldObject.Consumer.hunger < ProtoCs.CONCERNED_VALUE;
+  this.isHungry = () => this.hunger < ProtoCs.CONCERNED_VALUE;
+  this.isThirsty = () => this.thirst < ProtoCs.CONCERNED_VALUE;
 
   this.canIConsumeObject = (worldObject) => {
     if (!worldObject.Consumable) { return false; }

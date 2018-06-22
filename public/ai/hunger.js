@@ -7,7 +7,7 @@ export default function takeActionOnHunger(worldObject) {
   const closestFoodObjects = getClosestObjects(worldObject, World.allObjectsConsumable.filter(isFood));
   if (closestFoodObjects.length > 0) {
     worldObject.Pathing.createPath({ pathTo: closestFoodObjects[0] });
-    publishEvent(`${worldObject.name} wants to consume ${closestFoodObjects[0].name}.`);
+    publishEvent(`${worldObject.name} wants to eat ${closestFoodObjects[0].name}.`);
 
     worldObject.DecisionAI.currentAction = () => worldObject.Pathing.movePath();
 

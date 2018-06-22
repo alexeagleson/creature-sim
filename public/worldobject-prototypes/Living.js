@@ -3,6 +3,9 @@ import { isNotObject } from './../main/filters';
 import { normalizeToValue } from './../main/general-utility';
 import { isEngine, convertToCoords, getActivePrototypesByName } from './../main/world-utility';
 
+const DAMAGE_THRESHOLD = 25;
+const EXHAUSTION_ADJUSTMENT_FACTOR = 100;
+
 function Living(worldObject) {
   this.owner = worldObject;
   World.allObjectsLiving.push(this.owner);
@@ -10,10 +13,26 @@ function Living(worldObject) {
   if (!this.owner.Destructible) { applyDestructible(this.owner); }
 
   this.stamina = 100;
+  this.asleep = false;
+
+  this.isTired = () => this.stamina < ProtoCs.CONCERNED_VALUE;
+  this.isVeryTired = () => this.stamina < ProtoCs.PROBLEM_VALUE;
+
+  this.fallAsleep = () => { this.asleep = true; };
+  this.wakeUp = () => { this.asleep = false; };
 
   this.adjustStamina = (timePassedMilliseconds) => {
-    this.stamina -= ProtoCs.STAMINA_LOSS_PER_MILLISECOND * timePassedMilliseconds;
+    this.stamina += this.asleep ? (ProtoCs.STAMINA_LOSS_PER_MILLISECOND * timePassedMilliseconds) : (0 - (ProtoCs.STAMINA_LOSS_PER_MILLISECOND * timePassedMilliseconds));
     this.stamina = normalizeToValue(this.stamina, 0, 100);
+
+    const staminaDamage = Math.round((100 - this.stamina) / EXHAUSTION_ADJUSTMENT_FACTOR);
+
+    this.takingStaminaDamage = false;
+    if (this.stamina < DAMAGE_THRESHOLD && staminaDamage > 0) {
+      this.takingStaminaDamage = true;
+      const causeOfConditionLoss = 'exhaustion';
+      this.owner.Destructible.adjustConditionBy(0 - staminaDamage, causeOfConditionLoss);
+    }
   };
 
   this.checkAdequateStaminaForAction = (actionName) => {
@@ -35,7 +54,7 @@ function Living(worldObject) {
 
   this.death = () => {
     if (isEngine('RotJs')) {
-      this.owner.RotJsObject.fgColour = Colours.HEX_RED
+      this.owner.RotJsObject.fgColour = Colours.HEX_RED;
     } else {
       this.owner.PhaserObject.spriteFilename = 'Corpse';
       this.owner.destroySprite();

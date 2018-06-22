@@ -21,13 +21,13 @@ function TurnTaking(worldObject, arg = {}) {
 
   this.takeTurn = () => {
     if (this.owner.DecisionAI) {
-      if (this.owner.DecisionAI.hasObjective) {
-        if (this.owner.DecisionAI.successCondition()) {
-          this.owner.DecisionAI.onSuccess();
-          this.owner.DecisionAI.resetObjective();
-        } else if (!this.owner.DecisionAI.currentAction()) {
-          this.owner.DecisionAI.onFail();
-          this.owner.DecisionAI.resetObjective();
+      if (this.owner.DecisionAI.taskQueue.length > 0) {
+        if (this.owner.DecisionAI.taskQueue[0].successCondition()) {
+          this.owner.DecisionAI.taskQueue[0].onSuccess();
+          this.owner.DecisionAI.nextTask();
+        } else if (!this.owner.DecisionAI.taskQueue[0].currentAction()) {
+          this.owner.DecisionAI.taskQueue[0].onFail();
+          this.owner.DecisionAI.resetAllTasks();
         }
       } else {
         this.owner.DecisionAI.determineAction();

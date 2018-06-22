@@ -24,7 +24,8 @@ function pointerdownHandler(pointerEvent) {
   if (objectsAtCoords.length > 0) {
     World.ReactUI.SelectObject.prompt(objectsAtCoords);
   } else {
-    World.player.Pathing.createPath({ pathTo: clickedTileCoords });
+    World.player.Pathing.createPath({ pathTo: World.player.WorldMap.getTile(clickedTileCoords) });
+    World.player.Pathing.movePath();
     World.player.Pathing.movePath();
   }
 }

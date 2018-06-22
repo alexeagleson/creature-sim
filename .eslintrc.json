@@ -23,7 +23,8 @@
         "no-unused-expressions": ["error", {"allowTernary": true}],
         "no-nested-ternary": 0,
         "no-continue": 0,
-        "no-underscore-dangle": 0
+        "no-underscore-dangle": 0,
+        "no-param-reassign": 0
     },
     "globals": {
         "ROT": false,
