@@ -18,24 +18,27 @@ function Consumer(worldObject) {
   this.takingHungerDamage = false;
   this.takingThirstDamage = false;
 
-  this.isHungry = () => this.hunger < ProtoCs.CONCERNED_VALUE;
-  this.isThirsty = () => this.thirst < ProtoCs.CONCERNED_VALUE;
+  this.getHungerPriority = () => this.hunger;
+  this.getThirstPriority = () => this.thirst;
 
-  this.canIConsumeObject = (worldObject) => {
-    if (!worldObject.Consumable) { return false; }
-    if (!this.owner.inMyInventoryOrAdjacent(worldObject)) { return false; }
+  this.isHungry = () => this.getHungerPriority() < ProtoCs.PROBLEM_VALUE;
+  this.isThirsty = () => this.getThirstPriority() < ProtoCs.PROBLEM_VALUE;
+
+  this.canIConsumeObject = (anObject) => {
+    if (!anObject.Consumable) { return false; }
+    if (!this.owner.inMyInventoryOrAdjacent(anObject)) { return false; }
     return true;
   };
 
-  this.consume = (worldObject) => {
-    this.hunger += worldObject.Consumable.hungerValue;
+  this.consume = (anObject) => {
+    this.hunger += anObject.Consumable.hungerValue;
     this.hunger = normalizeToValue(this.hunger, 0, 100);
 
-    this.thirst += worldObject.Consumable.thirstValue;
+    this.thirst += anObject.Consumable.thirstValue;
     this.thirst = normalizeToValue(this.thirst, 0, 100);
 
-    worldObject.removeFromUniverse();
-    publishEvent(`${this.owner.name} consumes ${worldObject.name}.`);
+    anObject.removeFromUniverse();
+    publishEvent(`${this.owner.name} consumes ${anObject.name}.`);
     displayDialogue(this.owner, pickRandom(['yum!', '*crunch*']));
   };
 

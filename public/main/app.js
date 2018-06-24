@@ -13,8 +13,6 @@ import { isOnAMap, isNotObject } from './../main/filters';
 
 import buildUI from './../ui/app.jsx';
 
-let lastRender = 0;
-
 let oneTenthSecondInterval = 0;
 let oneSecondInterval = 0;
 

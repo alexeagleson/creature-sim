@@ -15,6 +15,7 @@ function Temperature(worldObject) {
   this.isHot = () => this.temp > ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE;
   this.isComfortable = () => this.temp > ProtoCs.COMFORTABLE_TEMP - ProtoCs.COMFORTABLE_TEMP_VARIANCE && this.temp < ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE;
 
+  this.getTempPriority = () => normalizeToValue(100 - Math.abs(this.temp - ProtoCs.COMFORTABLE_TEMP) - Math.abs(this.owner.WorldMap.mapTemp - ProtoCs.COMFORTABLE_TEMP), 1, 100);
 
   this.adjustTemperature = (timePassedMilliseconds) => {
     let differenceBetweenWeatherAndCurrent = this.owner.WorldMap.mapTemp - this.temp;
@@ -31,7 +32,7 @@ function Temperature(worldObject) {
   };
 
   this.adjustConditionBasedOnTemperature = () => {
-    let tempAffectsCondition = Math.abs(20 - this.temp);
+    let tempAffectsCondition = Math.abs(ProtoCs.COMFORTABLE_TEMP - this.temp);
     tempAffectsCondition = normalizeToValue((tempAffectsCondition - ProtoCs.COMFORTABLE_TEMP_VARIANCE), 0, 100);
 
     const temperatureDamage = Math.round(tempAffectsCondition / TEMP_ADJUSTMENT_FACTOR);

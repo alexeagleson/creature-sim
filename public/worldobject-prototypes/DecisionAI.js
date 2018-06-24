@@ -1,14 +1,10 @@
-import taskPath from '../ai/taskPath';
 
-import takeActionOnCold from './../ai/cold';
-import takeActionOnHot from './../ai/hot';
-import takeActionOnHunger from './../ai/hunger';
-import takeActionOnThirst from './../ai/thirst';
-import takeActionOnSocial from './../ai/social';
-import takeActionOnSleep from './../ai/sleep';
-
-import { pickRandom } from './../main/general-utility';
-import { isNotObject } from './../main/filters';
+import hungerTask from '../ai/hungerTask';
+import speakTask from './../ai/speakTask';
+import sleepTask from './../ai/sleepTask';
+import coldTask from '../ai/coldTask';
+import { getClosestObjects, getClosestMaps } from './../main/world-utility';
+import { isNotObject, isFood, isDrink, portalToHotOrComfortable, portalToColdOrComfortable } from './../main/filters';
 
 function DecisionAI(worldObject) {
   this.owner = worldObject;
@@ -18,71 +14,96 @@ function DecisionAI(worldObject) {
 
   this.taskQueue = [];
 
-  this.nextTask = () => {
-    this.taskQueue.shift();
-    this.startNewTask();
-  }
+  this.currentTask = null;
 
-  this.startNewTask = () => { if (this.taskQueue.length > 0) this.taskQueue[0].initialAction(); }
-
-  this.resetAllTasks = () => {
-    this.taskQueue = [];
+  this.addTask = (taskObject) => {
+    this.taskQueue.push(taskObject);
+    return taskObject;
   };
 
-  this.determineAction = () => {
-    const item = pickRandom(World.allObjectsConsumable);
-    const social = pickRandom(World.allObjectsSocial.filter(isNotObject.bind(this.owner)));
+  this.getHighestPriorityTask = () => {
+    const taskQueueExcludingPaths = this.taskQueue.filter(task => task.taskType !== 'path');
+    taskQueueExcludingPaths.forEach(task => task.updatePriorityVsDistance());
+    const chosenTask = taskQueueExcludingPaths.reduce((acc, task) => {
+      if (task.priorityVsDistance < acc.priorityVsDistance) return task;
+      return acc;
+    });
+    if (chosenTask.prerequisiteTask) return chosenTask.prerequisiteTask;
+    return chosenTask;
+  };
 
-    this.taskQueue.push(taskPath(this.owner, {pathTo: item }));
-    this.taskQueue.push(taskPath(this.owner, {pathTo: social }));
-    
-    this.startNewTask();
-    return false;
+  this.startNewTask = () => {
+    const followUpTask = this.currentTask ? this.currentTask.followUpTask : null;
+    if (this.currentTask) {
+      this.taskQueue = this.taskQueue.filter(task => task !== this.currentTask);
+      this.currentTask = null;
+    }
 
+    if (followUpTask) {
+      this.currentTask = followUpTask;
+    } else {
+      this.updateTasks();
+      this.currentTask = this.getHighestPriorityTask(this.taskQueue);
+    }
+
+    if (!this.currentTask) alert('this should never run --- if there is a task in the queue at leats one should be returned by getHighestPriorityTask')
+    this.currentTask.initialAction();
+    return true;
+  };
+
+  this.resetAllTasks = () => { this.taskQueue = []; };
+
+  this.updateTasks = () => {
     if (this.owner.Consumer) {
       if (this.owner.Consumer.isHungry()) {
-        this.hasObjective = takeActionOnHunger(this.owner);
-        if (this.hasObjective) return true;
+        if (!this.taskQueue.find(task => task.taskType === 'hunger')) {
+          const closestFoodObjects = getClosestObjects(this.owner, World.allObjectsConsumable.filter(isFood));
+          if (closestFoodObjects.length > 0) this.addTask(hungerTask(this.owner, closestFoodObjects[0]));
+        }
       }
     }
 
-    if (this.owner.Consumer) {
-      if (this.owner.Consumer.isThirsty()) {
-        this.hasObjective = takeActionOnThirst(this.owner);
-        if (this.hasObjective) return true;
-      }
-    }
+    // if (this.owner.Consumer) {
+    //   if (this.owner.Consumer.isThirsty()) {
+    //     const closestDrinkObjects = getClosestObjects(this.owner, World.allObjectsConsumable.filter(isDrink));
+    //     if (closestDrinkObjects.length > 0) this.addTask(consumeTask(this.owner, closestDrinkObjects[0]));
+    //   }
+    // }
 
     if (this.owner.Social) {
       if (this.owner.Social.needsToTalk()) {
-        this.hasObjective = takeActionOnSocial(this.owner);
-        if (this.hasObjective) return true;
+        if (!this.taskQueue.find(task => task.taskType === 'speak')) {
+          const closestSocialObjects = getClosestObjects(this.owner, World.allObjectsSocial.filter(isNotObject.bind(this.owner)));
+          if (closestSocialObjects.length > 0) this.addTask(speakTask(this.owner, closestSocialObjects[0]));
+        }
       }
     }
 
     if (this.owner.Temperature) {
       if (this.owner.Temperature.isCold() && this.owner.WorldMap.isCold()) {
-        this.hasObjective = takeActionOnCold(this.owner);
-        if (this.hasObjective) return true;
+        if (!this.taskQueue.find(task => task.taskType === 'cold')) {
+          const closestPortalObjects = getClosestObjects(this.owner, World.allObjectsPortal.filter(portalToHotOrComfortable));
+          if (closestPortalObjects.length > 0) this.addTask(coldTask(this.owner, closestPortalObjects[0].Portal.warpToMap));
+        }
       }
     }
 
-    if (this.owner.Temperature) {
-      if (this.owner.Temperature.isHot() && this.owner.WorldMap.isHot()) {
-        this.hasObjective = takeActionOnHot(this.owner);
-        if (this.hasObjective) return true;
-      }
-    }
+    // if (this.owner.Temperature) {
+    //   if (this.owner.Temperature.isHot() && this.owner.WorldMap.isHot()) {
+    //     const closestPortalObjects = getClosestObjects(this.owner, World.allObjectsPortal.filter(portalToColdOrComfortable));
+    //     if (closestPortalObjects.length > 0) this.addTask(tempTask(this.owner, closestPortalObjects[0].Portal.warpToMap));
+    //   }
+    // }
 
     if (this.owner.Living) {
-      if (this.owner.Living.isVeryTired()) {
-        this.hasObjective = takeActionOnSleep(this.owner);
-        if (this.hasObjective) return true;
+      if (this.owner.Living.isTired()) {
+        if (!this.taskQueue.find(task => task.taskType === 'sleep')) {
+          const comfortableMaps = getClosestMaps(this.owner, World.allMaps.filter(worldMap => worldMap.isComfortable()));
+          if (comfortableMaps.length > 0) this.addTask(sleepTask(this.owner, comfortableMaps[0]));
+        }
       }
     }
-
-    if (this.owner.Moving) { this.owner.Moving.moveRandom(); }
-    return false;
+    return true;
   };
 
   this.revokePrototype = () => {

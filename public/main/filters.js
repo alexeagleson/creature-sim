@@ -49,6 +49,16 @@ export function isDrink(worldObject) {
   return worldObject.Consumable.thirstValue > 0;
 }
 
+export function portalToHotOrComfortable(worldObject) {
+  if (!worldObject.Portal) return false;
+  return worldObject.Portal.warpToMap.isHot() || worldObject.Portal.warpToMap.isComfortable();
+}
+
+export function portalToColdOrComfortable(worldObject) {
+  if (!worldObject.Portal) return false;
+  return worldObject.Portal.warpToMap.isCold() || worldObject.Portal.warpToMap.isComfortable();
+}
+
 export function isSocial(worldObject) {
   return worldObject.Social !== undefined;
 }
@@ -67,7 +77,7 @@ export function isOnAMap(worldObject) {
 }
 
 // Sorts
-function distanceToSort(objectA, objectB) {
+function distanceBetweenSort(objectA, objectB) {
   // Bind 'this' to desired lookup object
   if (!objectA.WorldTile || !objectB.WorldTile || !this.WorldTile) { return null; }
 
@@ -75,7 +85,7 @@ function distanceToSort(objectA, objectB) {
   const objectBCoords = [objectB.WorldTile.x, objectB.WorldTile.y];
   const targetCoords = [this.WorldTile.x, this.WorldTile.y];
 
-  return distanceTo(objectACoords, targetCoords) - distanceTo(objectBCoords, targetCoords);
+  return distanceBetween(objectACoords, targetCoords) - distanceBetween(objectBCoords, targetCoords);
 }
 
 export function worldPathSizeSort(mapA, mapB) {
@@ -91,11 +101,8 @@ export function localPathSizeSort(objectA, objectB) {
   if (!this.Pathing) { return displayError(`localPathSizeSort used on non-Pathing object $this.name}`); }
   if (!objectA.WorldTile || !objectB.WorldTile || !this.WorldTile) { return null; }
 
-  const objectACoords = [objectA.WorldTile.x, objectA.WorldTile.y];
-  const objectBCoords = [objectB.WorldTile.x, objectB.WorldTile.y];
-
-  const objectAPathLength = this.Pathing.calculatePath({ pathTo: objectACoords }).length || 9999;
-  const objectBPathLength = this.Pathing.calculatePath({ pathTo: objectBCoords }).length || 9999;
+  const objectAPathLength = this.Pathing.calculatePath({ pathTo: objectA.WorldTile }).length || 9999;
+  const objectBPathLength = this.Pathing.calculatePath({ pathTo: objectB.WorldTile }).length || 9999;
 
   return objectAPathLength - objectBPathLength;
 }

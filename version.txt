@@ -50,6 +50,9 @@ the event log is still constantly changing elements inefficiently
 NPCs should seek out portals instead of maps specifically
 ---
 
+<strong>2018/06/24 -- Version 0.1.30</strong>
+----------------------------
+(*) Implemented priority decision making for task queues
 
 <strong>2018/06/22 -- Version 0.1.29</strong>
 ----------------------------

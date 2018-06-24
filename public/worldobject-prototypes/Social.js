@@ -9,10 +9,11 @@ function Social(worldObject) {
   World.allObjectsSocial.push(this.owner);
   if (!this.owner.Living) { applyLiving(this.owner); }
 
-  this.socialLevel = 60;
+  this.socialLevel = 5;
   this.myDialogue = ['5cb5d08d36337a277eb5e67a452d2c44'];
 
-  this.needsToTalk = () => this.socialLevel < ProtoCs.CONCERNED_VALUE;
+  this.getSocialPriority = () => this.socialLevel;
+  this.needsToTalk = () => this.getSocialPriority() < ProtoCs.PROBLEM_VALUE;
 
   this.assignNewDialogue = (dialogueArray) => {
     this.myDialogue = this.myDialogue.concat(dialogueArray);

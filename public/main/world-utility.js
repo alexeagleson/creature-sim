@@ -3,7 +3,7 @@ import WorldMap, { getAvailableTile } from './../constructors/WorldMap';
 import WorldTile from './../constructors/WorldTile';
 import { shortestMapPath } from './../constructors/MapNodeTree';
 import createWorldMap from './../content/content-WorldMap';
-import { localPathSizeSort } from './../main/filters';
+import { localPathSizeSort, worldPathSizeSort } from './../main/filters';
 import { displayError, randBetween } from './../main/general-utility';
 import { hideMenusAndResume } from './../ui/components/WorldUI.jsx';
 
@@ -37,22 +37,10 @@ export function canvasPixelOffset(pixelCoordsArray) {
   return [pixelCoordsArray[0] + canvasOffsetX, pixelCoordsArray[1] + canvasOffsetY]; 
 }
 
-export function withinMapBounds(WorldMap, coords) {
-  if (coords[0] < 0 || coords[0] >= WorldMap.mapWidth) { return false; }
-  if (coords[1] < 0 || coords[1] >= WorldMap.mapHeight) { return false; }
+export function withinMapBounds(worldMap, coords) {
+  if (coords[0] < 0 || coords[0] >= worldMap.mapWidth) { return false; }
+  if (coords[1] < 0 || coords[1] >= worldMap.mapHeight) { return false; }
   return true;
-}
-
-export function onSameMap(worldObject1, worldObject2) {
-  if (!worldObject1.WorldTile || !worldObject2.WorldTile) { return false; }
-  if (!worldObject1.WorldMap || !worldObject2.WorldMap) { return false; }
-  return worldObject1.WorldMap === worldObject2.WorldMap;
-}
-
-export function onSameTile(worldObject1, worldObject2) {
-  if (!onSameMap(worldObject1, worldObject2)) { return false; }
-  if (!worldObject1.WorldTile || !worldObject2.WorldTile) { return false; }
-  return worldObject1.WorldTile === worldObject2.WorldTile;
 }
 
 function directionTo(coordsFrom, coordsTo) {
@@ -72,10 +60,10 @@ function directionTo(coordsFrom, coordsTo) {
   return 'nodir';
 }
 
-export function distanceTo(coordsFrom, coordsTo) {
+export function distanceBetween(coordsFrom, coordsTo) {
   const dx = Math.abs(coordsTo[0] - coordsFrom[0]);
   const dy = Math.abs(coordsTo[1] - coordsFrom[1]);
-  return(Math.sqrt((dx * dx) + (dy * dy)));
+  return Math.sqrt((dx * dx) + (dy * dy));
 }
 
 export function pauseSim() {
@@ -101,17 +89,12 @@ export function convertToCoords(argument) {
   if (argument instanceof WorldTile) {
     return [argument.x, argument.y];
   }
-  if (argument instanceof WorldMap) {
-    return convertToCoords(getAvailableTile({ worldMap: argument }))
-  }
-
   return null;
 }
 
 export function convertToTile(argument) {
   if (argument instanceof WorldTile) return argument;
   if (argument instanceof WorldObject) if (argument.WorldTile) return argument.WorldTile;
-  if (argument instanceof WorldMap) return getAvailableTile({ worldMap: argument });
   return null;
 }
 
@@ -120,14 +103,28 @@ export function convertToMap(argument) {
   if (argument instanceof WorldObject) if (argument.WorldMap) return argument.WorldMap;
   if (argument instanceof WorldTile) if (argument.WorldMap) return argument.WorldMap;
   if (typeof argument === 'number') return World.allMapsMap.get(argument);
-  
+
   let foundMap = null;
-  if (typeof argument === 'string') { 
+  if (typeof argument === 'string') {
     foundMap = World.allMaps.find(worldMap => worldMap.name === argument);
     if (!foundMap) { foundMap = createWorldMap(argument); }
   }
   if (foundMap) { return foundMap; }
   return null;
+}
+
+export function onSameMap(arg1, arg2) {
+  const map1 = convertToMap(arg1);
+  const map2 = convertToMap(arg2);
+  if (!map1 || !map2) return false;
+  return map1 === map2;
+}
+
+export function onSameTile(arg1, arg2) {
+  const tile1 = convertToTile(arg1);
+  const tile2 = convertToTile(arg2);
+  if (!tile1 || !tile2) return false;
+  return tile1 === tile2;
 }
 
 export function getAllActivePrototypes(worldObject) {
@@ -272,6 +269,8 @@ export function estimateTotalDistance(componentA, componentB) {
   const mapFrom = convertToMap(componentA);
   const mapTo = convertToMap(componentB);
 
+  if (mapFrom === mapTo) return distanceBetween(convertToCoords(componentA), convertToCoords(componentB));
+
   const mapPath = shortestMapPath(mapFrom, mapTo);
   let totalDistance = 0;
   mapPath.forEach((mapID) => {
@@ -279,6 +278,11 @@ export function estimateTotalDistance(componentA, componentB) {
     totalDistance += Math.sqrt((mapObject.mapWidth * mapObject.mapWidth) + (mapObject.mapHeight * mapObject.mapHeight)) / 2;
   });
   return totalDistance;
+}
+
+export function getClosestMaps(fromObject, mapArray) {
+  mapArray.sort(worldPathSizeSort.bind(fromObject));
+  return mapArray;
 }
 
 export function getObjectsByWorldDistanceFromMe(fromObject, worldObjectArray) {

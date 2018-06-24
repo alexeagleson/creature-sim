@@ -1,8 +1,10 @@
+import Path from './../constructors/Path';
 import WorldObject from './../constructors/WorldObject';
+import WorldTile from './../constructors/WorldTile';
 import { shortestMapPath } from './../constructors/MapNodeTree';
 import { isNotObject } from './../main/filters';
 import { displayError } from './../main/general-utility';
-import { distanceTo, convertToMap, convertToTile, convertToCoords } from './../main/world-utility';
+import { distanceBetween, convertToMap, convertToCoords } from './../main/world-utility';
 import { getPortalToMap, getPortalFromMap } from './../worldobject-prototypes/Portal';
 
 function Pathing(worldObject) {
@@ -16,23 +18,25 @@ function Pathing(worldObject) {
   };
 
   this.calculatePath = (pathArg = { pathTo: null, pathFrom: null }) => {
-    if (!pathArg.pathTo) return displayError(`Invalid argument given for pathTo: ${pathArg.pathTo}.`);
-    if (!pathArg.pathFrom) pathArg.pathFrom = this.owner;
-    const detailedPathInfo = pathArg.detailedPathInfo ? pathArg : convertToDetailedPathInfo(pathArg);
+    if (!(pathArg instanceof Path)) {
+      if (!(pathArg.pathTo instanceof WorldObject) && !(pathArg.pathTo instanceof WorldTile)) return displayError(`pathTo (${pathArg.pathTo}) must be a WorldTile or WorldObject`);
+      if (!(pathArg.pathFrom instanceof WorldObject) && !(pathArg.pathFrom instanceof WorldTile)) pathArg.pathFrom = this.owner;
+    }
+    const pathObject = pathArg instanceof Path ? pathArg : new Path(pathArg.pathTo, pathArg.pathFrom);
 
-    if (detailedPathInfo.pathFromMap !== detailedPathInfo.pathToMap) {
-      const mapPathIDs = shortestMapPath(detailedPathInfo.pathFromMap, detailedPathInfo.pathToMap);
+    if (pathObject.pathFromMap !== pathObject.pathToMap) {
+      const mapPathIDs = shortestMapPath(pathObject.pathFromMap, pathObject.pathToMap);
       let totalPath = [];
 
       for (let i = 0; i < mapPathIDs.length; i += 1) {
         if (i === 0) {
           // This branch is the first path toward the first portal
           const portalTo = getPortalToMap(convertToMap(mapPathIDs[i]), convertToMap(mapPathIDs[i + 1]));
-          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: detailedPathInfo.pathFromCoords, pathToMap: portalTo.WorldMap }));
+          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: pathObject.pathFromCoords, pathToMap: portalTo.WorldMap }));
         } else if (i === (mapPathIDs.length - 1)) {
           // This branch is on the final map where the goal is
           const portalFrom = getPortalFromMap(convertToMap(mapPathIDs[i - 1]), convertToMap(mapPathIDs[i]));
-          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: detailedPathInfo.pathToCoords, pathFromCoords: convertToCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
+          totalPath = totalPath.concat(this.calculateTilePath({ pathToCoords: pathObject.pathToCoords, pathFromCoords: convertToCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
         } else {
           // This branch is a middle map between two portals on the way to the goal
           const portalTo = getPortalToMap(convertToMap(mapPathIDs[i]), convertToMap(mapPathIDs[i + 1]));
@@ -42,7 +46,7 @@ function Pathing(worldObject) {
       }
       return totalPath;
     }
-    return this.calculateTilePath(detailedPathInfo);
+    return this.calculateTilePath(pathObject);
   };
 
   this.calculateTilePath = (pathArg = { pathFromCoords: null, pathToCoords: null, pathToMap: null  }) => {
@@ -108,7 +112,7 @@ function Pathing(worldObject) {
   };
 
   this.add = (x, y, prev) => {
-    const h = distanceTo(convertToCoords(this.owner), [x, y]);
+    const h = distanceBetween(convertToCoords(this.owner), [x, y]);
     const obj = {
       x,
       y,
@@ -145,19 +149,4 @@ function Pathing(worldObject) {
 
 export default function applyPathing(worldObject, arg = {}) {
   worldObject.Pathing = worldObject.Pathing || new Pathing(worldObject, arg);
-}
-
-export function convertToDetailedPathInfo(pathArg) {
-  const detailedPathInfo = {
-    pathToObject: pathArg.pathTo instanceof WorldObject ? pathArg.pathTo : null,
-    pathToCoords: convertToCoords(pathArg.pathTo),
-    pathToMap: convertToMap(pathArg.pathTo),
-    pathToTile: convertToTile(pathArg.pathTo),
-    pathFromObject: pathArg.pathFrom instanceof WorldObject ? pathArg.pathFrom : null,
-    pathFromCoords: convertToCoords(pathArg.pathFrom),
-    pathFromMap: convertToMap(pathArg.pathFrom),
-    pathFromTile: convertToTile(pathArg.pathFrom),
-    detailedPathInfo: true
-  }
-  return detailedPathInfo;
 }

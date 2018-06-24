@@ -103,12 +103,14 @@ export default function createWorldMap(mapName, width, height) {
     createdMap = new WorldMap(mapName, { mapType: 'Cellular' });
     createWorldObject('Treasure').placeOnMap({ worldMap: createdMap });
 
+    createdMap.mapTemp = 20;
+
     //createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
     
 
   } else if (mapName === 'Building') {
     createdMap = new WorldMap(mapName, { mapWidth: width, mapHeight: height, mapType: 'Arena' });
-    createdMap.mapTemp = 50;
+    createdMap.mapTemp = 22;
   } else {
     return displayError(`No predefined map found with name ${mapName} in createWorldMap function.`);
   }
