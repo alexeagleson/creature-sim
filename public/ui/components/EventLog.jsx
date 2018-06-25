@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { uniqueNumber } from './../../main/general-utility';
-
 export default class EventLog extends React.Component {
   constructor(props) {
     super(props);
@@ -16,7 +14,7 @@ export default class EventLog extends React.Component {
 
   updateState() {
     this.setState({
-      listOfEvents: World.allEvents.map(event => <div key={uniqueNumber()} className={`colour-${event.colour}`}>{event.text}</div>).reverse(),
+      listOfEvents: World.allEvents.map(event => <div key={event.uniqueID} className={`colour-${event.colour}`}>{event.text}</div>).reverse(),
     });
   }
 

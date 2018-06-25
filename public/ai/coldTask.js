@@ -13,7 +13,7 @@ export default function coldTask(tempObject, tempLocationMap, overwrite = {}) {
   if (overwrite.successCondition === undefined) thisTempTask.successCondition = () => tempObject.Temperature.isComfortable();
   if (overwrite.onSuccess === undefined) thisTempTask.onSuccess = () => publishEvent(`${tempObject.name} is feeling much more comfortable now.`);
   if (overwrite.onFail === undefined) thisTempTask.onFail = () => publishEvent(`${tempObject.name} fails to get comfortable in ${tempLocationMap.name}.`);
-  thisTempTask.getPriority = tempObject.Temperature.getTempPriority;
+  thisTempTask.getPriority = tempObject.Temperature.getColdPriority;
   thisTempTask.updatePriorityVsDistance();
   publishEvent(`${tempObject.name} wants to get to a more comfortable temperature in ${tempLocationMap.name} (Priority: ${thisTempTask.priorityVsDistance}).`);
   return thisTempTask;

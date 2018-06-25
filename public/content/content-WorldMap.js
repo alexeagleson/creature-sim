@@ -20,10 +20,10 @@ export default function createWorldMap(mapName, width, height) {
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
 
     createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
-    //createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
-    // createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
-    // createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
-    // createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
     // createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
     // createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
     // createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
@@ -87,8 +87,24 @@ export default function createWorldMap(mapName, width, height) {
 
     // createWorldObject('Heavy Jacket').placeOnMap({ worldMap: createdMap });
 
-    //createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
-    // createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Carrot').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Acorn').placeOnMap({ worldMap: createdMap });
+
+
 
     runXTimes(createWorldObject, 2, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
   } else if (mapName === 'Map 2') {

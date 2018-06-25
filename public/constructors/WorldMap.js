@@ -3,7 +3,7 @@ import WorldTile from './../constructors/WorldTile';
 import createWorldObject from './../content/content-WorldObject';
 import createWorldMap from './../content/content-WorldMap';
 
-import { displayError, uniqueNumber, randBetween } from './../main/general-utility';
+import { displayError, uniqueNumber, randBetween, normalizeToValue } from './../main/general-utility';
 import { convertToMap, convertToCoords } from './../main/world-utility';
 
 export default function WorldMap(mapName, arg = {
@@ -20,9 +20,12 @@ export default function WorldMap(mapName, arg = {
 
   this.mapWidth = arg.mapWidth || 75;
   this.mapHeight = arg.mapHeight || 40;
-  this.mapTemp = arg.mapTemp || -100;
+  this.mapTemp = arg.mapTemp || -24;
   this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};
+
+  this.coldValue = () => normalizeToValue(100 + (this.mapTemp - ProtoCs.COMFORTABLE_TEMP), 0, 100);
+  this.hotValue = () => normalizeToValue(100 - (this.mapTemp - ProtoCs.COMFORTABLE_TEMP), 0, 100);
 
   this.isCold = () => this.mapTemp < ProtoCs.COMFORTABLE_TEMP - ProtoCs.COMFORTABLE_TEMP_VARIANCE;
   this.isHot = () => this.mapTemp > ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE;

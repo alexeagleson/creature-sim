@@ -14,6 +14,8 @@ export default function WorldTile(arg = {
   this.wall = arg.wall;
   this.char = null;
 
+  this.myCoords = () => [this.x, this.y];
+
   this.toggleWall = (wall) => {
     this.wall = wall;
     if (wall) {

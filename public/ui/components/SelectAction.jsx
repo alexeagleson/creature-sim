@@ -34,6 +34,7 @@ export default class SelectAction extends React.Component {
       unequip: validActions.unequip || null,
       drop: validActions.drop || null,
       activate: validActions.activate || null,
+      debug: validActions.debug || null,
       selectActionVisible: true,
     });
   }
@@ -53,6 +54,7 @@ export default class SelectAction extends React.Component {
             {!!this.state.unequip && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.unequip}>Unequip</button>}
             {!!this.state.drop && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.drop}>Drop</button>}
             {!!this.state.activate && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.activate}>Activate</button>}
+            {!!this.state.debug && <button className="action-button animate button-green ui-border strokeme" onClick={this.state.debug}>Debug</button>}
           </div>
         }
       </div>

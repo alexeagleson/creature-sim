@@ -2,7 +2,7 @@ import { getInventory } from './../constructors/WorldObject';
 import { endSim } from './../main/app';
 import { directionTextToCoords } from './../main/general-utility';
 import { screenToActual, pixelToTile, withinMapBounds } from './../main/world-utility';
-import { isNotObject } from './../main/filters';
+import { isNotObject, isOnMapOfObject } from './../main/filters';
 import { displayNamesOfObjects } from './../ui/components/HoveringText';
 import { hideMenusAndResume } from './../ui/components/WorldUI.jsx';
 
@@ -44,8 +44,7 @@ function keydownHandler(keyboardEvent) {
   } else if (keyboardEvent.key === 't') {
     World.ReactUI.EventLog.toggle();
   } else if (keyboardEvent.key === 'f') {
-    World.player.myTile().wall = true;
-    World.player.myTile().char = '#';
+    World.ReactUI.SelectObject.prompt(World.allObjectsDecisionAI.filter(isNotObject.bind(World.player)));
   } else if (keyboardEvent.key === 'ArrowUp') {
     World.player.Moving.moveRelative(directionTextToCoords('up'));
   } else if (keyboardEvent.key === 'ArrowDown') {

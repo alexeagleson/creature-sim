@@ -4,6 +4,7 @@ import Logo from './Logo.jsx';
 import SelectAction from './SelectAction.jsx';
 import SelectObject from './SelectObject.jsx';
 import SelectOption from './SelectOption.jsx';
+import Debug from './Debug.jsx';
 import EventLog from './EventLog.jsx';
 
 import { resumeSim } from './../../main/world-utility';
@@ -29,6 +30,7 @@ export default class WorldUI extends React.Component {
           <SelectAction />
           <SelectObject />
           <SelectOption />
+          <Debug />
         </div>
         <aside className="hud hud-player ui-border strokeme">
           <Hud targetObject={World.player} />
@@ -48,5 +50,6 @@ export function hideMenusAndResume() {
   World.ReactUI.SelectObject.hide();
   World.ReactUI.SelectAction.hide();
   World.ReactUI.SelectOption.hide();
+  World.ReactUI.Debug.hide();
   resumeSim();
 }

@@ -79,22 +79,22 @@ export function isEngine(engineName) {
   return false;
 }
 
-export function convertToCoords(argument) {
+export function convertToCoords(argument, randomAllowed = false) {
   if (Array.isArray(argument)) {
-    if (argument.length === 2) { return argument; }
+    if (argument.length === 2) return argument;
   }
   if (argument instanceof WorldObject) {
-    if (argument.WorldMap && argument.WorldTile) { return [argument.WorldTile.x, argument.WorldTile.y]; }
+    if (argument.WorldMap && argument.WorldTile) return [argument.WorldTile.x, argument.WorldTile.y];
   }
-  if (argument instanceof WorldTile) {
-    return [argument.x, argument.y];
-  }
+  if (argument instanceof WorldTile) return [argument.x, argument.y];
+  if (argument instanceof WorldMap && randomAllowed) return getAvailableTile({ worldMap: argument }).myCoords();
   return null;
 }
 
-export function convertToTile(argument) {
+export function convertToTile(argument, randomAllowed) {
   if (argument instanceof WorldTile) return argument;
   if (argument instanceof WorldObject) if (argument.WorldTile) return argument.WorldTile;
+  if (argument instanceof WorldMap && randomAllowed) return getAvailableTile({ worldMap: argument });
   return null;
 }
 
@@ -260,8 +260,8 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
       };
     }
   }
-
   validActions.activate = null;
+  validActions.debug = () => { World.ReactUI.Debug.prompt(objectBeingActivated); };
   return validActions;
 }
 
@@ -269,7 +269,9 @@ export function estimateTotalDistance(componentA, componentB) {
   const mapFrom = convertToMap(componentA);
   const mapTo = convertToMap(componentB);
 
-  if (mapFrom === mapTo) return distanceBetween(convertToCoords(componentA), convertToCoords(componentB));
+  if (!mapFrom || !mapTo) return displayError(`Cannot resolve either ${componentA.name} or ${componentB.name} into maps.`);
+
+  if (mapFrom === mapTo) return distanceBetween(convertToCoords(componentA, true), convertToCoords(componentB, true));
 
   const mapPath = shortestMapPath(mapFrom, mapTo);
   let totalDistance = 0;

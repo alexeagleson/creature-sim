@@ -1,8 +1,10 @@
+import { uniqueNumber } from './../main/general-utility';
 import { estimateTotalDistance } from './../main/world-utility';
 
 export default function Task(taskOwner, taskType) {
   this.taskOwner = taskOwner;
   this.taskType = taskType;
+  this.uniqueID = uniqueNumber();
   this.currentAction = () => null;
   this.successCondition = () => null;
   this.onSuccess = () => null;

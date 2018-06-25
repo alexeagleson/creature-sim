@@ -43,12 +43,12 @@ function DecisionAI(worldObject) {
       this.currentTask = followUpTask;
     } else {
       this.updateTasks();
+      if (this.taskQueue.length === 0) return;
       this.currentTask = this.getHighestPriorityTask(this.taskQueue);
     }
 
     if (!this.currentTask) alert('this should never run --- if there is a task in the queue at leats one should be returned by getHighestPriorityTask')
     this.currentTask.initialAction();
-    return true;
   };
 
   this.resetAllTasks = () => { this.taskQueue = []; };
@@ -80,7 +80,7 @@ function DecisionAI(worldObject) {
     }
 
     if (this.owner.Temperature) {
-      if (this.owner.Temperature.isCold() && this.owner.WorldMap.isCold()) {
+      if (this.owner.Temperature.isCold() || this.owner.WorldMap.isCold()) {
         if (!this.taskQueue.find(task => task.taskType === 'cold')) {
           const closestPortalObjects = getClosestObjects(this.owner, World.allObjectsPortal.filter(portalToHotOrComfortable));
           if (closestPortalObjects.length > 0) this.addTask(coldTask(this.owner, closestPortalObjects[0].Portal.warpToMap));
@@ -89,7 +89,7 @@ function DecisionAI(worldObject) {
     }
 
     // if (this.owner.Temperature) {
-    //   if (this.owner.Temperature.isHot() && this.owner.WorldMap.isHot()) {
+    //   if (this.owner.Temperature.isHot() || this.owner.WorldMap.isHot()) {
     //     const closestPortalObjects = getClosestObjects(this.owner, World.allObjectsPortal.filter(portalToColdOrComfortable));
     //     if (closestPortalObjects.length > 0) this.addTask(tempTask(this.owner, closestPortalObjects[0].Portal.warpToMap));
     //   }

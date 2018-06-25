@@ -6,9 +6,10 @@ import pathTask from './../ai/pathTask';
 
 export default function sleepTask(sleepObject, sleepMap, overwrite = {}) {
   const thisSleepTask = Object.assign(new Task(sleepObject, 'sleep'), overwrite);
-  thisSleepTask.prerequisiteTask = sleepObject.DecisionAI.addTask(pathTask(sleepObject, { pathTo: getAvailableTile({ worldMap: sleepMap }) }));
+  const sleepTile = getAvailableTile({ worldMap: sleepMap });
+  thisSleepTask.prerequisiteTask = sleepObject.DecisionAI.addTask(pathTask(sleepObject, { pathTo: sleepTile }));
   thisSleepTask.prerequisiteTask.followUpTask = thisSleepTask;
-  thisSleepTask.target = sleepMap;
+  thisSleepTask.target = sleepTile;
   thisSleepTask.initialAction = () => sleepObject.Living.fallAsleep();
   thisSleepTask.currentAction = () => {
     displayDialogue(sleepObject, 'Zzz');

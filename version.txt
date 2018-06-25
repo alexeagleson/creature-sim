@@ -27,12 +27,6 @@ hover names
 modal
 
 
-
-
-
-
-
-
 ---
 ** death with item drop
 ** UI chat menu
@@ -49,6 +43,14 @@ sometimes NPCs still warp to weird places on the next map, also keep stepping in
 the event log is still constantly changing elements inefficiently
 NPCs should seek out portals instead of maps specifically
 ---
+
+---
+need to refactor the AI
+---
+
+<strong>2018/06/24 -- Version 0.1.31</strong>
+----------------------------
+(*) Improved decision making for task queues
 
 <strong>2018/06/24 -- Version 0.1.30</strong>
 ----------------------------
