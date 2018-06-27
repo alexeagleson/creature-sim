@@ -45,6 +45,8 @@ function keydownHandler(keyboardEvent) {
     World.ReactUI.EventLog.toggle();
   } else if (keyboardEvent.key === 'f') {
     World.ReactUI.SelectObject.prompt(World.allObjectsDecisionAI.filter(isNotObject.bind(World.player)));
+  } else if (keyboardEvent.key === 'x') {
+    World.disableAI = !World.disableAI;
   } else if (keyboardEvent.key === 'ArrowUp') {
     World.player.Moving.moveRelative(directionTextToCoords('up'));
   } else if (keyboardEvent.key === 'ArrowDown') {

@@ -58,12 +58,13 @@ export function uniqueNumber() {
 }
 uniqueNumber.previous = 0;
 
-export function displayError(errorText) {
+export function displayError(errorText, errorArguments) {
   if (!errorAlertHasBeenTriggered) {
     alert(`Error: ${errorText}`);
     errorAlertHasBeenTriggered = true;
   }
   console.log(`Error: ${errorText}`);
+  errorArguments.forEach(arg => console.log(arg));
   return null;
 }
 

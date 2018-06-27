@@ -32,6 +32,7 @@ export default class Debug extends React.Component {
       debugObject,
       tasks,
       debugVisible: true,
+      biggestPriority: debugObject.DecisionAI.OverallPlan.biggestPriority,
     });
   }
 
@@ -42,6 +43,7 @@ export default class Debug extends React.Component {
           <div className="select-menu ui-border strokeme">
             <center>{this.state.debugObject.name}</center>
             {this.state.tasks}
+            {this.state.biggestPriority}
           </div>
         }
       </div>

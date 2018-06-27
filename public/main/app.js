@@ -13,6 +13,7 @@ import { isOnAMap, isNotObject } from './../main/filters';
 
 import buildUI from './../ui/app.jsx';
 
+let turnSpeedInterval = 0;
 let oneTenthSecondInterval = 0;
 let oneSecondInterval = 0;
 
@@ -30,22 +31,18 @@ export function initializeInputimeAndCamera() {
   document.getElementById('canvas-wrapper-id').append(World.MainDisplay.canvas);
 }
 
-function rotJsLoop() {
-  if (!World.worldPaused) { mainLoop(); }
-  if (!World.worldEnd) {
-    window.requestAnimationFrame(rotJsLoop);
-  }
-}
-
 export function mainLoop() {
   if (World.gamepadAllowed) pollGamepad();
 
-  World.allObjectsTurnTaking.filter(isOnAMap).filter(isNotObject.bind(World.player)).forEach((object) => {
-    if (object.TurnTaking.checkForTurnReady()) {
-      object.TurnTaking.takeTurn();
-      if (object.updateDialoguePosition) { object.updateDialoguePosition(); }
-    }
-  });
+  if (World.Time.millisecondsElapsed > turnSpeedInterval + ProtoCs.TURN_SPEED) {
+    World.allObjectsTurnTaking.filter(isOnAMap).filter(isNotObject.bind(World.player)).forEach((object) => {
+      if (object.TurnTaking.checkForTurnReady()) {
+        object.TurnTaking.takeTurn();
+        if (object.updateDialoguePosition) { object.updateDialoguePosition(); }
+      }
+    });
+    turnSpeedInterval = World.Time.millisecondsElapsed;
+  }
 
   if (World.Time.millisecondsElapsed > oneTenthSecondInterval + 100) {
     if (World.ReactUI.HudPlayer) { World.ReactUI.HudPlayer.updateState(); }
@@ -73,6 +70,14 @@ export function mainLoop() {
     }
     World.playerMapTransition = false;
     World.MainDisplay.renderAll();
+  }
+  World.totalTurnsTaken += 1;
+}
+
+function rotJsLoop() {
+  if (!World.worldPaused) { mainLoop(); }
+  if (!World.worldEnd) {
+    window.requestAnimationFrame(rotJsLoop);
   }
 }
 

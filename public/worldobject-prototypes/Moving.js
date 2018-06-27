@@ -1,6 +1,6 @@
 import { isNotObject } from './../main/filters';
 import { displayError, randomDirectionCoords } from './../main/general-utility';
-import { withinMapBounds, distanceBetween, convertToCoords } from './../main/world-utility';
+import { withinMapBounds, distanceBetweenCoords, convertToCoords } from './../main/world-utility';
 
 function Moving(worldObject) {
   this.owner = worldObject;
@@ -9,7 +9,7 @@ function Moving(worldObject) {
   this.move = (movementCoords, ignoreTriggers) => {
     const moveTile = this.owner.WorldMap.getTile(movementCoords);
     if (!moveTile) { return false; }
-    const moveDistance = distanceBetween(convertToCoords(this.owner), movementCoords);
+    const moveDistance = distanceBetweenCoords(convertToCoords(this.owner), movementCoords);
     if (moveDistance > 1.5) return displayError(`${this.owner.name} Is trying to move ${moveDistance} tiles on map ${this.owner.WorldMap.name}.`);
 
     if (!moveTile.wall) {

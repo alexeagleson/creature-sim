@@ -29,7 +29,8 @@ export function displayNamesOfObjects(objectsAtCoords) {
 }
 
 export function displayDialogue(speakerObject, dialogue) {
-  if (!onSameMap(World.player, speakerObject)) { return; }
+  if (World.disableDialogue) return;
+  if (!onSameMap(World.player, speakerObject)) return;
   let dialogueElement = document.getElementById(`dialogue${speakerObject.uniqueID}`);
 
   if (!dialogueElement) {

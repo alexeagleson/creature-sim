@@ -1,5 +1,5 @@
 import { shortestMapPath } from './../constructors/MapNodeTree';
-import { onSameMap, convertToMap } from './../main/world-utility';
+import { onSameMap, convertToMap, convertToTile, distanceBetweenCoords } from './../main/world-utility';
 import { displayError } from './../main/general-utility';
 
 // Filters
@@ -77,17 +77,6 @@ export function isOnAMap(worldObject) {
 }
 
 // Sorts
-function distanceBetweenSort(objectA, objectB) {
-  // Bind 'this' to desired lookup object
-  if (!objectA.WorldTile || !objectB.WorldTile || !this.WorldTile) { return null; }
-
-  const objectACoords = [objectA.WorldTile.x, objectA.WorldTile.y];
-  const objectBCoords = [objectB.WorldTile.x, objectB.WorldTile.y];
-  const targetCoords = [this.WorldTile.x, this.WorldTile.y];
-
-  return distanceBetween(objectACoords, targetCoords) - distanceBetween(objectBCoords, targetCoords);
-}
-
 export function worldPathSizeSort(mapA, mapB) {
   // Bind 'this' to desired lookup map or object
   const startingMap = convertToMap(this);
@@ -98,11 +87,25 @@ export function worldPathSizeSort(mapA, mapB) {
 
 export function localPathSizeSort(objectA, objectB) {
   // Bind 'this' to desired lookup object
-  if (!this.Pathing) { return displayError(`localPathSizeSort used on non-Pathing object $this.name}`); }
+  if (!this.Pathing) return displayError(`localPathSizeSort used on non-Pathing object $this.name}`);
   if (!objectA.WorldTile || !objectB.WorldTile || !this.WorldTile) { return null; }
 
   const objectAPathLength = this.Pathing.calculatePath({ pathTo: objectA.WorldTile }).length || 9999;
   const objectBPathLength = this.Pathing.calculatePath({ pathTo: objectB.WorldTile }).length || 9999;
 
   return objectAPathLength - objectBPathLength;
+}
+
+export function localDistanceToSort(objectA, objectB) {
+  // Bind 'this' to desired lookup object
+  const objectATile = convertToTile(objectA);
+  const objectBTile = convertToTile(objectB);
+  const startingTile = convertToTile(this);
+
+  if (!objectATile || !objectBTile || !startingTile) return displayError('Cannot convert one of these to WorldTile in localDistanceToSort:', [objectA, objectB, this]);
+
+  const objectADistanceTo = distanceBetweenCoords(startingTile.myCoords(), objectATile.myCoords());
+  const objectBDistanceTo = distanceBetweenCoords(startingTile.myCoords(), objectBTile.myCoords());
+
+  return objectADistanceTo - objectBDistanceTo;
 }

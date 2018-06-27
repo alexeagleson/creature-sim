@@ -48,6 +48,10 @@ NPCs should seek out portals instead of maps specifically
 need to refactor the AI
 ---
 
+<strong>2018/06/24 -- Version 0.1.32</strong>
+----------------------------
+(*) Experimenting with large quantity decision making entities above 1000
+
 <strong>2018/06/24 -- Version 0.1.31</strong>
 ----------------------------
 (*) Improved decision making for task queues

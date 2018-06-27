@@ -18,8 +18,8 @@ function Consumer(worldObject) {
   this.takingHungerDamage = false;
   this.takingThirstDamage = false;
 
-  this.getHungerPriority = () => this.hunger;
-  this.getThirstPriority = () => this.thirst;
+  this.getHungerPriority = () => Math.round(this.hunger);
+  this.getThirstPriority = () => Math.round(this.thirst);
 
   this.isHungry = () => this.getHungerPriority() < ProtoCs.PROBLEM_VALUE;
   this.isThirsty = () => this.getThirstPriority() < ProtoCs.PROBLEM_VALUE;

@@ -21,11 +21,12 @@ function TurnTaking(worldObject, arg = {}) {
 
   this.takeTurn = () => {
     if (this.owner.DecisionAI) {
+      if (World.disableAI) return this.owner.Moving.moveRandom();
       if (this.owner.DecisionAI.currentTask) {
         if (this.owner.DecisionAI.currentTask.successCondition()) {
           this.owner.DecisionAI.currentTask.onSuccess();
           this.owner.DecisionAI.startNewTask();
-        } else if (!this.owner.DecisionAI.currentTask.currentAction()) {
+        } else if (!this.owner.DecisionAI.currentTask.pathTowardTarget()) {
           this.owner.DecisionAI.currentTask.onFail();
           this.owner.DecisionAI.startNewTask();
         }

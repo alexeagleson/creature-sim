@@ -4,7 +4,7 @@ import WorldTile from './../constructors/WorldTile';
 import { shortestMapPath } from './../constructors/MapNodeTree';
 import { isNotObject } from './../main/filters';
 import { displayError } from './../main/general-utility';
-import { distanceBetween, convertToMap, convertToCoords } from './../main/world-utility';
+import { distanceBetweenCoords, convertToMap, convertToCoords } from './../main/world-utility';
 import { getPortalToMap, getPortalFromMap } from './../worldobject-prototypes/Portal';
 
 function Pathing(worldObject) {
@@ -112,7 +112,7 @@ function Pathing(worldObject) {
   };
 
   this.add = (x, y, prev) => {
-    const h = distanceBetween(convertToCoords(this.owner), [x, y]);
+    const h = distanceBetweenCoords(convertToCoords(this.owner), [x, y]);
     const obj = {
       x,
       y,

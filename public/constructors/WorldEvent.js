@@ -10,6 +10,7 @@ export default function WorldEvent(text) {
 }
 
 export function publishEvent(text, colour) {
+  if (World.disableDialogue) return true;
   const event = new WorldEvent(text);
   event.colour = colour || 'white';
   event.addToTimeline(colour);

@@ -2,6 +2,8 @@ const renderEngine = 'RotJs';
 const canvasSize = 0.75;
 
 const gamepadAllowed = true;
+const disableDialogue = false;
+const disableAI = true;
 
 // Phaser constants
 const phaserTileSize = 32;
@@ -58,7 +60,7 @@ const ScreenCs = {
 };
 
 const ProtoCs = {
-  TURN_SPEED: 100,
+  TURN_SPEED: 200,
 
   STANDING_ON_MAX_DISTANCE: 0,
   INTERACT_MAX_DISTANCE: 1.5,
@@ -67,14 +69,19 @@ const ProtoCs = {
 
   DIALOGUE_DURATION_MILLISECONDS: 3000,
 
+  MILLISECONDS_BETWEEN_TASK_REEVALUATE: 10000,
+
+  LIFE_THREATENING_VALUE: 25,
   PROBLEM_VALUE: 50,
+  INCONVENIENCE_VALUE: 75,
+  GOOD_VALUE: 100,
 
   COMFORTABLE_TEMP: 20,
   COMFORTABLE_TEMP_VARIANCE: 15,
 
   HUNGER_LOSS_PER_MILLISECOND: 0.001,
   THIRST_LOSS_PER_MILLISECOND: 0.001,
-  STAMINA_LOSS_PER_MILLISECOND: 0.002,
+  STAMINA_LOSS_PER_MILLISECOND: 0.001,
 };
 
 const World = {
@@ -114,4 +121,7 @@ const World = {
   worldEnd: false,
   playerMapTransition: false,
   gamepadAllowed,
+  disableDialogue,
+  disableAI,
+  totalTurnsTaken: 0,
 };

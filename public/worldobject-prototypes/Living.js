@@ -15,7 +15,7 @@ function Living(worldObject) {
   this.stamina = 100;
   this.asleep = false;
 
-  this.getSleepPriority = () => this.stamina;
+  this.getSleepPriority = () => Math.round(this.stamina);
   this.isTired = () => this.getSleepPriority() < ProtoCs.PROBLEM_VALUE;
   this.isRested = () => this.stamina > 90;
 

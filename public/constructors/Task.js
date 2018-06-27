@@ -5,18 +5,18 @@ export default function Task(taskOwner, taskType) {
   this.taskOwner = taskOwner;
   this.taskType = taskType;
   this.uniqueID = uniqueNumber();
-  this.currentAction = () => null;
-  this.successCondition = () => null;
+
+  this.taskTarget = null;
+  this.successProximity = 1;
+
+  this.locateTarget = () => null;
+  this.calculatePathToTarget = () => this.taskOwner.Pathing.createPath({ pathTo: this.taskTarget });
+  this.pathTowardTarget = () => this.taskOwner.Pathing.movePath();
+  this.successCondition = () => this.taskOwner.isAdjacentTo(this.taskTarget, this.successProximity);
   this.onSuccess = () => null;
   this.onFail = () => null;
 
-  this.prerequisiteTask = null;
-  this.followUpTask = null;
-  this.target = null;
-
-  this.getPriority = () => null;
-
-  this.estimatedActionsToComplete = () => this.target ? estimateTotalDistance(this.taskOwner, this.target) : null;
-
-  this.updatePriorityVsDistance = () => { this.priorityVsDistance = Math.round(this.estimatedActionsToComplete() * this.getPriority()); };
+  // this.getPriority = () => null;
+  // this.estimatedActionsToComplete = () => this.target ? estimateTotalDistance(this.taskOwner, this.target) : null;
+  // this.updatePriorityVsDistance = () => { this.priorityVsDistance = Math.round(this.estimatedActionsToComplete() * this.getPriority()); };
 }

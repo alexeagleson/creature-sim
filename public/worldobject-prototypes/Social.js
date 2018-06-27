@@ -12,7 +12,7 @@ function Social(worldObject) {
   this.socialLevel = 5;
   this.myDialogue = ['5cb5d08d36337a277eb5e67a452d2c44'];
 
-  this.getSocialPriority = () => this.socialLevel;
+  this.getSocialPriority = () => Math.round(this.socialLevel);
   this.needsToTalk = () => this.getSocialPriority() < ProtoCs.PROBLEM_VALUE;
 
   this.assignNewDialogue = (dialogueArray) => {

@@ -18,8 +18,8 @@ function Temperature(worldObject) {
   this.isHot = () => this.mapTemp > ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE;
   this.isComfortable = () => this.temp > (ProtoCs.COMFORTABLE_TEMP - ProtoCs.COMFORTABLE_TEMP_VARIANCE) && this.temp < (ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE);
 
-  this.getColdPriority = () => normalizeToValue(this.coldValue() - (100 - this.owner.WorldMap.coldValue()), 0, 100);
-  this.getHoldPriority = () => normalizeToValue(this.coldValue() - (100 - this.owner.WorldMap.coldValue()), 0, 100);
+  this.getColdPriority = () => Math.round(normalizeToValue(this.coldValue() - (100 - this.owner.WorldMap.coldValue()), 0, 100));
+  this.getHotPriority = () => Math.round(normalizeToValue(this.coldValue() - (100 - this.owner.WorldMap.coldValue()), 0, 100));
 
   this.adjustTemperature = (timePassedMilliseconds) => {
     let differenceBetweenWeatherAndCurrent = this.owner.WorldMap.mapTemp - this.temp;

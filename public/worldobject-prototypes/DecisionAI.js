@@ -1,10 +1,32 @@
 
-import hungerTask from '../ai/hungerTask';
-import speakTask from './../ai/speakTask';
+import { hungerTask, speakTask, coldTask } from '../ai/hungerTask';
+//import speakTask from './../ai/speakTask';
 import sleepTask from './../ai/sleepTask';
-import coldTask from '../ai/coldTask';
+// import coldTask from '../ai/coldTask';
+import { rollDie } from './../main/general-utility';
 import { getClosestObjects, getClosestMaps } from './../main/world-utility';
 import { isNotObject, isFood, isDrink, portalToHotOrComfortable, portalToColdOrComfortable } from './../main/filters';
+
+function OverallPlan(decisionObject) {
+  this.owner = decisionObject;
+
+  this.currentTask = null;
+
+  this.updatePriorities = () => {
+    this.priorities = [
+      { need: 'Hunger', priority: this.owner.Consumer ? this.owner.Consumer.getHungerPriority() : null },
+      // { need: 'Thirst', priority: this.owner.Consumer ? this.owner.Consumer.getThirstPriority() : null },
+      // { need: 'Hot', priority: this.owner.Temperature ? this.owner.Temperature.getHotPriority() : null },
+      { need: 'Cold', priority: this.owner.Temperature ? this.owner.Temperature.getColdPriority() : null },
+      { need: 'Speak', priority: this.owner.Social ? this.owner.Social.getSocialPriority() : null },
+      { need: 'Sleep', priority: this.owner.Living ? this.owner.Living.getSleepPriority() : null },
+    ];
+    this.priorities.sort((a, b) => a.priority - b.priority);
+  };
+
+
+
+}
 
 function DecisionAI(worldObject) {
   this.owner = worldObject;
@@ -15,6 +37,8 @@ function DecisionAI(worldObject) {
   this.taskQueue = [];
 
   this.currentTask = null;
+
+  this.OverallPlan = new OverallPlan(worldObject);
 
   this.addTask = (taskObject) => {
     this.taskQueue.push(taskObject);
@@ -33,6 +57,26 @@ function DecisionAI(worldObject) {
   };
 
   this.startNewTask = () => {
+    const a = rollDie(3);
+    console.log(a);
+    if (a === 1) {
+      this.currentTask = hungerTask(this.owner);
+      this.currentTask.locateTarget();
+      this.currentTask.calculatePathToTarget();
+    } else if (a === 2) {
+      // this.currentTask = coldTask(this.owner);
+      // this.currentTask.locateTarget();
+      // this.currentTask.calculatePathToTarget();
+    } else {
+      // this.currentTask = speakTask(this.owner);
+      // this.currentTask.locateTarget();
+      // this.currentTask.calculatePathToTarget();
+    }
+
+
+    return;
+
+
     const followUpTask = this.currentTask ? this.currentTask.followUpTask : null;
     if (this.currentTask) {
       this.taskQueue = this.taskQueue.filter(task => task !== this.currentTask);

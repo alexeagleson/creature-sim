@@ -60,7 +60,7 @@ function directionTo(coordsFrom, coordsTo) {
   return 'nodir';
 }
 
-export function distanceBetween(coordsFrom, coordsTo) {
+export function distanceBetweenCoords(coordsFrom, coordsTo) {
   const dx = Math.abs(coordsTo[0] - coordsFrom[0]);
   const dy = Math.abs(coordsTo[1] - coordsFrom[1]);
   return Math.sqrt((dx * dx) + (dy * dy));
@@ -268,10 +268,8 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
 export function estimateTotalDistance(componentA, componentB) {
   const mapFrom = convertToMap(componentA);
   const mapTo = convertToMap(componentB);
-
   if (!mapFrom || !mapTo) return displayError(`Cannot resolve either ${componentA.name} or ${componentB.name} into maps.`);
-
-  if (mapFrom === mapTo) return distanceBetween(convertToCoords(componentA, true), convertToCoords(componentB, true));
+  if (mapFrom === mapTo) return distanceBetweenCoords(convertToCoords(componentA, true), convertToCoords(componentB, true));
 
   const mapPath = shortestMapPath(mapFrom, mapTo);
   let totalDistance = 0;
@@ -309,18 +307,31 @@ export function getClosestObjects(fromObject, objectArray) {
       closestObjects = objectsByWorldDistanceFromMe[key].sort(localPathSizeSort.bind(fromObject));
     } else {
       closestObjects = objectsByWorldDistanceFromMe[key];
-
       const swapArrayElements = (a, x, y) => {
         if (a.length === 1) return a;
         a.splice(y, 1, a.splice(x, 1, a[y])[0]);
         return a;
       };
-
       swapArrayElements(closestObjects, 0, randBetween(0, 4));
-
     }
     return true;
   });
   return closestObjects;
+}
+
+export function getClosestObjectInListFast(fromObject, objectList) {
+  // const closestFoodObjects = getClosestObjects(thisTask.taskOwner, World.allObjectsConsumable.filter(isFood));
+  // const closestFoodObjects = World.allObjectsConsumable.filter(isFood).sort(localDistanceToSort.bind(thisTask.taskOwner));
+  let shortestDistance = null;
+  const foundObject = objectList.reduce((accObject, currObject) => {
+    const currentDistance = estimateTotalDistance(fromObject, currObject);
+    if (shortestDistance === null) { shortestDistance = currentDistance; return currObject; }
+    if (currentDistance < shortestDistance) {
+      shortestDistance = currentDistance;
+      return currObject;
+    }
+    return accObject;
+  });
+  return foundObject;
 }
 
