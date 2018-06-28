@@ -4,7 +4,7 @@ import createWorldObject from './../content/content-WorldObject';
 import createWorldMap from './../content/content-WorldMap';
 
 import { displayError, uniqueNumber, randBetween, normalizeToValue } from './../main/general-utility';
-import { convertToMap, convertToCoords } from './../main/world-utility';
+import { convertToMap, convertToCoords, withinMapBounds } from './../main/world-utility';
 
 export default function WorldMap(mapName, arg = {
   mapWidth: null,
@@ -73,11 +73,36 @@ export default function WorldMap(mapName, arg = {
     map.create(createMapCallback.bind(this));
   };
 
+  this.getVisibleTiles = (coords, fovRadius = 3) => {
+    const visibleTiles = [];
+    this.fovMap.compute(coords[0], coords[1], fovRadius, (x, y, r, visibility) => {
+      visibleTiles.push(this.getTile([x, y]));
+    });
+    return visibleTiles;
+  };
+
+  this.getVisibleObjects = (coords, fovRadius = 3) => {
+    let visibleObjects = [];
+    this.fovMap.compute(coords[0], coords[1], fovRadius, (x, y, r, visibility) => {
+      const visibleTile = this.getTile([x, y]);
+      if (visibleTile.objectsOnTile.length > 0) visibleObjects = visibleObjects.concat(visibleTile.objectsOnTile);
+    });
+    return visibleObjects;
+  };
+
+  this.checkPassableAtLocation = (x, y, optionalComparisonObject) => {
+    if (!withinMapBounds(this, [x, y])) return false;
+    if (!this.getTile([x, y]).checkPassable(optionalComparisonObject)) return false;
+    return true;
+  };
+
   if (this.mapType === 'Cellular') {
     this.generateCellularMap();
   } else {
     this.generateMapByType({ mapType: this.mapType });
   }
+
+  this.fovMap = new ROT.FOV.PreciseShadowcasting(this.checkPassableAtLocation);
 }
 
 
@@ -103,7 +128,7 @@ export function getAvailableTile(arg = { worldMap: null, radius: null, checkForW
         const thisTile = worldMap.getTile([x, y]);
 
         if (checkForWall && thisTile.wall) { conflictFound = true; }
-        if (checkForObjects && (thisTile.objectsOnTile().length > 0)) { conflictFound = true; }
+        if (checkForObjects && (thisTile.objectsOnTile.length > 0)) { conflictFound = true; }
         if (checkForBuildings && thisTile.buildingLot) { conflictFound = true; }
       }
     }

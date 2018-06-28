@@ -1,12 +1,45 @@
 import { getAvailableTile } from './../constructors/WorldMap';
 import { publishEvent } from './../constructors/WorldEvent';
-import Task from './../constructors/Task';
-import { getClosestObjectInListFast } from './../main/world-utility';
+import { getClosestObjectInListFast, estimateTotalDistance } from './../main/world-utility';
 import { isFood, portalToHotOrComfortable } from './../main/filters';
+import { uniqueNumber } from './../main/general-utility';
+
+export default function Task(taskOwner, taskType) {
+  this.taskOwner = taskOwner;
+  this.taskType = taskType;
+  this.uniqueID = uniqueNumber();
+
+  this.taskTarget = null;
+  this.successProximity = 1;
+
+  this.locateTarget = () => null;
+  this.calculatePathToTarget = () => this.taskOwner.Pathing.createPathTo(this.taskTarget, this.taskOwner, 'direct');
+  this.pathTowardTarget = () => {
+    if (this.taskOwner.Pathing.currentPath.length === 0) return false;
+    if (!this.taskOwner.Pathing.movePath() && this.taskOwner.Pathing.pathDetails.pathType === 'direct') return this.taskOwner.Pathing.createPathTo(this.taskTarget, this.taskOwner, 'dijkstra');
+    if (!this.taskOwner.Pathing.movePath() && this.taskOwner.Pathing.pathDetails.pathType === 'dijkstra') return this.taskOwner.Pathing.createPathTo(this.taskTarget, this.taskOwner, 'astar');
+    return true;
+  };
+  this.successCondition = () => this.taskOwner.isAdjacentTo(this.taskTarget, this.successProximity);
+  this.onSuccess = () => null;
+  this.onFail = () => null;
+
+  this.initializeTask = () => {
+    if (this.locateTarget()) return this.calculatePathToTarget();
+    return false;
+  };
+
+  // this.getPriority = () => null;
+  // this.estimatedActionsToComplete = () => this.target ? estimateTotalDistance(this.taskOwner, this.target) : null;
+  // this.updatePriorityVsDistance = () => { this.priorityVsDistance = Math.round(this.estimatedActionsToComplete() * this.getPriority()); };
+}
 
 export function hungerTask(taskOwner) {
   const thisTask = new Task(taskOwner, 'Hunger');
-  thisTask.locateTarget = () => { thisTask.taskTarget = getClosestObjectInListFast(thisTask.taskOwner, World.allObjectsConsumable.filter(isFood)); };
+  thisTask.locateTarget = () => {
+    thisTask.taskTarget = getClosestObjectInListFast(thisTask.taskOwner, thisTask.taskOwner.DecisionAI.familiarObjects.filter(isFood));
+    return !!thisTask.taskTarget;
+  };
   thisTask.onSuccess = () => thisTask.taskOwner.Consumer.consume(thisTask.taskTarget);
   thisTask.onFail = () => publishEvent(`${thisTask.taskOwner.name} fails to consume ${thisTask.taskTarget.name}.`);
   return thisTask;

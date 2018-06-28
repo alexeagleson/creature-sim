@@ -8,6 +8,8 @@ export default function WorldObject(objectName, arg = {}) {
   this.name = objectName;
   this.uniqueID = uniqueNumber();
 
+  this.objectsFamiliarWithMe = [];
+
   World.allObjects.push(this);
   World.allObjectsMap.set(this.uniqueID, this);
 
@@ -15,9 +17,11 @@ export default function WorldObject(objectName, arg = {}) {
   this.WorldMap = arg.WorldMap || null;
   this.WorldTile = arg.WorldMap || null;
 
-  this.myTile = () => this.WorldMap.getTile(convertToCoords(this));
+  this.hasLocation = () => (this.WorldMap && this.WorldTile);
 
   this.removeLocationData = () => {
+    if (this.WorldTile.dijkstraMap) this.WorldTile.dijkstraMap = null;
+    this.WorldTile.objectsOnTile = this.WorldTile.objectsOnTile.filter(isNotObject.bind(this));
     this.destroySprite();
     this.WorldMap = null;
     this.WorldTile = null;
@@ -48,7 +52,7 @@ export default function WorldObject(objectName, arg = {}) {
     const ignoreTriggers = placeOnMapArg.ignoreTriggers || false;
     const mapTransition = (this.WorldMap !== null && this.WorldMap !== placeOnMapArg.worldMap) || false;
 
-    if (mapTransition) { this.removeLocationData(); }
+    if (this.hasLocation()) this.removeLocationData();
 
     if (this === World.player && mapTransition) { World.playerMapTransition = true; }
     this.WorldMap = convertToMap(placeOnMapArg.worldMap) || displayError(`Could not convert to map: ${placeOnMapArg.worldMap}`);
@@ -62,6 +66,8 @@ export default function WorldObject(objectName, arg = {}) {
       const onStepTriggers = World.allObjects.filter(worldObject => worldObject.onStep).filter(isOnMapOfObject.bind(this)).filter(isOnTile.bind(this.WorldTile)).filter(isNotObject.bind(this));
       onStepTriggers.forEach(triggerObject => triggerObject.onStep(this));
     }
+
+    this.WorldTile.objectsOnTile.push(this);
     return this;
   };
 

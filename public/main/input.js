@@ -5,12 +5,13 @@ import { screenToActual, pixelToTile, withinMapBounds } from './../main/world-ut
 import { isNotObject, isOnMapOfObject } from './../main/filters';
 import { displayNamesOfObjects } from './../ui/components/HoveringText';
 import { hideMenusAndResume } from './../ui/components/WorldUI.jsx';
+import { newDijkstra } from './../worldobject-prototypes/Pathing';
 
 function mousemoveHandler(mousemoveEvent) {
   const hoverTileCoords = screenToActual(pixelToTile([mousemoveEvent.offsetX, mousemoveEvent.offsetY]));
   if (!withinMapBounds(World.player.WorldMap, hoverTileCoords)) { return; }
 
-  const objectsAtCoords = World.player.WorldMap.getTile(hoverTileCoords).objectsOnTile();
+  const objectsAtCoords = World.player.WorldMap.getTile(hoverTileCoords).objectsOnTile;
   displayNamesOfObjects(objectsAtCoords);
 }
 
@@ -20,11 +21,11 @@ function pointerdownHandler(pointerEvent) {
   const clickedTileCoords = screenToActual(pixelToTile([pointerEvent.offsetX, pointerEvent.offsetY]));
   if (!withinMapBounds(World.player.WorldMap, clickedTileCoords)) { return; }
 
-  const objectsAtCoords = World.player.WorldMap.getTile(clickedTileCoords).objectsOnTile().filter(isNotObject.bind(World.player));
+  const objectsAtCoords = World.player.WorldMap.getTile(clickedTileCoords).objectsOnTile.filter(isNotObject.bind(World.player));
   if (objectsAtCoords.length > 0) {
     World.ReactUI.SelectObject.prompt(objectsAtCoords);
   } else {
-    World.player.Pathing.createPath({ pathTo: World.player.WorldMap.getTile(clickedTileCoords) });
+    World.player.Pathing.createPathTo(World.player.WorldMap.getTile(clickedTileCoords), World.player, 'astar');
     World.player.Pathing.movePath();
     World.player.Pathing.movePath();
   }
@@ -47,6 +48,8 @@ function keydownHandler(keyboardEvent) {
     World.ReactUI.SelectObject.prompt(World.allObjectsDecisionAI.filter(isNotObject.bind(World.player)));
   } else if (keyboardEvent.key === 'x') {
     World.disableAI = !World.disableAI;
+  } else if (keyboardEvent.key === 'z') {
+    null;    
   } else if (keyboardEvent.key === 'ArrowUp') {
     World.player.Moving.moveRelative(directionTextToCoords('up'));
   } else if (keyboardEvent.key === 'ArrowDown') {

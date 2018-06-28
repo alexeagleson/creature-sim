@@ -13,21 +13,26 @@ export default function createWorldMap(mapName, width, height) {
   if (mapName === 'Home') {
     createdMap = new WorldMap(mapName, { mapType: 'Arena' });
 
-    const a = createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
-    createWorldObject('Treasure').placeOnMap({ worldMap: a });
 
-    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
-    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
+    // createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    // createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    // createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    // createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
+    createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
 
     // createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
     // createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
-    
 
-    runXTimes(createWorldObject, 1000, 'Squirrel').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
-    runXTimes(createWorldObject, 300, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
+    runXTimes(createWorldObject, 1000, 'Squirrel').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
+    runXTimes(createWorldObject, 5000, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
 
     // createWorldObject('Heavy Jacket').placeOnMap({ worldMap: createdMap });
-    runXTimes(createWorldObject, 2, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
+    runXTimes(createWorldObject, 2, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
   } else if (mapName === 'Map 2') {
     createdMap = new WorldMap(mapName, { mapType: 'Cellular' });
     createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 3, outerPadding: 1 }));
@@ -38,11 +43,10 @@ export default function createWorldMap(mapName, width, height) {
 
   } else if (mapName === 'Map 3') {
     createdMap = new WorldMap(mapName, { mapType: 'Cellular' });
-    createWorldObject('Treasure').placeOnMap({ worldMap: createdMap });
+    createWorldObject('Treasure').placeOnMap({ worldMap: createdMap, ignoreTriggers: true });
 
     createdMap.mapTemp = 20;
-
-    runXTimes(createWorldObject, 50, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
+    //runXTimes(createWorldObject, 50, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
     
 
   } else if (mapName === 'Building') {

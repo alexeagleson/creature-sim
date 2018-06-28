@@ -43,10 +43,17 @@ export function withinMapBounds(worldMap, coords) {
   return true;
 }
 
-function directionTo(coordsFrom, coordsTo) {
+export function compareCoords(coordsA, coordsB) {
+  if (!Array.isArray(coordsA) || !Array.isArray(coordsB)) return false;
+  if (!(coordsA.length === 2) || !(coordsB.length === 2)) return false;
+  if (coordsA[0] === coordsB[0] && coordsA[1] === coordsB[1]) return true;
+  return false;
+}
+
+export function directionToCoords(coordsFrom, coordsTo) {
   const dx = coordsTo[0] - coordsFrom[0];
   const dy = coordsTo[1] - coordsFrom[1];
-  const angle = dx != 0 ? Math.abs(dy / dx) : 9999;
+  const angle = dx !== 0 ? Math.abs(dy / dx) : 9999;
 
   if (dy < 0 && angle > 1) {
     return 'up';
@@ -84,23 +91,23 @@ export function convertToCoords(argument, randomAllowed = false) {
     if (argument.length === 2) return argument;
   }
   if (argument instanceof WorldObject) {
-    if (argument.WorldMap && argument.WorldTile) return [argument.WorldTile.x, argument.WorldTile.y];
+    if (argument.hasLocation()) return [argument.WorldTile.x, argument.WorldTile.y];
   }
   if (argument instanceof WorldTile) return [argument.x, argument.y];
   if (argument instanceof WorldMap && randomAllowed) return getAvailableTile({ worldMap: argument }).myCoords();
   return null;
 }
 
-export function convertToTile(argument, randomAllowed) {
+export function convertToTile(argument, randomAllowed = false) {
   if (argument instanceof WorldTile) return argument;
-  if (argument instanceof WorldObject) if (argument.WorldTile) return argument.WorldTile;
+  if (argument instanceof WorldObject) if (argument.hasLocation()) return argument.WorldTile;
   if (argument instanceof WorldMap && randomAllowed) return getAvailableTile({ worldMap: argument });
   return null;
 }
 
 export function convertToMap(argument) {
   if (argument instanceof WorldMap) return argument;
-  if (argument instanceof WorldObject) if (argument.WorldMap) return argument.WorldMap;
+  if (argument instanceof WorldObject) if (argument.hasLocation()) return argument.WorldMap;
   if (argument instanceof WorldTile) if (argument.WorldMap) return argument.WorldMap;
   if (typeof argument === 'number') return World.allMapsMap.get(argument);
 
@@ -268,7 +275,7 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
 export function estimateTotalDistance(componentA, componentB) {
   const mapFrom = convertToMap(componentA);
   const mapTo = convertToMap(componentB);
-  if (!mapFrom || !mapTo) return displayError(`Cannot resolve either ${componentA.name} or ${componentB.name} into maps.`);
+  if (!mapFrom || !mapTo) return displayError('estimateTotalDistance: Cannot convertToMap componentA or componentB:', [componentA, componentB]);
   if (mapFrom === mapTo) return distanceBetweenCoords(convertToCoords(componentA, true), convertToCoords(componentB, true));
 
   const mapPath = shortestMapPath(mapFrom, mapTo);
@@ -323,15 +330,24 @@ export function getClosestObjectInListFast(fromObject, objectList) {
   // const closestFoodObjects = getClosestObjects(thisTask.taskOwner, World.allObjectsConsumable.filter(isFood));
   // const closestFoodObjects = World.allObjectsConsumable.filter(isFood).sort(localDistanceToSort.bind(thisTask.taskOwner));
   let shortestDistance = null;
-  const foundObject = objectList.reduce((accObject, currObject) => {
-    const currentDistance = estimateTotalDistance(fromObject, currObject);
-    if (shortestDistance === null) { shortestDistance = currentDistance; return currObject; }
-    if (currentDistance < shortestDistance) {
+  let closestObject = null;
+  objectList.forEach((anObject) => {
+    const currentDistance = estimateTotalDistance(fromObject, anObject);
+    if (shortestDistance === null) shortestDistance = currentDistance;
+    if (currentDistance <= shortestDistance) {
       shortestDistance = currentDistance;
-      return currObject;
+      closestObject = anObject;
     }
-    return accObject;
   });
-  return foundObject;
+  return closestObject;
 }
 
+export function mergeLists(listA, listB) {
+  const uniqueObjects = new Map();
+  listA.forEach((listItem) => { uniqueObjects.set(listItem, listItem); });
+  listB.forEach((listItem) => { uniqueObjects.set(listItem, listItem); });
+
+  const mergedList = [];
+  uniqueObjects.forEach((listItem) => { mergedList.push(listItem); });
+  return mergedList;
+}

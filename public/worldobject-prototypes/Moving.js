@@ -1,6 +1,6 @@
 import { isNotObject } from './../main/filters';
 import { displayError, randomDirectionCoords } from './../main/general-utility';
-import { withinMapBounds, distanceBetweenCoords, convertToCoords } from './../main/world-utility';
+import { distanceBetweenCoords, convertToCoords } from './../main/world-utility';
 
 function Moving(worldObject) {
   this.owner = worldObject;
@@ -25,16 +25,6 @@ function Moving(worldObject) {
     this.moveRelative(randomDirectionCoords(), true);
     // Move random always returns true, even if the object tries to move into a blocked tile
     return true;
-  };
-
-  this.checkBlockedAgainstObject = (x, y, worldMap = null) => {
-    if (!worldMap) worldMap = this.owner.WorldMap;
-    if (!worldMap) return displayError(`${this.owner.name} must be on a map to call checkBlockedAgainstObject.`);
-
-    if (!withinMapBounds(worldMap, [x, y])) {
-      return false;
-    }
-    return worldMap.getTile([x, y]).checkBlocked(this.owner);
   };
 
   this.revokePrototype = () => {

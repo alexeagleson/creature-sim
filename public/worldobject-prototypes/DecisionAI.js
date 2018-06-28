@@ -1,16 +1,11 @@
 
 import { hungerTask, speakTask, coldTask } from '../ai/hungerTask';
-//import speakTask from './../ai/speakTask';
-import sleepTask from './../ai/sleepTask';
-// import coldTask from '../ai/coldTask';
 import { rollDie } from './../main/general-utility';
-import { getClosestObjects, getClosestMaps } from './../main/world-utility';
-import { isNotObject, isFood, isDrink, portalToHotOrComfortable, portalToColdOrComfortable } from './../main/filters';
+import { getClosestObjects, getClosestMaps, convertToCoords, distanceBetweenCoords, mergeLists } from './../main/world-utility';
+import { isNotObject, isOnMapOfObject, isFood, isDrink, portalToHotOrComfortable, portalToColdOrComfortable } from './../main/filters';
 
 function OverallPlan(decisionObject) {
   this.owner = decisionObject;
-
-  this.currentTask = null;
 
   this.updatePriorities = () => {
     this.priorities = [
@@ -23,76 +18,78 @@ function OverallPlan(decisionObject) {
     ];
     this.priorities.sort((a, b) => a.priority - b.priority);
   };
-
-
-
 }
 
 function DecisionAI(worldObject) {
   this.owner = worldObject;
   World.allObjectsDecisionAI.push(this.owner);
 
-  if (!this.owner.TurnTaking) { applyTurnTaking(this.owner); }
+  this.familiarObjects = [];
 
   this.taskQueue = [];
-
   this.currentTask = null;
-
   this.OverallPlan = new OverallPlan(worldObject);
 
-  this.addTask = (taskObject) => {
-    this.taskQueue.push(taskObject);
-    return taskObject;
+  // this.addTask = (taskObject) => {
+  //   this.taskQueue.push(taskObject);
+  //   return taskObject;
+  // };
+
+  this.clearTask = () => {
+    this.OverallPlan = null;
+    this.taskQueue = [];
+    this.currentTask = null;
   };
 
-  this.getHighestPriorityTask = () => {
-    const taskQueueExcludingPaths = this.taskQueue.filter(task => task.taskType !== 'path');
-    taskQueueExcludingPaths.forEach(task => task.updatePriorityVsDistance());
-    const chosenTask = taskQueueExcludingPaths.reduce((acc, task) => {
-      if (task.priorityVsDistance < acc.priorityVsDistance) return task;
-      return acc;
-    });
-    if (chosenTask.prerequisiteTask) return chosenTask.prerequisiteTask;
-    return chosenTask;
-  };
+  // this.getHighestPriorityTask = () => {
+  //   const taskQueueExcludingPaths = this.taskQueue.filter(task => task.taskType !== 'path');
+  //   taskQueueExcludingPaths.forEach(task => task.updatePriorityVsDistance());
+  //   const chosenTask = taskQueueExcludingPaths.reduce((acc, task) => {
+  //     if (task.priorityVsDistance < acc.priorityVsDistance) return task;
+  //     return acc;
+  //   });
+  //   if (chosenTask.prerequisiteTask) return chosenTask.prerequisiteTask;
+  //   return chosenTask;
+  // };
 
   this.startNewTask = () => {
-    const a = rollDie(3);
-    console.log(a);
-    if (a === 1) {
-      this.currentTask = hungerTask(this.owner);
-      this.currentTask.locateTarget();
-      this.currentTask.calculatePathToTarget();
-    } else if (a === 2) {
-      // this.currentTask = coldTask(this.owner);
-      // this.currentTask.locateTarget();
-      // this.currentTask.calculatePathToTarget();
-    } else {
-      // this.currentTask = speakTask(this.owner);
-      // this.currentTask.locateTarget();
-      // this.currentTask.calculatePathToTarget();
+    if (World.allObjectsConsumable.length === 0) {
+      World.allObjectsDecisionAI.forEach(decObject => decObject.DecisionAI.clearTask());
+      World.disableAI = true;
+      return false;
     }
 
+    this.familiarObjects = this.familiarObjects.filter(object => object.hasLocation());
+    this.familiarObjects = mergeLists(this.familiarObjects, this.owner.WorldMap.getVisibleObjects(convertToCoords(this.owner)));
 
-    return;
 
-
-    const followUpTask = this.currentTask ? this.currentTask.followUpTask : null;
+    this.currentTask = hungerTask(this.owner);
     if (this.currentTask) {
-      this.taskQueue = this.taskQueue.filter(task => task !== this.currentTask);
-      this.currentTask = null;
+      if (!this.currentTask.initializeTask()) {
+        this.clearTask();
+        this.owner.Moving.moveRandom();
+      }
     }
+    return true;
 
-    if (followUpTask) {
-      this.currentTask = followUpTask;
-    } else {
-      this.updateTasks();
-      if (this.taskQueue.length === 0) return;
-      this.currentTask = this.getHighestPriorityTask(this.taskQueue);
-    }
 
-    if (!this.currentTask) alert('this should never run --- if there is a task in the queue at leats one should be returned by getHighestPriorityTask')
-    this.currentTask.initialAction();
+    // const followUpTask = this.currentTask ? this.currentTask.followUpTask : null;
+    // if (this.currentTask) {
+    //   this.taskQueue = this.taskQueue.filter(task => task !== this.currentTask);
+    //   this.currentTask = null;
+    // }
+
+    // if (followUpTask) {
+    //   this.currentTask = followUpTask;
+    // } else {
+    //   this.updateTasks();
+    //   if (this.taskQueue.length === 0) return;
+    //   this.currentTask = this.getHighestPriorityTask(this.taskQueue);
+    // }
+
+    // if (!this.currentTask) alert('this should never run --- if there is a task in the queue at leats one should be returned by getHighestPriorityTask')
+    // this.currentTask.initialAction();
+
   };
 
   this.resetAllTasks = () => { this.taskQueue = []; };

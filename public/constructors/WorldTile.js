@@ -14,6 +14,8 @@ export default function WorldTile(arg = {
   this.wall = arg.wall;
   this.char = null;
 
+  this.objectsOnTile = [];
+
   this.myCoords = () => [this.x, this.y];
 
   this.toggleWall = (wall) => {
@@ -31,10 +33,5 @@ export default function WorldTile(arg = {
     return this;
   };
 
-  this.checkBlocked = () => !(this.wall);
-
-  this.objectsOnTile = () => {
-    const listOfObjects = World.allObjects.filter(isOnTile.bind(this));
-    return listOfObjects;
-  };
+  this.checkPassable = (optionalComparisonObject) => !(this.wall);
 }
