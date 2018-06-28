@@ -1,5 +1,5 @@
 import { shortestMapPath } from './../constructors/MapNodeTree';
-import { onSameMap, convertToMap, convertToTile, distanceBetweenCoords } from './../main/world-utility';
+import { onSameMap, toCoords, toMap, toTile, distanceBetweenCoords } from './../main/world-utility';
 import { displayError } from './../main/general-utility';
 
 // Filters
@@ -79,7 +79,7 @@ export function isOnAMap(worldObject) {
 // Sorts
 export function worldPathSizeSort(mapA, mapB) {
   // Bind 'this' to desired lookup map or object
-  const startingMap = convertToMap(this);
+  const startingMap = toMap(this);
   const mapADistance = shortestMapPath(startingMap, mapA) || 9999;
   const mapBDistance = shortestMapPath(startingMap, mapB) || 9999;
   return mapADistance.length - mapBDistance.length;
@@ -87,7 +87,7 @@ export function worldPathSizeSort(mapA, mapB) {
 
 export function localPathSizeSort(objectA, objectB) {
   // Bind 'this' to desired lookup object
-  if (!this.Pathing) return displayError(`localPathSizeSort used on non-Pathing object $this.name}`);
+  if (!this.Pathing) return displayError('localPathSizeSort used on non-Pathing object:', [this]);
   if (!objectA.WorldTile || !objectB.WorldTile || !this.WorldTile) { return null; }
 
   const objectAPathLength = this.Pathing.calculatePath({ pathTo: objectA.WorldTile }).length || 9999;
@@ -98,14 +98,12 @@ export function localPathSizeSort(objectA, objectB) {
 
 export function localDistanceToSort(objectA, objectB) {
   // Bind 'this' to desired lookup object
-  const objectATile = convertToTile(objectA);
-  const objectBTile = convertToTile(objectB);
-  const startingTile = convertToTile(this);
-
+  const objectATile = toTile(objectA);
+  const objectBTile = toTile(objectB);
+  const startingTile = toTile(this);
   if (!objectATile || !objectBTile || !startingTile) return displayError('Cannot convert one of these to WorldTile in localDistanceToSort:', [objectA, objectB, this]);
 
-  const objectADistanceTo = distanceBetweenCoords(startingTile.myCoords(), objectATile.myCoords());
-  const objectBDistanceTo = distanceBetweenCoords(startingTile.myCoords(), objectBTile.myCoords());
-
+  const objectADistanceTo = distanceBetweenCoords(toCoords(startingTile), toCoords(objectATile));
+  const objectBDistanceTo = distanceBetweenCoords(toCoords(startingTile), toCoords(objectBTile));
   return objectADistanceTo - objectBDistanceTo;
 }

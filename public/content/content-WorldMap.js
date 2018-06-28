@@ -4,7 +4,7 @@ import WorldTile from './../constructors/WorldTile';
 
 import createWorldObject from './../content/content-WorldObject';
 
-import { convertToMap } from './../main/world-utility';
+import { toMap } from './../main/world-utility';
 import { displayError, runXTimes, directionTextToCoords } from './../main/general-utility';
 
 export default function createWorldMap(mapName, width, height) {
@@ -28,8 +28,8 @@ export default function createWorldMap(mapName, width, height) {
     // createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
     // createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
 
-    runXTimes(createWorldObject, 1000, 'Squirrel').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
-    runXTimes(createWorldObject, 5000, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
+    runXTimes(createWorldObject, 10, 'Squirrel').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
+    runXTimes(createWorldObject, 10, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
 
     // createWorldObject('Heavy Jacket').placeOnMap({ worldMap: createdMap });
     runXTimes(createWorldObject, 2, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
@@ -46,7 +46,7 @@ export default function createWorldMap(mapName, width, height) {
     createWorldObject('Treasure').placeOnMap({ worldMap: createdMap, ignoreTriggers: true });
 
     createdMap.mapTemp = 20;
-    //runXTimes(createWorldObject, 50, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
+    runXTimes(createWorldObject, 1, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
     
 
   } else if (mapName === 'Building') {
@@ -59,9 +59,9 @@ export default function createWorldMap(mapName, width, height) {
 }
 
 export function generateAllMaps() {
-  const a = convertToMap('Home');
-  const b = convertToMap('Map 2');
-  const c = convertToMap('Map 3');
+  const a = toMap('Home');
+  const b = toMap('Map 2');
+  const c = toMap('Map 3');
 
   connectMaps({ mapFrom: a, mapTo: b, coordsFrom: null, coordsTo: null });
   connectMaps({ mapFrom: b, mapTo: c, coordsFrom: null, coordsTo: null });

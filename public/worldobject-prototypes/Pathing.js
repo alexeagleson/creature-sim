@@ -1,10 +1,10 @@
 import WorldObject from './../constructors/WorldObject';
-import WorldTile, { checkBlockedCoords } from './../constructors/WorldTile';
+import WorldTile from './../constructors/WorldTile';
 import { shortestMapPath } from './../constructors/MapNodeTree';
 import { isNotObject } from './../main/filters';
 import { displayError, directionTextToCoords } from './../main/general-utility';
-import { distanceBetweenCoords, directionToCoords, compareCoords, convertToMap, convertToCoords, convertToTile } from './../main/world-utility';
-import { getPortalToMap, getPortalFromMap } from './../worldobject-prototypes/Portal';
+import { distanceBetweenCoords, directionToCoords, compareCoords, toMap, toCoords, toTile } from './../main/world-utility';
+import { getPortal } from './../worldobject-prototypes/Portal';
 
 function AStarPath() {
   this.todo = [];
@@ -13,13 +13,12 @@ function AStarPath() {
   this.getUnblockedNeighbors = (cx, cy, worldMap, movingObject) => {
     const result = [];
     const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-
     for (let i = 0; i < dirs.length; i += 1) {
       const dir = dirs[i];
       const x = cx + dir[0];
       const y = cy + dir[1];
 
-      if (!movingObject.WorldMap.checkPassableAtLocation(x, y, movingObject)) { continue; }
+      if (!movingObject.WorldMap.checkPassableAtLocation(x, y, movingObject)) continue;
       result.push([x, y]);
     }
     return result;
@@ -44,20 +43,40 @@ function AStarPath() {
 
 function PathDetails(pathTo, pathFrom, pathType) {
   this.pathType = pathType;
+  if (this.pathType === 'dijkstra' || this.pathType === 'astar') console.log(this.pathType);
 
-  if (pathType === 'dijkstra' || pathType === 'astar') console.log(pathType);
+  this.originalPathTo = pathTo;
+  this.originalPathFrom = pathFrom;
 
-  this.pathToObject = pathTo instanceof WorldObject ? pathTo : null;
-  this.pathToCoords = convertToCoords(pathTo);
-  this.pathToMap = convertToMap(pathTo);
-  this.pathToTile = convertToTile(pathTo);
+  this.mapPathPortals = [];
 
-  this.pathFromObject = pathFrom instanceof WorldObject ? pathFrom : null;
-  this.pathFromCoords = convertToCoords(pathFrom);
-  this.pathFromMap = convertToMap(pathFrom);
-  this.pathFromTile = convertToTile(pathFrom);
+  this.updatePathDetails = (newTo, newFrom) => {
+    this.pathToObject = newTo instanceof WorldObject ? newTo : null;
+    this.pathToMap = toMap(newTo);
+    this.pathToTile = toTile(newTo);
 
-  if (this.pathFromMap !== this.pathToMap) this.mapPathIDs = shortestMapPath(this.pathFromMap, this.pathToMap);
+    this.pathFromObject = newFrom instanceof WorldObject ? newFrom : null;
+    this.pathFromMap = toMap(newFrom);
+    this.pathFromTile = toTile(newFrom);
+  };
+
+  this.updatePathDetails(this.originalPathTo, this.originalPathFrom);
+
+  this.nextTarget = (fromObject) => {
+    this.updatePathDetails(this.mapPathPortals[0], fromObject);
+    this.mapPathPortals.shift();
+  };
+
+  if (this.pathFromMap !== this.pathToMap) {
+    this.mapPathIDs = shortestMapPath(this.pathFromMap, this.pathToMap);
+    for (let i = 0; i < this.mapPathIDs.length - 1; i += 1) {
+      this.mapPathPortals.push(getPortal(this.mapPathIDs[i], this.mapPathIDs[i + 1], true));
+    }
+    this.mapPathPortals.push(this.originalPathTo);
+    this.nextTarget(this.originalPathFrom);
+  }
+
+  this.hasNextTarget = () => this.mapPathPortals.length > 0;
 }
 
 function Pathing(worldObject) {
@@ -66,10 +85,10 @@ function Pathing(worldObject) {
 
   this.calculateDirectPath = (pathDetails) => {
     const finalPath = [];
-    let currentCoords = pathDetails.pathFromCoords;
+    let currentCoords = toCoords(pathDetails.pathFromTile);
     finalPath.push(currentCoords);
-    while (!compareCoords(currentCoords, pathDetails.pathToCoords)) {
-      const nextCoordsRelative = directionTextToCoords(directionToCoords(currentCoords, pathDetails.pathToCoords));
+    while (!compareCoords(currentCoords, toCoords(pathDetails.pathToTile))) {
+      const nextCoordsRelative = directionTextToCoords(directionToCoords(currentCoords, toCoords(pathDetails.pathToTile)));
       const nextCoords = [currentCoords[0] + nextCoordsRelative[0], currentCoords[1] + nextCoordsRelative[1]];
       finalPath.push(nextCoords);
       currentCoords = nextCoords;
@@ -88,36 +107,28 @@ function Pathing(worldObject) {
 
   this.calculateAStarPath = (pathDetails) => {
     const starPath = new AStarPath();
-
-    const fromX = pathDetails.pathFromCoords[0];
-    const fromY = pathDetails.pathFromCoords[1];
-    const toX = pathDetails.pathToCoords[0];
-    const toY = pathDetails.pathToCoords[1];
-    const worldMap = pathDetails.pathToMap;
     const finalPath = [];
-
     let thisNode = null;
-    starPath.add(toX, toY, null, [fromX, fromY]);
+    starPath.add(pathDetails.pathToTile.x, pathDetails.pathToTile.y, null, [pathDetails.pathFromTile.x, pathDetails.pathFromTile.y]);
 
     while (starPath.todo.length) {
       thisNode = starPath.todo.shift();
       let id = `${thisNode.x},${thisNode.y}`;
       if (id in starPath.done) { continue; }
       starPath.done[id] = thisNode;
-      if (thisNode.x === fromX && thisNode.y === fromY) { break; }
+      if (thisNode.x === pathDetails.pathFromTile.x && thisNode.y === pathDetails.pathFromTile.y) { break; }
 
-      const neighbors = starPath.getUnblockedNeighbors(thisNode.x, thisNode.y, worldMap, this.owner);
+      const neighbors = starPath.getUnblockedNeighbors(thisNode.x, thisNode.y, pathDetails.pathToMap, this.owner);
       for (let i = 0; i < neighbors.length; i += 1) {
         const neighbor = neighbors[i];
         const x = neighbor[0];
         const y = neighbor[1];
         id = `${x},${y}`;
         if (id in starPath.done) { continue; }
-        starPath.add(x, y, thisNode, [fromX, fromY]);
+        starPath.add(x, y, thisNode, [pathDetails.pathFromTile.x, pathDetails.pathFromTile.y]);
       }
     }
-
-    thisNode = starPath.done[`${fromX},${fromY}`];
+    thisNode = starPath.done[`${pathDetails.pathFromTile.x},${pathDetails.pathFromTile.y}`];
     if (!thisNode) return finalPath;
 
     while (thisNode) {
@@ -154,7 +165,7 @@ function Pathing(worldObject) {
 
   this.movePath = () => {
     if (this.currentPath.length === 0) return false;
-    if (distanceBetweenCoords(this.currentPath[0], convertToCoords(this.owner)) > 1) {
+    if (distanceBetweenCoords(this.currentPath[0], toCoords(this.owner)) > 1) {
       this.clearPath();
       return false;
     }
@@ -203,17 +214,17 @@ export default function applyPathing(worldObject, arg = {}) {
 //     for (let i = 0; i < mapPathIDs.length; i += 1) {
 //       if (i === 0) {
 //         // This branch is the first path toward the first portal
-//         const portalTo = getPortalToMap(convertToMap(mapPathIDs[i]), convertToMap(mapPathIDs[i + 1]));
-//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: pathObject.pathFromCoords, pathToMap: portalTo.WorldMap }));
+//         const portalTo = getPortalToMap(toMap(mapPathIDs[i]), toMap(mapPathIDs[i + 1]));
+//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: toCoords(portalTo), pathFromCoords: pathObject.pathFromCoords, pathToMap: portalTo.WorldMap }));
 //       } else if (i === (mapPathIDs.length - 1)) {
 //         // This branch is on the final map where the goal is
-//         const portalFrom = getPortalFromMap(convertToMap(mapPathIDs[i - 1]), convertToMap(mapPathIDs[i]));
-//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: pathObject.pathToCoords, pathFromCoords: convertToCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
+//         const portalFrom = getPortalFromMap(toMap(mapPathIDs[i - 1]), toMap(mapPathIDs[i]));
+//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: pathObject.pathToCoords, pathFromCoords: toCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
 //       } else {
 //         // This branch is a middle map between two portals on the way to the goal
-//         const portalTo = getPortalToMap(convertToMap(mapPathIDs[i]), convertToMap(mapPathIDs[i + 1]));
-//         const portalFrom = getPortalFromMap(convertToMap(mapPathIDs[i - 1]), convertToMap(mapPathIDs[i]));
-//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: convertToCoords(portalTo), pathFromCoords: convertToCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
+//         const portalTo = getPortalToMap(toMap(mapPathIDs[i]), toMap(mapPathIDs[i + 1]));
+//         const portalFrom = getPortalFromMap(toMap(mapPathIDs[i - 1]), toMap(mapPathIDs[i]));
+//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: toCoords(portalTo), pathFromCoords: toCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
 //       }
 //     }
 //     return totalPath;

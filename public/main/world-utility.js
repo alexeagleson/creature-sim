@@ -86,7 +86,7 @@ export function isEngine(engineName) {
   return false;
 }
 
-export function convertToCoords(argument, randomAllowed = false) {
+export function toCoords(argument, randomAllowed = false) {
   if (Array.isArray(argument)) {
     if (argument.length === 2) return argument;
   }
@@ -98,14 +98,14 @@ export function convertToCoords(argument, randomAllowed = false) {
   return null;
 }
 
-export function convertToTile(argument, randomAllowed = false) {
+export function toTile(argument, randomAllowed = false) {
   if (argument instanceof WorldTile) return argument;
   if (argument instanceof WorldObject) if (argument.hasLocation()) return argument.WorldTile;
   if (argument instanceof WorldMap && randomAllowed) return getAvailableTile({ worldMap: argument });
   return null;
 }
 
-export function convertToMap(argument) {
+export function toMap(argument) {
   if (argument instanceof WorldMap) return argument;
   if (argument instanceof WorldObject) if (argument.hasLocation()) return argument.WorldMap;
   if (argument instanceof WorldTile) if (argument.WorldMap) return argument.WorldMap;
@@ -121,15 +121,15 @@ export function convertToMap(argument) {
 }
 
 export function onSameMap(arg1, arg2) {
-  const map1 = convertToMap(arg1);
-  const map2 = convertToMap(arg2);
+  const map1 = toMap(arg1);
+  const map2 = toMap(arg2);
   if (!map1 || !map2) return false;
   return map1 === map2;
 }
 
 export function onSameTile(arg1, arg2) {
-  const tile1 = convertToTile(arg1);
-  const tile2 = convertToTile(arg2);
+  const tile1 = toTile(arg1);
+  const tile2 = toTile(arg2);
   if (!tile1 || !tile2) return false;
   return tile1 === tile2;
 }
@@ -273,15 +273,15 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
 }
 
 export function estimateTotalDistance(componentA, componentB) {
-  const mapFrom = convertToMap(componentA);
-  const mapTo = convertToMap(componentB);
-  if (!mapFrom || !mapTo) return displayError('estimateTotalDistance: Cannot convertToMap componentA or componentB:', [componentA, componentB]);
-  if (mapFrom === mapTo) return distanceBetweenCoords(convertToCoords(componentA, true), convertToCoords(componentB, true));
+  const mapFrom = toMap(componentA);
+  const mapTo = toMap(componentB);
+  if (!mapFrom || !mapTo) return displayError('estimateTotalDistance: Cannot toMap componentA or componentB:', [componentA, componentB]);
+  if (mapFrom === mapTo) return distanceBetweenCoords(toCoords(componentA, true), toCoords(componentB, true));
 
   const mapPath = shortestMapPath(mapFrom, mapTo);
   let totalDistance = 0;
   mapPath.forEach((mapID) => {
-    const mapObject = convertToMap(mapID);
+    const mapObject = toMap(mapID);
     totalDistance += Math.sqrt((mapObject.mapWidth * mapObject.mapWidth) + (mapObject.mapHeight * mapObject.mapHeight)) / 2;
   });
   return totalDistance;

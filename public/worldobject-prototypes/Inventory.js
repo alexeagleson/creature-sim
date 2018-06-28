@@ -1,6 +1,6 @@
 import { publishEvent } from './../constructors/WorldEvent';
 import { isNotObject } from './../main/filters';
-import { convertToCoords, isInInventoryOf } from './../main/world-utility';
+import { toCoords, isInInventoryOf } from './../main/world-utility';
 
 function Inventory(worldObject) {
   this.owner = worldObject;
@@ -25,7 +25,7 @@ function Inventory(worldObject) {
   };
 
   this.removeFromInventory = (worldObject) => {
-    worldObject.placeOnMap({ worldMap: this.owner.WorldMap, coords: convertToCoords(this.owner) });
+    worldObject.placeOnMap({ worldMap: this.owner.WorldMap, coords: toCoords(this.owner) });
     worldObject.Item.inInventoryOf = null;
     if (this.owner.Equipper) this.owner.Equipper.unequip();
     publishEvent(`${this.owner.name} drops ${worldObject.name}.`);

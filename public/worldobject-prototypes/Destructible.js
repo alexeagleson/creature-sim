@@ -3,7 +3,7 @@ import { publishEvent } from './../constructors/WorldEvent';
 import { endSim } from './../main/app';
 import { isNotObject } from './../main/filters';
 import { normalizeToValue, rollDie } from './../main/general-utility';
-import { convertToCoords } from './../main/world-utility';
+import { toCoords } from './../main/world-utility';
 
 function Destructible(worldObject, arg = {}) {
   this.owner = worldObject;
@@ -53,7 +53,7 @@ function Destructible(worldObject, arg = {}) {
 
   this.destroy = (causeOfConditionLoss) => {
     if (this.owner.Inventory) {
-      getInventory(this.owner).forEach(object => object.placeOnMap({ worldMap: this.owner.WorldMap, coords: convertToCoords(this.owner), ignoreTriggers: true }));
+      getInventory(this.owner).forEach(object => object.placeOnMap({ worldMap: this.owner.WorldMap, coords: toCoords(this.owner), ignoreTriggers: true }));
     }
 
     const destroyterm = this.owner.Living ? 'died' : 'been destroyed';

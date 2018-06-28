@@ -1,6 +1,6 @@
 import { initializeInputimeAndCamera, mainLoop } from './../main/app';
 
-import { tileToPixel, convertToCoords } from './../main/world-utility';
+import { tileToPixel, toCoords } from './../main/world-utility';
 
 const playGame = new Phaser.Class({
   Extends: Phaser.Scene,
@@ -55,7 +55,7 @@ export default function PhaserDisplay(mainDisplay) {
 
   this.drawTile = (tileCoords) => {
     const worldTile = World.player.WorldMap.getTile(tileCoords);
-    const pixelCoords = tileToPixel(convertToCoords(worldTile));
+    const pixelCoords = tileToPixel(toCoords(worldTile));
 
     if (worldTile.char === '.') {
       World.allActiveTileSprites.push(this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], 'Floor_Grass', 0));
@@ -68,7 +68,7 @@ export default function PhaserDisplay(mainDisplay) {
   };
 
   this.drawObject = (worldObject) => {
-    const pixelCoords = tileToPixel(convertToCoords(worldObject));
+    const pixelCoords = tileToPixel(toCoords(worldObject));
     worldObject.PhaserObject.sprite = this.mainScene.add.sprite(pixelCoords[0], pixelCoords[1], worldObject.PhaserObject.spriteFilename, worldObject.PhaserObject.defaultFrameNumber);
   };
 

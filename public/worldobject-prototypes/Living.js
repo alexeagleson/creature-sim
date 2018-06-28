@@ -1,7 +1,7 @@
 import { publishEvent } from './../constructors/WorldEvent';
 import { isNotObject } from './../main/filters';
 import { normalizeToValue } from './../main/general-utility';
-import { isEngine, convertToCoords, getActivePrototypesByName } from './../main/world-utility';
+import { isEngine, toCoords, getActivePrototypesByName } from './../main/world-utility';
 
 const DAMAGE_THRESHOLD = 25;
 const EXHAUSTION_ADJUSTMENT_FACTOR = 100;
@@ -59,7 +59,7 @@ function Living(worldObject) {
     } else {
       this.owner.PhaserObject.spriteFilename = 'Corpse';
       this.owner.destroySprite();
-      this.owner.placeSprite(convertToCoords(this.owner));
+      this.owner.placeSprite(toCoords(this.owner));
     }
     this.owner.char = '%';
     this.owner.name = `Remains of ${this.owner.name}`;

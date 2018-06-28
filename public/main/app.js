@@ -8,7 +8,7 @@ import MainCamera from './../display-engines/MainCamera';
 import AllSounds from './../main/audio';
 
 import initializeInput, { pollGamepad } from './../main/input';
-import { convertToMap, isEngine } from './../main/world-utility';
+import { toMap, isEngine } from './../main/world-utility';
 import { isOnAMap, isNotObject } from './../main/filters';
 
 import buildUI from './../ui/app.jsx';
@@ -20,7 +20,7 @@ let oneSecondInterval = 0;
 function initializeWorld() {
   World.MapNodeTree = new MapNodeTree();
   World.player = createWorldObject('Player');
-  World.player.placeOnMap({ worldMap: convertToMap('Home') });
+  World.player.placeOnMap({ worldMap: toMap('Home') });
 }
 
 export function initializeInputimeAndCamera() {

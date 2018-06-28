@@ -2,7 +2,7 @@ const renderEngine = 'RotJs';
 const canvasSize = 0.75;
 
 const gamepadAllowed = true;
-const disableDialogue = true;
+const disableDialogue = false;
 const disableAI = true;
 
 // Phaser constants
@@ -61,6 +61,8 @@ const ScreenCs = {
 
 const ProtoCs = {
   TURN_SPEED: 100,
+
+  VISIBILITY_RADIUS: 4,
 
   STANDING_ON_MAX_DISTANCE: 0,
   INTERACT_MAX_DISTANCE: 1.5,

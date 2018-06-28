@@ -4,7 +4,7 @@ import createWorldObject from './../content/content-WorldObject';
 import createWorldMap from './../content/content-WorldMap';
 
 import { displayError, uniqueNumber, randBetween, normalizeToValue } from './../main/general-utility';
-import { convertToMap, convertToCoords, withinMapBounds } from './../main/world-utility';
+import { toMap, toCoords, withinMapBounds } from './../main/world-utility';
 
 export default function WorldMap(mapName, arg = {
   mapWidth: null,
@@ -73,7 +73,7 @@ export default function WorldMap(mapName, arg = {
     map.create(createMapCallback.bind(this));
   };
 
-  this.getVisibleTiles = (coords, fovRadius = 3) => {
+  this.getVisibleTiles = (coords, fovRadius = ProtoCs.VISIBILITY_RADIUS) => {
     const visibleTiles = [];
     this.fovMap.compute(coords[0], coords[1], fovRadius, (x, y, r, visibility) => {
       visibleTiles.push(this.getTile([x, y]));
@@ -81,7 +81,7 @@ export default function WorldMap(mapName, arg = {
     return visibleTiles;
   };
 
-  this.getVisibleObjects = (coords, fovRadius = 3) => {
+  this.getVisibleObjects = (coords, fovRadius = ProtoCs.VISIBILITY_RADIUS) => {
     let visibleObjects = [];
     this.fovMap.compute(coords[0], coords[1], fovRadius, (x, y, r, visibility) => {
       const visibleTile = this.getTile([x, y]);
@@ -151,11 +151,11 @@ export function connectMaps(arg = {
   coordsTo: null,
   coordsFrom: null,
 }) {
-  const mapTo = convertToMap(arg.mapTo);
-  const mapFrom = convertToMap(arg.mapFrom);
+  const mapTo = toMap(arg.mapTo);
+  const mapFrom = toMap(arg.mapFrom);
 
-  const coordsTo = arg.coordsTo || convertToCoords(getAvailableTile({ worldMap: arg.mapTo }));
-  const coordsFrom = arg.coordsFrom || convertToCoords(getAvailableTile({ worldMap: arg.mapFrom }));
+  const coordsTo = arg.coordsTo || toCoords(getAvailableTile({ worldMap: arg.mapTo }));
+  const coordsFrom = arg.coordsFrom || toCoords(getAvailableTile({ worldMap: arg.mapFrom }));
 
   mapTo.getTile(coordsTo).toggleWall(false);
   mapFrom.getTile(coordsFrom).toggleWall(false);
@@ -175,7 +175,7 @@ export function digBuildingLot(arg = { worldMap: null, size: null, outerPadding:
   outerPadding = outerPadding || 1;
   outerPadding = (outerPadding >= size) ? (size - 1) : outerPadding;
 
-  const centreCoords = convertToCoords(getAvailableTile({ worldMap, radius: (size + outerPadding), checkForWall: false, checkForObjects: false, checkForBuildings: true }));
+  const centreCoords = toCoords(getAvailableTile({ worldMap, radius: (size + outerPadding), checkForWall: false, checkForObjects: false, checkForBuildings: true }));
 
   for (let x = (centreCoords[0] - size); x <= (centreCoords[0] + size); x += 1) {
     for (let y = (centreCoords[1] - size - 1); y < (centreCoords[1] + size); y += 1) {

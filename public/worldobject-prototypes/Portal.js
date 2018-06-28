@@ -1,14 +1,15 @@
 import { isNotObject } from './../main/filters';
 import { getAvailableTile } from './../constructors/WorldMap';
-import { convertToMap, convertToCoords } from './../main/world-utility';
+import { toMap, toCoords } from './../main/world-utility';
+import { displayError } from './../main/general-utility';
 
 function Portal(worldObject, arg = { warpToMap: null, warpCoords: null }) {
   this.owner = worldObject;
   World.allObjectsPortal.push(this.owner);
 
-  this.warpToMap = convertToMap(arg.warpToMap) || null;
+  this.warpToMap = toMap(arg.warpToMap) || null;
   this.warpFromMap = null;
-  this.warpCoords = (arg.warpCoords) ? arg.warpCoords : convertToCoords(getAvailableTile({ worldMap: this.warpToMap }));
+  this.warpCoords = (arg.warpCoords) ? arg.warpCoords : toCoords(getAvailableTile({ worldMap: this.warpToMap }));
 
   this.owner.onStep = (objectThatTriggered) => {
     objectThatTriggered.placeOnMap({ worldMap: this.warpToMap, coords: this.warpCoords, ignoreTriggers: true });
@@ -24,12 +25,15 @@ export default function applyPortal(worldObject, arg = {}) {
   worldObject.Portal = worldObject.Portal || new Portal(worldObject, arg);
 }
 
-export function getPortalToMap(fromMap, toMap) {
-  const portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === fromMap && portalObject.Portal.warpToMap === toMap);
-  return portalArray.length > 0 ? portalArray[0] : null;
-}
-
-export function getPortalFromMap(fromMap, toMap) {
-  const portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === toMap && portalObject.Portal.warpFromMap === fromMap);
+export function getPortal(comingFromMap, goingToMap, portalAway = true) {
+  const mapA = toMap(comingFromMap);
+  const mapB = toMap(goingToMap);
+  if (!comingFromMap || !goingToMap) return displayError('getPortalFromMap: Could not convert to map:', [comingFromMap, goingToMap]);
+  let portalArray = null;
+  if (portalAway) {
+    portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === mapA && portalObject.Portal.warpToMap === mapB);
+  } else {
+    portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === mapB && portalObject.Portal.warpFromMap === mapA);
+  }
   return portalArray.length > 0 ? portalArray[0] : null;
 }

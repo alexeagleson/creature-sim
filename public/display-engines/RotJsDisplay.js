@@ -1,4 +1,4 @@
-import { screenToActual, actualToScreen, convertToCoords } from './../main/world-utility';
+import { screenToActual, actualToScreen, toCoords } from './../main/world-utility';
 
 export default function RotJsDisplay(mainDisplay) {
   this.owner = mainDisplay;
@@ -30,7 +30,7 @@ export default function RotJsDisplay(mainDisplay) {
   };
 
   this.drawObject = (worldObject) => {
-    const screenTileCoords = actualToScreen(convertToCoords(worldObject));
+    const screenTileCoords = actualToScreen(toCoords(worldObject));
     this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldObject.char, worldObject.RotJsObject.fgColour, worldObject.RotJsObject.bgColour);
   };
 

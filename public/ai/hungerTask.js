@@ -13,11 +13,16 @@ export default function Task(taskOwner, taskType) {
   this.successProximity = 1;
 
   this.locateTarget = () => null;
-  this.calculatePathToTarget = () => this.taskOwner.Pathing.createPathTo(this.taskTarget, this.taskOwner, 'direct');
+  this.calculatePathToTarget = (pathType = 'direct') => this.taskOwner.Pathing.createPathTo(this.taskTarget, this.taskOwner, pathType);
   this.pathTowardTarget = () => {
-    if (this.taskOwner.Pathing.currentPath.length === 0) return false;
-    if (!this.taskOwner.Pathing.movePath() && this.taskOwner.Pathing.pathDetails.pathType === 'direct') return this.taskOwner.Pathing.createPathTo(this.taskTarget, this.taskOwner, 'dijkstra');
-    if (!this.taskOwner.Pathing.movePath() && this.taskOwner.Pathing.pathDetails.pathType === 'dijkstra') return this.taskOwner.Pathing.createPathTo(this.taskTarget, this.taskOwner, 'astar');
+    if (this.taskOwner.Pathing.currentPath.length === 0) {
+      if (this.taskOwner.Pathing.pathDetails.hasNextTarget()) this.taskOwner.Moving.moveRelative([0, 0], false);
+      return false;
+    }
+    if (!this.taskOwner.Pathing.movePath()) {
+      if (this.taskOwner.Pathing.pathDetails.pathType === 'direct') return this.calculatePathToTarget('dijkstra');
+      if (this.taskOwner.Pathing.pathDetails.pathType === 'dijkstra') return this.calculatePathToTarget('astar');
+    }
     return true;
   };
   this.successCondition = () => this.taskOwner.isAdjacentTo(this.taskTarget, this.successProximity);
@@ -37,7 +42,8 @@ export default function Task(taskOwner, taskType) {
 export function hungerTask(taskOwner) {
   const thisTask = new Task(taskOwner, 'Hunger');
   thisTask.locateTarget = () => {
-    thisTask.taskTarget = getClosestObjectInListFast(thisTask.taskOwner, thisTask.taskOwner.DecisionAI.familiarObjects.filter(isFood));
+    // thisTask.taskTarget = getClosestObjectInListFast(thisTask.taskOwner, thisTask.taskOwner.DecisionAI.familiarObjects.filter(isFood));
+    thisTask.taskTarget = getClosestObjectInListFast(thisTask.taskOwner, World.allObjectsConsumable.filter(isFood));
     return !!thisTask.taskTarget;
   };
   thisTask.onSuccess = () => thisTask.taskOwner.Consumer.consume(thisTask.taskTarget);

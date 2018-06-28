@@ -1,7 +1,7 @@
 
 import { hungerTask, speakTask, coldTask } from '../ai/hungerTask';
 import { rollDie } from './../main/general-utility';
-import { getClosestObjects, getClosestMaps, convertToCoords, distanceBetweenCoords, mergeLists } from './../main/world-utility';
+import { getClosestObjects, getClosestMaps, toCoords, distanceBetweenCoords, mergeLists } from './../main/world-utility';
 import { isNotObject, isOnMapOfObject, isFood, isDrink, portalToHotOrComfortable, portalToColdOrComfortable } from './../main/filters';
 
 function OverallPlan(decisionObject) {
@@ -60,7 +60,7 @@ function DecisionAI(worldObject) {
     }
 
     this.familiarObjects = this.familiarObjects.filter(object => object.hasLocation());
-    this.familiarObjects = mergeLists(this.familiarObjects, this.owner.WorldMap.getVisibleObjects(convertToCoords(this.owner)));
+    this.familiarObjects = mergeLists(this.familiarObjects, this.owner.WorldMap.getVisibleObjects(toCoords(this.owner)));
 
 
     this.currentTask = hungerTask(this.owner);
