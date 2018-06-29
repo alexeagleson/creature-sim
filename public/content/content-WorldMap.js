@@ -46,7 +46,7 @@ export default function createWorldMap(mapName, width, height) {
     createWorldObject('Treasure').placeOnMap({ worldMap: createdMap, ignoreTriggers: true });
 
     createdMap.mapTemp = 20;
-    runXTimes(createWorldObject, 1, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
+    runXTimes(createWorldObject, 50, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
     
 
   } else if (mapName === 'Building') {

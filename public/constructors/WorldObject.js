@@ -20,8 +20,8 @@ export default function WorldObject(objectName, arg = {}) {
   this.hasLocation = () => (this.WorldMap && this.WorldTile);
 
   this.removeLocationData = () => {
-    if (this.WorldTile.dijkstraMap) this.WorldTile.dijkstraMap = null;
     this.WorldTile.objectsOnTile = this.WorldTile.objectsOnTile.filter(isNotObject.bind(this));
+    if (this.WorldTile.objectsOnTile.length === 0) this.WorldTile.dijkstraMap = null;
     this.destroySprite();
     this.WorldMap = null;
     this.WorldTile = null;

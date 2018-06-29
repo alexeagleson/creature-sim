@@ -47,36 +47,32 @@ function PathDetails(pathTo, pathFrom, pathType) {
 
   this.originalPathTo = pathTo;
   this.originalPathFrom = pathFrom;
+  this.allTargets = [];
+  this.mapPathIDs = [];
 
-  this.mapPathPortals = [];
+  if (toMap(pathFrom) !== toMap(pathTo)) {
+    this.mapPathIDs = shortestMapPath(toMap(pathFrom), toMap(pathTo));
+    for (let i = 0; i < this.mapPathIDs.length - 1; i += 1) {
+      this.allTargets.push(getPortal(this.mapPathIDs[i], this.mapPathIDs[i + 1], true));
+    }
+  }
+  this.allTargets.push(this.originalPathTo);
 
   this.updatePathDetails = (newTo, newFrom) => {
     this.pathToObject = newTo instanceof WorldObject ? newTo : null;
-    this.pathToMap = toMap(newTo);
     this.pathToTile = toTile(newTo);
-
     this.pathFromObject = newFrom instanceof WorldObject ? newFrom : null;
-    this.pathFromMap = toMap(newFrom);
     this.pathFromTile = toTile(newFrom);
   };
 
-  this.updatePathDetails(this.originalPathTo, this.originalPathFrom);
-
-  this.nextTarget = (fromObject) => {
-    this.updatePathDetails(this.mapPathPortals[0], fromObject);
-    this.mapPathPortals.shift();
+  this.updatePathTarget = () => {
+    this.updatePathDetails(this.allTargets[0], this.originalPathFrom);
+    this.allTargets.shift();
   };
 
-  if (this.pathFromMap !== this.pathToMap) {
-    this.mapPathIDs = shortestMapPath(this.pathFromMap, this.pathToMap);
-    for (let i = 0; i < this.mapPathIDs.length - 1; i += 1) {
-      this.mapPathPortals.push(getPortal(this.mapPathIDs[i], this.mapPathIDs[i + 1], true));
-    }
-    this.mapPathPortals.push(this.originalPathTo);
-    this.nextTarget(this.originalPathFrom);
-  }
+  this.hasNextTarget = () => this.allTargets.length > 0;
 
-  this.hasNextTarget = () => this.mapPathPortals.length > 0;
+  this.updatePathTarget();
 }
 
 function Pathing(worldObject) {
@@ -98,7 +94,7 @@ function Pathing(worldObject) {
 
   this.calculateDijkstraPath = (pathDetails) => {
     if (!pathDetails.pathToTile.dijkstraMap) {
-      pathDetails.pathToTile.dijkstraMap = new ROT.Path.Dijkstra(pathDetails.pathToTile.x, pathDetails.pathToTile.y, pathDetails.pathToMap.checkPassableAtLocation, { topology: 4 });
+      pathDetails.pathToTile.dijkstraMap = new ROT.Path.Dijkstra(pathDetails.pathToTile.x, pathDetails.pathToTile.y, toMap(pathDetails.pathToTile).checkPassableAtLocation, { topology: 4 });
     }
     const finalPath = [];
     pathDetails.pathToTile.dijkstraMap.compute(pathDetails.pathFromTile.x, pathDetails.pathFromTile.y, (x, y) => { finalPath.push([x, y]); });
@@ -118,7 +114,7 @@ function Pathing(worldObject) {
       starPath.done[id] = thisNode;
       if (thisNode.x === pathDetails.pathFromTile.x && thisNode.y === pathDetails.pathFromTile.y) { break; }
 
-      const neighbors = starPath.getUnblockedNeighbors(thisNode.x, thisNode.y, pathDetails.pathToMap, this.owner);
+      const neighbors = starPath.getUnblockedNeighbors(thisNode.x, thisNode.y, toMap(pathDetails.pathToTile), this.owner);
       for (let i = 0; i < neighbors.length; i += 1) {
         const neighbor = neighbors[i];
         const x = neighbor[0];
@@ -164,12 +160,14 @@ function Pathing(worldObject) {
   this.clearPath = () => { this.currentPath = []; };
 
   this.movePath = () => {
+    let ignoreTriggers = true;
     if (this.currentPath.length === 0) return false;
+    if (this.currentPath.length === 1) ignoreTriggers = false;
     if (distanceBetweenCoords(this.currentPath[0], toCoords(this.owner)) > 1) {
       this.clearPath();
       return false;
     }
-    const pathSuccess = this.owner.Moving.move(this.currentPath[0], true);
+    const pathSuccess = this.owner.Moving.move(this.currentPath[0], ignoreTriggers);
     this.currentPath.shift();
     return pathSuccess;
   };

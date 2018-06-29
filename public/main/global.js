@@ -2,7 +2,7 @@ const renderEngine = 'RotJs';
 const canvasSize = 0.75;
 
 const gamepadAllowed = true;
-const disableDialogue = false;
+const disableDialogue = true;
 const disableAI = true;
 
 // Phaser constants

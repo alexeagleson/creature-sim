@@ -1,4 +1,5 @@
 import { isNotObject } from './../main/filters';
+import { rollDie } from './../main/general-utility';
 
 function TurnTaking(worldObject, arg = {}) {
   this.owner = worldObject;
@@ -23,6 +24,7 @@ function TurnTaking(worldObject, arg = {}) {
     if (this.owner.DecisionAI) {
       if (World.disableAI) return this.owner.Moving.moveRandom();
       if (this.owner.DecisionAI.currentTask) {
+        if (rollDie(this.owner.DecisionAI.currentTask.exploreFrequency) === 1) this.owner.DecisionAI.currentTask.explore();
         if (this.owner.DecisionAI.currentTask.successCondition()) {
           this.owner.DecisionAI.currentTask.onSuccess();
           this.owner.DecisionAI.startNewTask();

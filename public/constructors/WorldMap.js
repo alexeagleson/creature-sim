@@ -23,6 +23,7 @@ export default function WorldMap(mapName, arg = {
   this.mapTemp = arg.mapTemp || -24;
   this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};
+  this.dijkstraMap = null;
 
   this.coldValue = () => normalizeToValue(100 + (this.mapTemp - ProtoCs.COMFORTABLE_TEMP), 0, 100);
   this.hotValue = () => normalizeToValue(100 - (this.mapTemp - ProtoCs.COMFORTABLE_TEMP), 0, 100);
@@ -76,7 +77,8 @@ export default function WorldMap(mapName, arg = {
   this.getVisibleTiles = (coords, fovRadius = ProtoCs.VISIBILITY_RADIUS) => {
     const visibleTiles = [];
     this.fovMap.compute(coords[0], coords[1], fovRadius, (x, y, r, visibility) => {
-      visibleTiles.push(this.getTile([x, y]));
+      const visibleTile = this.getTile([x, y]);
+      if (visibleTile) visibleTiles.push(visibleTile);
     });
     return visibleTiles;
   };
@@ -85,7 +87,7 @@ export default function WorldMap(mapName, arg = {
     let visibleObjects = [];
     this.fovMap.compute(coords[0], coords[1], fovRadius, (x, y, r, visibility) => {
       const visibleTile = this.getTile([x, y]);
-      if (visibleTile.objectsOnTile.length > 0) visibleObjects = visibleObjects.concat(visibleTile.objectsOnTile);
+      if (visibleTile) if (visibleTile.objectsOnTile.length > 0) visibleObjects = visibleObjects.concat(visibleTile.objectsOnTile);
     });
     return visibleObjects;
   };
