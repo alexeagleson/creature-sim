@@ -43,7 +43,7 @@ function AStarPath() {
 
 function PathDetails(pathTo, pathFrom, pathType) {
   this.pathType = pathType;
-  if (this.pathType === 'dijkstra' || this.pathType === 'astar') console.log(this.pathType);
+  //if (this.pathType === 'dijkstra' || this.pathType === 'astar') console.log(this.pathType);
 
   this.originalPathTo = pathTo;
   this.originalPathFrom = pathFrom;

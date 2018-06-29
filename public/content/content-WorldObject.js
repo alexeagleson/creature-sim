@@ -10,6 +10,7 @@ import applyEquipper from './../worldobject-prototypes/Equipper';
 import applyInventory from './../worldobject-prototypes/Inventory';
 import applyItem from './../worldobject-prototypes/Item';
 import applyLiving from './../worldobject-prototypes/Living';
+import applyMemory from './../worldobject-prototypes/Memory';
 import applyMoving from './../worldobject-prototypes/Moving';
 import applyPathing from './../worldobject-prototypes/Pathing';
 import applyPhaserObject from './../worldobject-prototypes/PhaserObject';
@@ -42,6 +43,7 @@ function applyLivingPrototypes(createdObject) {
 function applyAIPrototypes(createdObject) {
   applyTurnTaking(createdObject);
   applyDecisionAI(createdObject);
+  applyMemory(createdObject);
 }
 
 export default function createWorldObject(objectName, arg = {}) {
@@ -51,8 +53,8 @@ export default function createWorldObject(objectName, arg = {}) {
     applyBasePrototypes(createdObject);
     applyLivingPrototypes(createdObject);
     applyTurnTaking(createdObject);
-    createdObject.Temperature.revokePrototype();
-    createdObject.Consumer.revokePrototype();
+    //createdObject.Temperature.revokePrototype();
+    //createdObject.Consumer.revokePrototype();
 
     createdObject.TurnTaking.millisecondsBetweenTurns = 200;
     createdObject.char = '@';
@@ -77,6 +79,7 @@ export default function createWorldObject(objectName, arg = {}) {
       ? createdObject.RotJsObject.fgColour = Colours.HEX_GREEN
       : createdObject.PhaserObject.spriteFilename = 'Acorn';
     applyConsumable(createdObject);
+    applyItem(createdObject);
     createdObject.Consumable.hungerValue = 100;
 
   } else if (objectName === 'Rabbit') {

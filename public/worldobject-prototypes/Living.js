@@ -10,8 +10,6 @@ function Living(worldObject) {
   this.owner = worldObject;
   World.allObjectsLiving.push(this.owner);
 
-  if (!this.owner.Destructible) { applyDestructible(this.owner); }
-
   this.stamina = 100;
   this.asleep = false;
 

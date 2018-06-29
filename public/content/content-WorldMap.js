@@ -28,7 +28,7 @@ export default function createWorldMap(mapName, width, height) {
     // createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
     // createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
 
-    runXTimes(createWorldObject, 50, 'Squirrel').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
+    runXTimes(createWorldObject, 500, 'Squirrel').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
     runXTimes(createWorldObject, 500, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
 
     // createWorldObject('Heavy Jacket').placeOnMap({ worldMap: createdMap });

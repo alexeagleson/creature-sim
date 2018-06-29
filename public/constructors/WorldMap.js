@@ -20,7 +20,7 @@ export default function WorldMap(mapName, arg = {
 
   this.mapWidth = arg.mapWidth || 75;
   this.mapHeight = arg.mapHeight || 40;
-  this.mapTemp = arg.mapTemp || -24;
+  this.mapTemp = arg.mapTemp || 10;
   this.mapType = arg.mapType || 'Cellular';
   this.tileMap = {};
   this.dijkstraMap = null;

@@ -146,6 +146,7 @@ export function getAllActivePrototypes(worldObject) {
   if (worldObject.Inventory) allPrototypes.push(worldObject.Inventory);
   if (worldObject.Item) allPrototypes.push(worldObject.Item);
   if (worldObject.Living) allPrototypes.push(worldObject.Living);
+  if (worldObject.Memory) allPrototypes.push(worldObject.Memory);
   if (worldObject.Moving) allPrototypes.push(worldObject.Moving);
   if (worldObject.Pathing) allPrototypes.push(worldObject.Pathing);
   if (worldObject.PhaserObject) allPrototypes.push(worldObject.PhaserObject);
@@ -170,6 +171,7 @@ export function getActivePrototypesByName(worldObject, namesArray) {
     if (worldObject.Inventory && protoypeName.toLowerCase() === 'Inventory'.toLowerCase()) allPrototypes.push(worldObject.Inventory);
     if (worldObject.Item && protoypeName.toLowerCase() === 'Item'.toLowerCase()) allPrototypes.push(worldObject.Item);
     if (worldObject.Living && protoypeName.toLowerCase() === 'Living'.toLowerCase()) allPrototypes.push(worldObject.Living);
+    if (worldObject.Memory && protoypeName.toLowerCase() === 'Memory'.toLowerCase()) allPrototypes.push(worldObject.Memory);
     if (worldObject.Moving && protoypeName.toLowerCase() === 'Moving'.toLowerCase()) allPrototypes.push(worldObject.Moving);
     if (worldObject.Pathing && protoypeName.toLowerCase() === 'Pathing'.toLowerCase()) allPrototypes.push(worldObject.Pathing);
     if (worldObject.PhaserObject && protoypeName.toLowerCase() === 'PhaserObject'.toLowerCase()) allPrototypes.push(worldObject.PhaserObject);
