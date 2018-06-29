@@ -49,7 +49,9 @@ need to refactor the AI
 ---
 
 
-
+<strong>2018/06/29 -- Version 0.1.34</strong>
+----------------------------
+(*) Pathfinding and exploring first prototype complete
 
 <strong>2018/06/28 -- Version 0.1.33</strong>
 ----------------------------

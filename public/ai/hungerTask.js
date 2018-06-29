@@ -2,7 +2,7 @@ import { getAvailableTile } from './../constructors/WorldMap';
 import { publishEvent } from './../constructors/WorldEvent';
 import { getClosestObjectInListFast, estimateTotalDistance, mergeLists, toTile, toCoords } from './../main/world-utility';
 import { isFood, portalToHotOrComfortable } from './../main/filters';
-import { uniqueNumber } from './../main/general-utility';
+import { uniqueNumber, pickRandom } from './../main/general-utility';
 
 export default function Task(taskOwner, taskType) {
   this.taskOwner = taskOwner;
@@ -10,7 +10,8 @@ export default function Task(taskOwner, taskType) {
   this.uniqueID = uniqueNumber();
 
   this.taskTarget = null;
-  this.exploreFrequency = null;
+  this.lookAroundEveryXTurns = ProtoCs.VISIBILITY_RADIUS;
+  this.objectsSeen = [];
 
   this.locateTarget = () => null;
 
@@ -35,9 +36,10 @@ export default function Task(taskOwner, taskType) {
     return true;
   };
 
-  this.explore = () => {
+  this.lookAround = () => {
+    this.objectsSeen = this.taskOwner.WorldMap.getVisibleObjects(toCoords(this.taskOwner));
     this.taskOwner.DecisionAI.familiarObjects = this.taskOwner.DecisionAI.familiarObjects.filter(object => object.hasLocation());
-    this.taskOwner.DecisionAI.familiarObjects = mergeLists(this.taskOwner.DecisionAI.familiarObjects, this.taskOwner.WorldMap.getVisibleObjects(toCoords(this.taskOwner)));
+    this.taskOwner.DecisionAI.familiarObjects = mergeLists(this.taskOwner.DecisionAI.familiarObjects, this.objectsSeen);
   };
 
   this.successCondition = () => null;
@@ -67,18 +69,38 @@ export function hungerTask(taskOwner) {
   return thisTask;
 }
 
-export function exploreTask(taskOwner) {
-  const thisTask = new Task(taskOwner, 'Explore');
+export function searchFoodTask(taskOwner) {
+  const thisTask = new Task(taskOwner, 'SearchFood');
   thisTask.locateTarget = () => {
-    thisTask.taskTarget = getClosestObjectInListFast(thisTask.taskOwner, World.allObjectsConsumable);
+    thisTask.taskTarget = getAvailableTile({ worldMap: pickRandom(World.allMaps) });
     return !!thisTask.taskTarget;
   };
-  thisTask.successCondition = () => thisTask.taskOwner.isAdjacentTo(thisTask.taskTarget, ProtoCs.INTERACT_MAX_DISTANCE) || thisTask.taskOwner.DecisionAI.familiarObjects.filter(isFood).length > 0;
-  thisTask.onSuccess = () => null;
-  thisTask.onFail = () => publishEvent(`${thisTask.taskOwner.name} fails to discover anything new.`);
-  thisTask.exploreFrequency = 5;
+
+  thisTask.successCondition = () => {
+    if (thisTask.objectsSeen.length > 0) {
+      const foodsSeen = thisTask.objectsSeen.filter(isFood).length;
+      thisTask.objectsSeen = [];
+      if (foodsSeen > 0) return true;
+    }
+    return false;
+  };
+
+  thisTask.onSuccess = () => publishEvent(`${thisTask.taskOwner.name} finds food!.`);
+  thisTask.onFail = () => publishEvent(`${thisTask.taskOwner.name} fails to find food.`);
   return thisTask;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 // export function speakTask(taskOwner) {
 //   const thisTask = new Task(taskOwner, 'Speak');
