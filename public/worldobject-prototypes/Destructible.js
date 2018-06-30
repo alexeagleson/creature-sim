@@ -73,6 +73,8 @@ function Destructible(worldObject, arg = {}) {
   };
 }
 
-export default function applyDestructible(worldObject, arg = {}) {
+const applyDestructible = (worldObject, arg = {}) => {
   worldObject.Destructible = worldObject.Destructible || new Destructible(worldObject, arg);
 };
+
+export default applyDestructible;

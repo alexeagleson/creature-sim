@@ -3,6 +3,19 @@ import { getAvailableTile } from './../constructors/WorldMap';
 import { toMap, toCoords } from './../main/world-utility';
 import { displayError } from './../main/general-utility';
 
+export function getPortal(comingFromMap, goingToMap, portalAway = true) {
+  const mapA = toMap(comingFromMap);
+  const mapB = toMap(goingToMap);
+  if (!comingFromMap || !goingToMap) return displayError('getPortalFromMap: Could not convert to map:', [comingFromMap, goingToMap]);
+  let portalArray = null;
+  if (portalAway) {
+    portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === mapA && portalObject.Portal.warpToMap === mapB);
+  } else {
+    portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === mapB && portalObject.Portal.warpFromMap === mapA);
+  }
+  return portalArray.length > 0 ? portalArray[0] : null;
+}
+
 function Portal(worldObject, arg = { warpToMap: null, warpCoords: null }) {
   this.owner = worldObject;
   World.allObjectsPortal.push(this.owner);
@@ -21,19 +34,8 @@ function Portal(worldObject, arg = { warpToMap: null, warpCoords: null }) {
   };
 }
 
-export default function applyPortal(worldObject, arg = {}) {
+const applyPortal = (worldObject, arg = {}) => {
   worldObject.Portal = worldObject.Portal || new Portal(worldObject, arg);
-}
+};
 
-export function getPortal(comingFromMap, goingToMap, portalAway = true) {
-  const mapA = toMap(comingFromMap);
-  const mapB = toMap(goingToMap);
-  if (!comingFromMap || !goingToMap) return displayError('getPortalFromMap: Could not convert to map:', [comingFromMap, goingToMap]);
-  let portalArray = null;
-  if (portalAway) {
-    portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === mapA && portalObject.Portal.warpToMap === mapB);
-  } else {
-    portalArray = World.allObjectsPortal.filter(portalObject => portalObject.WorldMap === mapB && portalObject.Portal.warpFromMap === mapA);
-  }
-  return portalArray.length > 0 ? portalArray[0] : null;
-}
+export default applyPortal;

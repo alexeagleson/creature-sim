@@ -10,8 +10,6 @@ function Consumer(worldObject) {
   this.owner = worldObject;
   World.allObjectsConsumer.push(this.owner);
 
-  if (!this.owner.Living) { applyLiving(this.owner); }
-
   this.hunger = 100;
   this.thirst = 100;
 
@@ -76,6 +74,8 @@ function Consumer(worldObject) {
   };
 }
 
-export default function applyConsumer(worldObject, arg = {}) {
+const applyConsumer = (worldObject, arg = {}) => {
   worldObject.Consumer = worldObject.Consumer || new Consumer(worldObject, arg);
-}
+};
+
+export default applyConsumer;

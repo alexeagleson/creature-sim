@@ -43,7 +43,7 @@ function AStarPath() {
 
 function PathDetails(pathTo, pathFrom, pathType) {
   this.pathType = pathType;
-  //if (this.pathType === 'dijkstra' || this.pathType === 'astar') console.log(this.pathType);
+  // if (this.pathType === 'dijkstra' || this.pathType === 'astar') console.log(this.pathType);
 
   this.originalPathTo = pathTo;
   this.originalPathFrom = pathFrom;
@@ -178,54 +178,8 @@ function Pathing(worldObject) {
   };
 }
 
-export default function applyPathing(worldObject, arg = {}) {
+const applyPathing = (worldObject, arg = {}) => {
   worldObject.Pathing = worldObject.Pathing || new Pathing(worldObject, arg);
-}
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// this.calculatePath = (pathArg = { pathTo: null, pathFrom: null }) => {
-//   if (!(pathArg instanceof Path)) {
-//     if (!(pathArg.pathTo instanceof WorldObject) && !(pathArg.pathTo instanceof WorldTile)) return displayError(`pathTo (${pathArg.pathTo}) must be a WorldTile or WorldObject`);
-//     if (!(pathArg.pathFrom instanceof WorldObject) && !(pathArg.pathFrom instanceof WorldTile)) pathArg.pathFrom = this.owner;
-//   }
-//   const pathObject = pathArg instanceof Path ? pathArg : new Path(pathArg.pathTo, pathArg.pathFrom);
-
-//   if (pathObject.pathFromMap !== pathObject.pathToMap) {
-//     const mapPathIDs = shortestMapPath(pathObject.pathFromMap, pathObject.pathToMap);
-//     let totalPath = [];
-
-//     for (let i = 0; i < mapPathIDs.length; i += 1) {
-//       if (i === 0) {
-//         // This branch is the first path toward the first portal
-//         const portalTo = getPortalToMap(toMap(mapPathIDs[i]), toMap(mapPathIDs[i + 1]));
-//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: toCoords(portalTo), pathFromCoords: pathObject.pathFromCoords, pathToMap: portalTo.WorldMap }));
-//       } else if (i === (mapPathIDs.length - 1)) {
-//         // This branch is on the final map where the goal is
-//         const portalFrom = getPortalFromMap(toMap(mapPathIDs[i - 1]), toMap(mapPathIDs[i]));
-//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: pathObject.pathToCoords, pathFromCoords: toCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
-//       } else {
-//         // This branch is a middle map between two portals on the way to the goal
-//         const portalTo = getPortalToMap(toMap(mapPathIDs[i]), toMap(mapPathIDs[i + 1]));
-//         const portalFrom = getPortalFromMap(toMap(mapPathIDs[i - 1]), toMap(mapPathIDs[i]));
-//         totalPath = totalPath.concat(this.calculateDijkstraPath({ pathToCoords: toCoords(portalTo), pathFromCoords: toCoords(portalFrom), pathToMap: portalFrom.WorldMap }));
-//       }
-//     }
-//     return totalPath;
-//   }
-//   return this.calculateDijkstraPath(pathObject);
-// };
+export default applyPathing;

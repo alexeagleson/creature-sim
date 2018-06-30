@@ -3,7 +3,7 @@ import { toCoords, mergeLists } from './../main/world-utility';
 
 function Memory(worldObject) {
   this.owner = worldObject;
-  World.allObjectsMoving.push(this.owner);
+  World.allObjectsMemory.push(this.owner);
 
   this.knownObjects = [];
 
@@ -16,7 +16,7 @@ function Memory(worldObject) {
 
   this.revokePrototype = () => {
     World.allObjectsMemory = World.allObjectsMemory.filter(isNotObject.bind(this.owner));
-    this.owner.Moving = null;
+    this.owner.Memory = null;
   };
 }
 

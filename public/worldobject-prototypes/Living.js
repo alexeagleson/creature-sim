@@ -70,6 +70,8 @@ function Living(worldObject) {
   };
 }
 
-export default function applyLiving(worldObject, arg = {}) {
+const applyLiving = (worldObject, arg = {}) => {
   worldObject.Living = worldObject.Living || new Living(worldObject, arg);
-}
+};
+
+export default applyLiving;

@@ -19,6 +19,8 @@ function Equipment(worldObject, arg = {}) {
   };
 }
 
-export default function applyEquipment(worldObject, arg = {}) {
+const applyEquipment = (worldObject, arg = {}) => {
   worldObject.Equipment = worldObject.Equipment || new Equipment(worldObject, arg);
-}
+};
+
+export default applyEquipment;

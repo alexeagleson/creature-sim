@@ -6,7 +6,6 @@ const TEMP_ADJUSTMENT_FACTOR = 20;
 function Temperature(worldObject) {
   this.owner = worldObject;
   World.allObjectsTemperature.push(this.owner);
-  if (!this.owner.Living) { applyLiving(this.owner); }
 
   this.temp = ProtoCs.COMFORTABLE_TEMP;
   this.takingTemperatureDamage = false;
@@ -55,6 +54,8 @@ function Temperature(worldObject) {
   };
 }
 
-export default function applyTemperature(worldObject, arg = {}) {
+const applyTemperature = (worldObject, arg = {}) => {
   worldObject.Temperature = worldObject.Temperature || new Temperature(worldObject, arg);
-}
+};
+
+export default applyTemperature;

@@ -17,6 +17,7 @@ import applyPhaserObject from './../worldobject-prototypes/PhaserObject';
 import applyPortal from './../worldobject-prototypes/Portal';
 import applyRotJsObject from './../worldobject-prototypes/RotJsObject';
 import applySocial from './../worldobject-prototypes/Social';
+import applyTask from './../worldobject-prototypes/Task';
 import applyTemperature from './../worldobject-prototypes/Temperature';
 import applyTurnTaking from './../worldobject-prototypes/TurnTaking';
 
@@ -44,6 +45,7 @@ function applyAIPrototypes(createdObject) {
   applyTurnTaking(createdObject);
   applyDecisionAI(createdObject);
   applyMemory(createdObject);
+  applyTask(createdObject);
 }
 
 export default function createWorldObject(objectName, arg = {}) {

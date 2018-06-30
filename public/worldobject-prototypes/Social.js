@@ -7,7 +7,6 @@ import { displayDialogue } from './../ui/components/HoveringText';
 function Social(worldObject) {
   this.owner = worldObject;
   World.allObjectsSocial.push(this.owner);
-  if (!this.owner.Living) { applyLiving(this.owner); }
 
   this.socialLevel = 5;
   this.myDialogue = ['5cb5d08d36337a277eb5e67a452d2c44'];
@@ -19,9 +18,9 @@ function Social(worldObject) {
     this.myDialogue = this.myDialogue.concat(dialogueArray);
   };
 
-  this.canISpeakTo = (worldObject) => {
-    if (!worldObject.Social) { return false; }
-    if (!this.owner.isAdjacentTo(worldObject, ProtoCs.SPEAK_MAX_DISTANCE)) { return false; }
+  this.canISpeakTo = (argObject) => {
+    if (!argObject.Social) { return false; }
+    if (!this.owner.isAdjacentTo(argObject, ProtoCs.SPEAK_MAX_DISTANCE)) { return false; }
     return true;
   };
 
@@ -47,6 +46,8 @@ function Social(worldObject) {
   };
 }
 
-export default function applySocial(worldObject, arg = {}) {
+const applySocial = (worldObject, arg = {}) => {
   worldObject.Social = worldObject.Social || new Social(worldObject, arg);
-}
+};
+
+export default applySocial;

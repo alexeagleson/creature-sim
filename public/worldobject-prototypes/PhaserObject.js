@@ -34,6 +34,8 @@ function PhaserObject(worldObject, arg = {}) {
   };
 }
 
-export default function applyPhaserObject(worldObject, arg = {}) {
+const applyPhaserObject = (worldObject, arg = {}) => {
   worldObject.PhaserObject = worldObject.PhaserObject || new PhaserObject(worldObject, arg);
-}
+};
+
+export default applyPhaserObject;

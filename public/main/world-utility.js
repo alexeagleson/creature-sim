@@ -153,6 +153,7 @@ export function getAllActivePrototypes(worldObject) {
   if (worldObject.Portal) allPrototypes.push(worldObject.Portal);
   if (worldObject.RotJsObject) allPrototypes.push(worldObject.RotJsObject);
   if (worldObject.Social) allPrototypes.push(worldObject.Social);
+  if (worldObject.Task) allPrototypes.push(worldObject.Task);
   if (worldObject.Temperature) allPrototypes.push(worldObject.Temperature);
   if (worldObject.TurnTaking) allPrototypes.push(worldObject.TurnTaking);
   return allPrototypes;
@@ -178,6 +179,7 @@ export function getActivePrototypesByName(worldObject, namesArray) {
     if (worldObject.Portal && protoypeName.toLowerCase() === 'Portal'.toLowerCase()) allPrototypes.push(worldObject.Portal);
     if (worldObject.RotJsObject && protoypeName.toLowerCase() === 'RotJsObject'.toLowerCase()) allPrototypes.push(worldObject.RotJsObject);
     if (worldObject.Social && protoypeName.toLowerCase() === 'Social'.toLowerCase()) allPrototypes.push(worldObject.Social);
+    if (worldObject.Task && protoypeName.toLowerCase() === 'Task'.toLowerCase()) allPrototypes.push(worldObject.Task);
     if (worldObject.Temperature && protoypeName.toLowerCase() === 'Temperature'.toLowerCase()) allPrototypes.push(worldObject.Temperature);
     if (worldObject.TurnTaking && protoypeName.toLowerCase() === 'TurnTaking'.toLowerCase()) allPrototypes.push(worldObject.TurnTaking);
   });

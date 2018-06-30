@@ -13,6 +13,8 @@ function RotJsObject(worldObject, arg = {}) {
   };
 }
 
-export default function applyRotJsObject(worldObject, arg = {}) {
+const applyRotJsObject = (worldObject, arg = {}) => {
   worldObject.RotJsObject = worldObject.RotJsObject || new RotJsObject(worldObject, arg);
-}
+};
+
+export default applyRotJsObject;

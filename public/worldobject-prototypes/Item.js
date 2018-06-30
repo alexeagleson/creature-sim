@@ -13,6 +13,8 @@ function Item(worldObject) {
   };
 }
 
-export default function applyItem(worldObject, arg = {}) {
+const applyItem = (worldObject, arg = {}) => {
   worldObject.Item = worldObject.Item || new Item(worldObject, arg);
-}
+};
+
+export default applyItem;

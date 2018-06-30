@@ -33,6 +33,8 @@ function Moving(worldObject) {
   };
 }
 
-export default function applyMoving(worldObject, arg = {}) {
+const applyMoving = (worldObject, arg = {}) => {
   worldObject.Moving = worldObject.Moving || new Moving(worldObject, arg);
-}
+};
+
+export default applyMoving;

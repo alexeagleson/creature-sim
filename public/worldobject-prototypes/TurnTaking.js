@@ -23,17 +23,18 @@ function TurnTaking(worldObject, arg = {}) {
   this.takeTurn = () => {
     if (this.owner.DecisionAI) {
       if (World.disableAI) return this.owner.Moving.moveRandom();
-      if (this.owner.DecisionAI.currentTask) {
+      if (this.owner.Task.currentlyActive) {
         if (rollDie(ProtoCs.VISIBILITY_RADIUS) === 1) this.owner.Memory.examineSurroundings();
-        if (this.owner.DecisionAI.currentTask.successCondition()) {
-          this.owner.DecisionAI.currentTask.onSuccess();
-          this.owner.DecisionAI.startNewTask();
-        } else if (!this.owner.DecisionAI.currentTask.pathTowardTarget()) {
-          this.owner.DecisionAI.currentTask.onFail();
-          this.owner.DecisionAI.startNewTask();
+
+        if (this.owner.Task.successCondition()) {
+          this.owner.Task.onSuccess();
+          this.owner.DecisionAI.generateNewTask();
+        } else if (!this.owner.Task.pathTowardTarget()) {
+          this.owner.Task.onFail();
+          this.owner.DecisionAI.generateNewTask();
         }
       } else {
-        this.owner.DecisionAI.startNewTask();
+        this.owner.DecisionAI.generateNewTask();
       }
     }
     return this.turnOver();
@@ -45,6 +46,8 @@ function TurnTaking(worldObject, arg = {}) {
   };
 }
 
-export default function applyTurnTaking(worldObject, arg = {}) {
+const applyTurnTaking = (worldObject, arg = {}) => {
   worldObject.TurnTaking = worldObject.TurnTaking || new TurnTaking(worldObject, arg);
-}
+};
+
+export default applyTurnTaking;

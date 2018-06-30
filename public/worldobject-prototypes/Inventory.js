@@ -37,6 +37,8 @@ function Inventory(worldObject) {
   };
 }
 
-export default function applyInventory(worldObject, arg = {}) {
+const applyInventory = (worldObject, arg = {}) => {
   worldObject.Inventory = worldObject.Inventory || new Inventory(worldObject, arg);
-}
+};
+
+export default applyInventory;

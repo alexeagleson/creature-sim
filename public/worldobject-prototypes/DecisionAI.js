@@ -1,55 +1,9 @@
 
-import { hungerTask, searchFoodTask } from '../ai/hungerTask';
-import { uniqueNumber } from './../main/general-utility';
-import { toTile } from './../main/world-utility';
 import { isNotObject, isFood } from './../main/filters';
-
-export function Task(taskOwner, taskType) {
-  this.taskOwner = taskOwner;
-  this.taskType = taskType;
-  this.uniqueID = uniqueNumber();
-
-  this.taskTarget = null;
-
-  this.locateTarget = () => null;
-
-  this.calculatePathToTarget = (pathType = 'dijkstra') => {
-    // If a Dijkstra map already exists for the given tile, use that, otherwise try a dumb direct path
-    // if (!pathType && toTile(this.taskTarget)) pathType = toTile(this.taskTarget).dijkstraMap ? 'dijkstra' : 'direct';
-    return this.taskOwner.Pathing.createPathTo(this.taskTarget, this.taskOwner, pathType);
-  };
-
-  this.pathTowardTarget = () => {
-    if (this.taskOwner.Pathing.currentPath.length === 0) {
-      if (this.taskOwner.Pathing.pathDetails.hasNextTarget()) {
-        this.taskOwner.Pathing.pathDetails.updatePathTarget();
-        return this.calculatePathToTarget();
-      }
-      return false;
-    }
-    if (!this.taskOwner.Pathing.movePath()) {
-      if (this.taskOwner.Pathing.pathDetails.pathType === 'direct') return this.calculatePathToTarget('dijkstra');
-      if (this.taskOwner.Pathing.pathDetails.pathType === 'dijkstra') return this.calculatePathToTarget('astar');
-    }
-    return true;
-  };
-
-  this.successCondition = () => null;
-  this.onSuccess = () => null;
-  this.onFail = () => null;
-
-  this.initializeTask = () => {
-    if (this.locateTarget()) return this.calculatePathToTarget();
-    return false;
-  };
-}
 
 function DecisionAI(worldObject) {
   this.owner = worldObject;
   World.allObjectsDecisionAI.push(this.owner);
-
-  this.currentTask = null;
-  this.clearTask = () => { this.currentTask = null; }
 
   this.updatePriorities = () => {
     this.priorities = [
@@ -63,19 +17,14 @@ function DecisionAI(worldObject) {
     this.priorities.sort((a, b) => a.priority - b.priority);
   };
 
-  this.startNewTask = () => {
+  this.generateNewTask = () => {
     if (this.owner.Memory.knownObjects.filter(isFood).length === 0) {
-      this.currentTask = searchFoodTask(this.owner);
+      this.owner.Task.initializeTask('explore');
     } else {
-      this.currentTask = hungerTask(this.owner);
+      this.owner.Task.initializeTask('food');
     }
-    
-    if (this.currentTask) {
-      if (!this.currentTask.initializeTask()) {
-        this.clearTask();
-        this.owner.Moving.moveRandom();
-      }
-    }
+
+    if (!this.owner.Task.currentlyActive) this.owner.Moving.moveRandom();
     return true;
   };
 
@@ -85,6 +34,8 @@ function DecisionAI(worldObject) {
   };
 }
 
-export default function applyDecisionAI(worldObject, arg = {}) {
+const applyDecisionAI = (worldObject, arg = {}) => {
   worldObject.DecisionAI = worldObject.DecisionAI || new DecisionAI(worldObject, arg);
-}
+};
+
+export default applyDecisionAI;

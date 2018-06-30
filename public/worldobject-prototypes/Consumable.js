@@ -13,6 +13,8 @@ function Consumable(worldObject) {
   };
 }
 
-export default function applyConsumable(worldObject, arg = {}) {
+const applyConsumable = (worldObject, arg = {}) => {
   worldObject.Consumable = worldObject.Consumable || new Consumable(worldObject, arg);
-}
+};
+
+export default applyConsumable;

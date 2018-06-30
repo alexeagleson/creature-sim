@@ -5,20 +5,18 @@ function Equipper(worldObject) {
   this.owner = worldObject;
   World.allObjectsEquipper.push(this.owner);
 
-  if (!this.owner.Living) { applyLiving(this.owner); }
-
   this.currentEquipment = null;
 
-  this.canIEquipObject = (worldObject) => {
-    if (!worldObject.Equipment) { return false; }
-    if (!this.owner.inMyInventoryOrAdjacent(worldObject)) { return false; }
+  this.canIEquipObject = (argObject) => {
+    if (!argObject.Equipment) { return false; }
+    if (!this.owner.inMyInventoryOrAdjacent(argObject)) { return false; }
     return true;
   };
 
-  this.equip = (worldObject) => {
-    if (this.owner.isAdjacentTo(worldObject)) { this.owner.Inventory.addToInventory(worldObject); }
-    this.currentEquipment = worldObject;
-    publishEvent(`${this.owner.name} equips ${worldObject.name}.`);
+  this.equip = (argObject) => {
+    if (this.owner.isAdjacentTo(argObject)) { this.owner.Inventory.addToInventory(argObject); }
+    this.currentEquipment = argObject;
+    publishEvent(`${this.owner.name} equips ${argObject.name}.`);
   };
 
   this.unequip = () => {
@@ -31,6 +29,8 @@ function Equipper(worldObject) {
   };
 }
 
-export default function applyEquipper(worldObject, arg = {}) {
+const applyEquipper = (worldObject, arg = {}) => {
   worldObject.Equipper = worldObject.Equipper || new Equipper(worldObject, arg);
-}
+};
+
+export default applyEquipper;
