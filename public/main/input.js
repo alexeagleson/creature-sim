@@ -1,11 +1,10 @@
 import { getInventory } from './../constructors/WorldObject';
 import { endSim } from './../main/app';
-import { directionTextToCoords } from './../main/general-utility';
-import { screenToActual, pixelToTile, withinMapBounds } from './../main/world-utility';
-import { isNotObject, isOnMapOfObject } from './../main/filters';
+import { directionTextToCoords, pickRandom } from './../main/general-utility';
+import { screenToActual, pixelToTile, withinMapBounds, toCoords } from './../main/world-utility';
+import { isNotObject, isSocial } from './../main/filters';
 import { displayNamesOfObjects } from './../ui/components/HoveringText';
 import { hideMenusAndResume } from './../ui/components/WorldUI.jsx';
-import { newDijkstra } from './../worldobject-prototypes/Pathing';
 
 function mousemoveHandler(mousemoveEvent) {
   const hoverTileCoords = screenToActual(pixelToTile([mousemoveEvent.offsetX, mousemoveEvent.offsetY]));
@@ -45,6 +44,10 @@ function keydownHandler(keyboardEvent) {
   } else if (keyboardEvent.key === 't') {
     World.ReactUI.EventLog.toggle();
   } else if (keyboardEvent.key === 'f') {
+    const allNearbyObjects = World.player.WorldMap.getVisibleObjects(toCoords(World.player)).filter(isSocial).filter(isNotObject.bind(World.player));
+    if (allNearbyObjects.length > 0) World.ReactUI.HudTarget.targetObject = pickRandom(allNearbyObjects);
+    // if (allNearbyObjects.length > 0) World.ReactUI.SelectObject.prompt(allNearbyObjects);
+  } else if (keyboardEvent.key === 'g') {
     World.ReactUI.SelectObject.prompt(World.allObjectsDecisionAI.filter(isNotObject.bind(World.player)));
   } else if (keyboardEvent.key === 'x') {
     World.disableAI = !World.disableAI;

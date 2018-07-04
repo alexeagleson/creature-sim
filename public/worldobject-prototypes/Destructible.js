@@ -15,6 +15,8 @@ function Destructible(worldObject, arg = {}) {
   this.adjustConditionBy = (value, causeOfConditionLoss) => {
     this.condition += value;
     this.condition = normalizeToValue(this.condition, 0, 100);
+    // Debug
+    if (this.owner === World.player) this.condition = 100;
     this.checkIfDestroyed(causeOfConditionLoss);
   };
 

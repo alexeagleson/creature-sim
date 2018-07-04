@@ -31,7 +31,10 @@ export default function RotJsDisplay(mainDisplay) {
 
   this.drawObject = (worldObject) => {
     const screenTileCoords = actualToScreen(toCoords(worldObject));
-    this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldObject.char, worldObject.RotJsObject.fgColour, worldObject.RotJsObject.bgColour);
+    // Debug
+    let debugFgColour = worldObject.RotJsObject.fgColour;
+    if (worldObject === World.ReactUI.HudTarget.targetObject) debugFgColour = Colours.HEX_YELLOW;
+    this.engine.draw(screenTileCoords[0], screenTileCoords[1], worldObject.char, debugFgColour, worldObject.RotJsObject.bgColour);
   };
 
   this.destroyAllSprites = () => {

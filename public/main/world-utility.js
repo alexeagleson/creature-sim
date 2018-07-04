@@ -279,7 +279,7 @@ export function getValidContextActions(objectActivating, objectBeingActivated) {
 export function estimateTotalDistance(componentA, componentB) {
   const mapFrom = toMap(componentA);
   const mapTo = toMap(componentB);
-  if (!mapFrom || !mapTo) return displayError('estimateTotalDistance: Cannot toMap componentA or componentB:', [componentA, componentB]);
+  if (!mapFrom || !mapTo) return displayError('estimateTotalDistance: Cannot convert componentA or componentB:', [componentA, componentB]);
   if (mapFrom === mapTo) return distanceBetweenCoords(toCoords(componentA, true), toCoords(componentB, true));
 
   const mapPath = shortestMapPath(mapFrom, mapTo);

@@ -84,6 +84,16 @@ export default function createWorldObject(objectName, arg = {}) {
     applyItem(createdObject);
     createdObject.Consumable.hungerValue = 100;
 
+  } else if (objectName === 'Club Soda') {
+    applyBasePrototypes(createdObject);
+    createdObject.char = 's';
+    isEngine('RotJs')
+      ? createdObject.RotJsObject.fgColour = Colours.HEX_GREEN
+      : createdObject.PhaserObject.spriteFilename = 'Water';
+    applyConsumable(createdObject);
+    applyItem(createdObject);
+    createdObject.Consumable.thirstValue = 100;
+
   } else if (objectName === 'Rabbit') {
     applyBasePrototypes(createdObject);
     applyLivingPrototypes(createdObject);

@@ -22,19 +22,25 @@ function TurnTaking(worldObject, arg = {}) {
 
   this.takeTurn = () => {
     if (this.owner.DecisionAI) {
-      if (World.disableAI) return this.owner.Moving.moveRandom();
+      if (World.disableAI) return this.turnOver();
+      if (this.owner.Temperature.adjustTemperatureActive) { this.owner.Temperature.adjustTemperatureTurn(); return this.turnOver(); }
+      if (this.owner.Living.asleep) { this.owner.Living.sleepTurn(); return this.turnOver(); }
+
       if (this.owner.Task.currentlyActive) {
-        if (rollDie(ProtoCs.VISIBILITY_RADIUS) === 1) this.owner.Memory.examineSurroundings();
+        if (rollDie(ProtoCs.VISIBILITY_RADIUS) === 1) {
+          this.owner.Memory.examineSurroundings();
+          this.owner.DecisionAI.reviewTasks();
+        }
 
         if (this.owner.Task.successCondition()) {
           this.owner.Task.onSuccess();
-          this.owner.DecisionAI.generateNewTask();
-        } else if (!this.owner.Task.pathTowardTarget()) {
+          this.owner.Task.clearTask();
+        } else if (!this.owner.Task.pathToTarget()) {
           this.owner.Task.onFail();
-          this.owner.DecisionAI.generateNewTask();
+          this.owner.Task.clearTask();
         }
       } else {
-        this.owner.DecisionAI.generateNewTask();
+        this.owner.DecisionAI.reviewTasks();
       }
     }
     return this.turnOver();

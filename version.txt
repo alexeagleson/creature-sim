@@ -48,6 +48,9 @@ NPCs should seek out portals instead of maps specifically
 need to refactor the AI
 ---
 
+<strong>2018/07/04 -- Version 0.1.36</strong>
+----------------------------
+(*) Basic AI implementation is complete (eat, drink, sleep, and temperature)
 
 <strong>2018/06/30 -- Version 0.1.36</strong>
 ----------------------------

@@ -1,5 +1,6 @@
 import { isNotObject } from './../main/filters';
 import { normalizeToValue } from './../main/general-utility';
+import { displayDialogue } from './../ui/components/HoveringText';
 
 const TEMP_ADJUSTMENT_FACTOR = 20;
 
@@ -10,15 +11,25 @@ function Temperature(worldObject) {
   this.temp = ProtoCs.COMFORTABLE_TEMP;
   this.takingTemperatureDamage = false;
 
+  this.adjustTemperatureActive = false;
+
+  this.startAdjustTemperature = () => { this.adjustTemperatureActive = true; };
+  this.stopAdjustTemperature = () => { this.adjustTemperatureActive = false; };
+  this.adjustTemperatureTurn = () => {
+    displayDialogue(this.owner, '*adjusting temp*');
+    this.temp = this.temp > 20 ? this.temp - 1 : this.temp + 1;
+    if (this.temp >= 15 && this.temp <= 25) this.stopAdjustTemperature();
+  };
+
   this.coldValue = () => normalizeToValue(100 + (this.temp - ProtoCs.COMFORTABLE_TEMP), 0, 100);
   this.hotValue = () => normalizeToValue(100 - (this.temp - ProtoCs.COMFORTABLE_TEMP), 0, 100);
 
-  this.isCold = () => this.mapTemp < ProtoCs.COMFORTABLE_TEMP - ProtoCs.COMFORTABLE_TEMP_VARIANCE;
-  this.isHot = () => this.mapTemp > ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE;
+  this.isCold = () => this.temp < ProtoCs.COMFORTABLE_TEMP - ProtoCs.COMFORTABLE_TEMP_VARIANCE;
+  this.isHot = () => this.temp > ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE;
   this.isComfortable = () => this.temp > (ProtoCs.COMFORTABLE_TEMP - ProtoCs.COMFORTABLE_TEMP_VARIANCE) && this.temp < (ProtoCs.COMFORTABLE_TEMP + ProtoCs.COMFORTABLE_TEMP_VARIANCE);
 
-  this.getColdPriority = () => Math.round(normalizeToValue(this.coldValue() - (100 - this.owner.WorldMap.coldValue()), 0, 100));
-  this.getHotPriority = () => Math.round(normalizeToValue(this.coldValue() - (100 - this.owner.WorldMap.coldValue()), 0, 100));
+  this.getColdPriority = () => Math.round(normalizeToValue(this.coldValue() - (100 - this.coldValue()), 0, 100));
+  this.getHotPriority = () => Math.round(normalizeToValue(this.hotValue() - (100 - this.hotValue()), 0, 100));
 
   this.adjustTemperature = (timePassedMilliseconds) => {
     let differenceBetweenWeatherAndCurrent = this.owner.WorldMap.mapTemp - this.temp;

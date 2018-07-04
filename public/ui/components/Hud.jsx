@@ -26,6 +26,11 @@ export default class Hud extends React.Component {
 
   updateState() {
     if (!this.targetObject) return;
+
+    const knownObjectsSet = new Set();
+    if (this.targetObject.Memory) this.targetObject.Memory.knownObjects.forEach(object => knownObjectsSet.add(`${object.name}, `));
+    const knownObjectsArray = Array.from(knownObjectsSet).sort();
+
     this.setState({
       name: this.targetObject.name,
       condition: this.targetObject.Destructible ? Math.round(this.targetObject.Destructible.condition) : null,
@@ -43,6 +48,10 @@ export default class Hud extends React.Component {
       takingThirstDamage: this.targetObject.Consumer ? this.targetObject.Consumer.takingThirstDamage : false,
       takingTemperatureDamage: this.targetObject.Temperature ? this.targetObject.Temperature.takingTemperatureDamage : false,
       takingStaminaDamage: this.targetObject.Living ? this.targetObject.Living.takingStaminaDamage : false,
+      asleep: this.targetObject.Living ? this.targetObject.Living.asleep : false,
+      coolingWarming: this.targetObject.Temperatue ? this.targetObject.Temperature.adjustTemperatureActive : false,
+      currentTask: this.targetObject.Task ? this.targetObject.Task : null,
+      knownObjectsArray: knownObjectsArray.length > 0 ? knownObjectsArray : null,
     });
   }
 
@@ -76,6 +85,10 @@ export default class Hud extends React.Component {
         {this.state.takingThirstDamage && <p className="colour-red">Taking thirst damage.</p>}
         {this.state.takingTemperatureDamage && <p className="colour-red">Taking temperature damage.</p>}
         {this.state.takingStaminaDamage && <p className="colour-red">Taking exhaustion damage.</p>}
+        {this.state.asleep && <p>Sleeping</p>}
+        {this.state.coolingWarming && <p>Cooling/warming up.</p>}
+        {this.state.currentTask && this.state.currentTask.currentlyActive && <p>Task: {this.state.currentTask.taskType} to {this.state.currentTask.taskTarget.name || this.state.currentTask.taskTarget.WorldMap.name}</p>}
+        {this.state.knownObjectsArray && <p>Known objects: {this.state.knownObjectsArray}</p>}
         {this.targetObject === World.player && <p>Time: {this.state.time}</p>}
         {this.targetObject === World.player && <p>Days Elapsed: {this.state.daysElapsed}</p>}
         {this.targetObject === World.player && <p>Turns/sec: {this.state.turnsPerSecond}</p>}

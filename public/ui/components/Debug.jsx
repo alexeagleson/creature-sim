@@ -26,13 +26,16 @@ export default class Debug extends React.Component {
     World.ReactUI.HudTarget.targetObject = debugObject;
     hideMenusAndResume();
     pauseSim();
-    const tasks = debugObject.DecisionAI.taskQueue.filter(task => task.taskType !== 'path').map(task => <p key={task.uniqueID}>{`${task.taskType} (${task.target.name}) ${task.priorityVsDistance}`}</p>);
-    tasks.sort((a, b) => a.priorityVsDistance - b.priorityVsDistance);
+
+    const knownObjectsSet = new Set();
+    if (debugObject.Memory) debugObject.Memory.knownObjects.forEach(object => knownObjectsSet.add(`${object.name}, `));
+    const knownObjectsArray = Array.from(knownObjectsSet).sort();
+
     this.setState({
       debugObject,
-      tasks,
+      task: debugObject.Task,
+      knownObjects: knownObjectsArray,
       debugVisible: true,
-      biggestPriority: debugObject.DecisionAI.OverallPlan.biggestPriority,
     });
   }
 
@@ -42,8 +45,7 @@ export default class Debug extends React.Component {
         {this.state.debugVisible &&
           <div className="select-menu ui-border strokeme">
             <center>{this.state.debugObject.name}</center>
-            {this.state.tasks}
-            {this.state.biggestPriority}
+            <p>Known objects: {this.state.knownObjects}</p>
           </div>
         }
       </div>

@@ -32,11 +32,11 @@ export function isNamed(worldObject) {
 
 // Filters no bind
 function isTurnTaking(worldObject) {
-  return worldObject.TurnTaking !== undefined;
+  return !!worldObject.TurnTaking;
 }
 
 export function isConsumable(worldObject) {
-  return worldObject.Consumable !== undefined;
+  return !!worldObject.Consumable;
 }
 
 export function isFood(worldObject) {
@@ -60,20 +60,20 @@ export function portalToColdOrComfortable(worldObject) {
 }
 
 export function isSocial(worldObject) {
-  return worldObject.Social !== undefined;
+  return !!worldObject.Social;
 }
 
 export function isItem(worldObject) {
-  return worldObject.Item !== undefined;
+  return !!worldObject.Item;
 }
 
 function isPortal(worldObject) {
-  return worldObject.Portal !== undefined;
+  return !!worldObject.Portal;
 }
 
 export function isOnAMap(worldObject) {
   if (!worldObject.WorldMap) { return false; }
-  return worldObject.WorldTile != null;
+  return !!worldObject.WorldTile;
 }
 
 // Sorts

@@ -13,7 +13,6 @@ export default function createWorldMap(mapName, width, height) {
   if (mapName === 'Home') {
     createdMap = new WorldMap(mapName, { mapType: 'Arena' });
 
-
     // createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
     // createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
     // createBuilding('Building', digBuildingLot({ worldMap: createdMap, size: 4, outerPadding: 1 }));
@@ -28,8 +27,9 @@ export default function createWorldMap(mapName, width, height) {
     // createWorldObject('Squirrel').placeOnMap({ worldMap: createdMap });
     // createWorldObject('Rabbit').placeOnMap({ worldMap: createdMap });
 
-    runXTimes(createWorldObject, 500, 'Squirrel').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
-    runXTimes(createWorldObject, 500, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
+    runXTimes(createWorldObject, 5, 'Squirrel').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
+    runXTimes(createWorldObject, 5, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
+    runXTimes(createWorldObject, 5, 'Club Soda').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
 
     // createWorldObject('Heavy Jacket').placeOnMap({ worldMap: createdMap });
     runXTimes(createWorldObject, 2, 'Trash').forEach((object) => { object.placeOnMap({ worldMap: createdMap, ignoreTriggers: true }); });
@@ -46,7 +46,7 @@ export default function createWorldMap(mapName, width, height) {
     createWorldObject('Treasure').placeOnMap({ worldMap: createdMap, ignoreTriggers: true });
 
     createdMap.mapTemp = 20;
-    runXTimes(createWorldObject, 50, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
+    // runXTimes(createWorldObject, 50, 'Acorn').forEach((object) => { object.placeOnMap({ worldMap: createdMap }); });
     
 
   } else if (mapName === 'Building') {

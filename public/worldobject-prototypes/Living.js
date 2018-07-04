@@ -2,6 +2,7 @@ import { publishEvent } from './../constructors/WorldEvent';
 import { isNotObject } from './../main/filters';
 import { normalizeToValue } from './../main/general-utility';
 import { isEngine, toCoords, getActivePrototypesByName } from './../main/world-utility';
+import { displayDialogue } from './../ui/components/HoveringText';
 
 const DAMAGE_THRESHOLD = 25;
 const EXHAUSTION_ADJUSTMENT_FACTOR = 100;
@@ -14,11 +15,16 @@ function Living(worldObject) {
   this.asleep = false;
 
   this.getSleepPriority = () => Math.round(this.stamina);
+
   this.isTired = () => this.getSleepPriority() < ProtoCs.PROBLEM_VALUE;
-  this.isRested = () => this.stamina > 90;
 
   this.fallAsleep = () => { this.asleep = true; };
   this.wakeUp = () => { this.asleep = false; };
+  this.sleepTurn = () => {
+    displayDialogue(this.owner, 'Zzz...');
+    this.stamina += 1;
+    if (this.stamina > 90) this.wakeUp();
+  };
 
   this.adjustStamina = (timePassedMilliseconds) => {
     this.stamina += this.asleep ? (ProtoCs.STAMINA_LOSS_PER_MILLISECOND * timePassedMilliseconds) : (0 - (ProtoCs.STAMINA_LOSS_PER_MILLISECOND * timePassedMilliseconds));
@@ -61,7 +67,7 @@ function Living(worldObject) {
     }
     this.owner.char = '%';
     this.owner.name = `Remains of ${this.owner.name}`;
-    getActivePrototypesByName(this.owner, ['Consumer', 'DecisionAI', 'Inventory', 'Living', 'Moving', 'Pathing', 'Social', 'Temperature']).forEach(objectProtoype => objectProtoype.revokePrototype());
+    getActivePrototypesByName(this.owner, ['Consumer', 'DecisionAI', 'Inventory', 'Living', 'Moving', 'Pathing', 'Social', 'Temperature', 'Memory', 'Task']).forEach(objectProtoype => objectProtoype.revokePrototype());
   };
 
   this.revokePrototype = () => {
